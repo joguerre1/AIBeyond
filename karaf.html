@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cuestionario Interactivo Apache Karaf</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Estilo personalizado para resaltar respuestas */
+        .correct-answer {
+            background-color: #d1fae5; /* Tailwind green-100 */
+            border-color: #10b981; /* Tailwind green-500 */
+        }
+        .incorrect-answer {
+            background-color: #fee2e2; /* Tailwind red-100 */
+            border-color: #ef4444; /* Tailwind red-500 */
+        }
+        .selected-answer {
+            border-width: 2px;
+            box-shadow: 0 0 5px rgba(66, 153, 225, 0.5); /* Azul claro */
+        }
+        /* Asegurar que los botones de opción sean clickables en toda el área */
+        .option-label {
+            display: block;
+            width: 100%;
+            cursor: pointer;
+            padding: 0.75rem 1rem; /* py-3 px-4 */
+            border: 1px solid #d1d5db; /* border-gray-300 */
+            border-radius: 0.375rem; /* rounded-md */
+            transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+        }
+        .option-label:hover {
+            background-color: #f3f4f6; /* gray-100 */
+        }
+        /* Ocultar el radio button real */
+        .option-input {
+            display: none;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans flex items-center justify-center min-h-screen p-4">
+
+    <div id="quiz-container" class="bg-white p-6 md:p-8 rounded-lg shadow-xl w-full max-w-3xl">
+        <h1 class="text-2xl md:text-3xl font-bold text-center text-gray-800 mb-6">Cuestionario Interactivo Apache Karaf</h1>
+
+        <div id="selection-screen" class="text-center">
+            <h2 class="text-xl font-semibold mb-4 text-gray-700">Selecciona un Módulo y Nivel</h2>
+            <div class="mb-4">
+                <label for="module-select" class="block text-sm font-medium text-gray-700 mb-1">Módulo:</label>
+                <select id="module-select" class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                    </select>
+            </div>
+            <div class="mb-6">
+                <label for="level-select" class="block text-sm font-medium text-gray-700 mb-1">Nivel:</label>
+                <select id="level-select" class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                    <option value="basico">Básico</option>
+                    <option value="intermedio">Intermedio</option>
+                    <option value="avanzado">Avanzado</option>
+                </select>
+            </div>
+            <button id="start-quiz-btn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md transition duration-300 ease-in-out">
+                Comenzar Cuestionario
+            </button>
+        </div>
+
+        <div id="quiz-screen" class="hidden">
+            <div class="mb-4 p-4 bg-indigo-100 border border-indigo-300 rounded-md">
+                <h2 id="module-title" class="text-lg font-semibold text-indigo-800"></h2>
+                <p id="level-title" class="text-sm text-indigo-600"></p>
+            </div>
+
+            <div id="question-container" class="mb-6">
+                <p id="question-text" class="text-lg font-medium text-gray-800 mb-4"></p>
+                <div id="options-container" class="space-y-3">
+                    </div>
+            </div>
+
+            <div id="feedback" class="mt-4 mb-4 text-sm font-medium hidden p-3 rounded-md"></div>
+
+            <div class="flex justify-between items-center mt-6">
+                <button id="prev-btn" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-md transition duration-300 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed">
+                    Anterior
+                </button>
+                <span id="progress-text" class="text-sm text-gray-600">Pregunta 1 / 10</span>
+                <button id="next-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md transition duration-300 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed">
+                    Siguiente
+                </button>
+            </div>
+             <button id="finish-btn" class="mt-4 w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-md transition duration-300 ease-in-out hidden">
+                Finalizar Cuestionario
+            </button>
+        </div>
+
+        <div id="results-screen" class="hidden text-center">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">Resultados del Cuestionario</h2>
+             <p id="results-module-level" class="text-lg text-gray-600 mb-4"></p>
+            <p class="text-xl mb-6">Tu puntuación: <span id="score" class="font-bold">0</span> / <span id="total-questions" class="font-bold">0</span></p>
+            <div id="summary-container" class="text-left space-y-4 max-h-60 overflow-y-auto border p-4 rounded-md mb-6">
+                </div>
+            <button id="restart-btn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md transition duration-300 ease-in-out">
+                Volver a Empezar
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // --- Datos del Cuestionario ---
+        const quizzes = [
+          {
+            module: "Módulo 1: Introducción a Apache Karaf",
+            levels: {
+              basico: [
+                { question: "¿Qué es Apache Karaf?", options: ["Un servidor web tradicional como Apache HTTP Server.", "Una base de datos NoSQL.", "Un contenedor de aplicaciones polimórfico basado en OSGi.", "Un framework de desarrollo frontend."], answer: 2 },
+                { question: "¿Cuál es una característica principal de Karaf mencionada?", options: ["Edición de video integrada.", "Gestión dinámica de la configuración.", "Soporte exclusivo para aplicaciones Python.", "Un sistema de archivos distribuido."], answer: 1 },
+                { question: "¿Qué directorio principal de Karaf se utiliza para archivos de configuración?", options: ["KARAF_HOME/bin", "KARAF_DATA", "KARAF_ETC", "KARAF_HOME/lib"], answer: 2 },
+                { question: "¿Qué comando se usa comúnmente para iniciar Karaf?", options: ["karaf start", "bin/karaf (o bin\\karaf.bat en Windows)", "karaf run --init", "systemctl start karaf"], answer: 1 }
+              ],
+              intermedio: [
+                { question: "¿Cuál es la diferencia principal entre `KARAF_HOME` y `KARAF_BASE`?", options: ["`KARAF_HOME` contiene los binarios, `KARAF_BASE` las instancias personalizadas.", "`KARAF_HOME` es para datos temporales, `KARAF_BASE` para configuración.", "No hay diferencia, son sinónimos.", "`KARAF_HOME` es para Windows, `KARAF_BASE` para Linux."], answer: 0 },
+                { question: "¿Qué significa que Karaf permite \"ejecutar en cualquier lugar\"?", options: ["Que solo necesita Java para funcionar en diferentes OS.", "Que se integra con cualquier servicio en la nube automáticamente.", "Que su diseño ligero y basado en OSGi facilita el despliegue en diversos entornos.", "Que traduce código automáticamente a diferentes lenguajes."], answer: 2 },
+                { question: "¿Para qué se utiliza principalmente la Consola Karaf?", options: ["Para escribir código Java directamente.", "Para navegar por internet de forma segura.", "Para interactuar con el contenedor, gestionar bundles, features y configuraciones.", "Para diseñar interfaces gráficas de usuario."], answer: 2 }
+              ],
+              avanzado: [
+                 { question: "¿En qué se diferencia Karaf fundamentalmente de un contenedor de Servlets tradicional como Tomcat?", options: ["Karaf no puede ejecutar aplicaciones web (WARs).", "Karaf se basa en el modelo modular de OSGi, mientras que Tomcat se centra en la especificación Servlet/JSP.", "Karaf es mucho más pesado y consume más recursos que Tomcat.", "Tomcat tiene un sistema de features, Karaf no."], answer: 1 },
+                 { question: "¿Por qué es relevante el concepto de \"polimórfico\" aplicado a Karaf?", options: ["Porque puede cambiar su forma física.", "Porque soporta múltiples modelos de programación y tipos de aplicaciones (OSGi, WAR, Spring, etc.).", "Porque requiere múltiples instancias para funcionar correctamente.", "Porque su código fuente está escrito en varios lenguajes."], answer: 1 },
+                 { question: "¿Cómo influyen las variables de entorno (`KARAF_HOME`, `KARAF_BASE`, `KARAF_DATA`, `KARAF_ETC`) en la configuración de una instancia Karaf?", options: ["Definen únicamente los colores de la consola.", "Permiten separar la instalación base de Karaf de los datos y configuraciones específicas de una instancia.", "Solo se usan durante la compilación de Karaf desde las fuentes.", "Controlan el nivel de logging de la aplicación."], answer: 1 }
+              ]
+            }
+          },
+          {
+            module: "Módulo 2: El Corazón de Karaf: Features y Bundles",
+            levels: {
+              basico: [
+                { question: "¿Qué es una \"Feature\" en Karaf?", options: ["Un error en el sistema.", "Un archivo de configuración individual.", "La unidad principal para describir una aplicación, agrupando bundles y configuraciones.", "Un comando de la consola Karaf."], answer: 2 },
+                { question: "¿Qué es un \"Bundle\" en el contexto de OSGi y Karaf?", options: ["Un conjunto de features.", "Un archivo JAR con metadatos OSGi específicos en su `MANIFEST.MF`.", "Un repositorio de código fuente.", "Un script de inicio de Karaf."], answer: 1 },
+                { question: "¿Qué herramienta se menciona para ayudar a generar los metadatos OSGi para un bundle?", options: ["Apache Ant.", "El plugin Maven Bundle (`maven-bundle-plugin`).", "Gradle.", "Un editor de texto simple."], answer: 1 }
+              ],
+              intermedio: [
+                { question: "¿Cuál es la relación principal entre Features y Bundles?", options: ["Un bundle contiene múltiples features.", "Una feature define un conjunto de bundles (y opcionalmente otras features) necesarios para una funcionalidad o aplicación.", "Son conceptos independientes sin relación directa.", "Las features se compilan en bundles."], answer: 1 },
+                { question: "¿Por qué es crucial el versionado de Features y Bundles?", options: ["Solo por motivos estéticos.", "Para permitir la resolución correcta de dependencias y gestionar el ciclo de vida de las aplicaciones.", "Para limitar el número de bundles que se pueden instalar.", "La versión no es importante en Karaf."], answer: 1 },
+                { question: "¿Qué es un Repositorio de Features y dónde se configuran en Karaf?", options: ["Una carpeta local con backups; se configura en `KARAF_DATA`.", "Una URL (como un repositorio Maven) que contiene definiciones de features (archivos XML); se configura en `etc/org.apache.karaf.features.repos.cfg`.", "Una base de datos de usuarios; se configura mediante comandos `jaas:*`.", "Un log de eventos; se configura en `etc/org.ops4j.pax.logging.cfg`."], answer: 1 }
+              ],
+              avanzado: [
+                { question: "¿Qué tipo de información esencial se encuentra típicamente dentro de un archivo XML de definición de Feature?", options: ["El código fuente Java de la aplicación.", "Los bundles que componen la feature, las dependencias de otras features y las configuraciones asociadas.", "Las credenciales de acceso a la base de datos.", "Los resultados de las pruebas unitarias."], answer: 1 },
+                { question: "¿Qué propósito cumple el archivo `bundle.info` dentro de un bundle?", options: ["Es obligatorio y define las dependencias OSGi.", "Contiene información extendida sobre el bundle, a menudo utilizada por herramientas o la consola.", "Define las features que este bundle requiere.", "Es un archivo de log interno del bundle."], answer: 1 },
+                { question: "Si dos features requieren versiones diferentes del mismo bundle, ¿cómo intenta Karaf/OSGi manejar esta situación?", options: ["Siempre falla la instalación de la segunda feature.", "Instala ambas versiones del bundle si es posible y las \"conecta\" (wires) a los consumidores correctos según sus requisitos de versión.", "Desinstala la primera feature automáticamente.", "Ignora los requisitos de versión e instala solo la última versión encontrada."], answer: 1 }
+              ]
+            }
+          },
+          {
+            module: "Módulo 3: Despliegue (Provisioning) de Aplicaciones",
+            levels: {
+              basico: [
+                { question: "¿Qué comando de la consola Karaf se utiliza para instalar una Feature?", options: ["bundle:install", "feature:add-url", "feature:install", "config:edit"], answer: 2 },
+                { question: "¿Qué es el \"Despliegue en Caliente\" (Hot Deploy) en Karaf?", options: ["Desplegar aplicaciones mientras el servidor está apagado.", "La capacidad de Karaf de monitorear una carpeta (`deploy`) e instalar automáticamente los artefactos colocados en ella.", "Un método para aumentar la temperatura del servidor.", "Instalar features usando comandos exclusivamente."], answer: 1 },
+                { question: "¿Cuál de los siguientes es un tipo de artefacto que Karaf puede desplegar (por ejemplo, vía Hot Deploy)?", options: ["Archivos `.txt`", "Archivos XML de Features, archivos KAR, archivos WAR.", "Imágenes `.jpg`", "Archivos `.exe`"], answer: 1 }
+              ],
+              intermedio: [
+                { question: "¿Cuál es la diferencia principal entre usar `feature:install <nombre_feature>` y `bundle:install <url_bundle>`?", options: ["`feature:install` instala bundles, `bundle:install` instala features.", "`feature:install` instala una feature y resuelve e instala automáticamente sus dependencias (bundles, otras features). `bundle:install` solo instala el bundle especificado.", "`bundle:install` es para desarrollo, `feature:install` para producción.", "No hay diferencia funcional."], answer: 1 },
+                { question: "¿Qué es un archivo KAR (Karaf Archive)?", options: ["Un archivo de configuración de seguridad.", "Un formato de archivo que empaqueta un repositorio de features y los artefactos (bundles) que estas features necesitan.", "Un script para automatizar tareas en Karaf.", "Un tipo de log de Karaf."], answer: 1 },
+                { question: "¿Cómo se configuran las \"Features de Inicio\" (Boot Features) que se instalan automáticamente al arrancar Karaf?", options: ["Ejecutando un comando `feature:install --boot` antes de apagar.", "Editando el archivo `etc/org.apache.karaf.features.cfg` y añadiendo las features a la propiedad `featuresBoot`.", "Colocando un archivo especial llamado `boot.xml` en la carpeta `deploy`.", "No es posible configurar features de inicio."], answer: 1 }
+              ],
+              avanzado: [
+                { question: "¿Qué mecanismo utiliza Karaf para detectar y procesar archivos en la carpeta `deploy` (Hot Deploy)?", options: ["Un proceso externo que escanea la carpeta periódicamente.", "El componente OSGi `org.apache.felix.fileinstall`, que monitorea directorios y delega el procesamiento a \"deployers\" específicos según el tipo de archivo.", "Un trigger en la base de datos interna de Karaf.", "Magia."], answer: 1 },
+                { question: "¿Para qué sirve el protocolo `wrap:` al instalar bundles (ej. `bundle:install wrap:mvn:commons-logging/commons-logging/1.1.1`)?", options: ["Para comprimir el bundle antes de instalarlo.", "Para instalar bundles desde una URL HTTP segura (HTTPS).", "Para tomar un JAR estándar (que no es un bundle OSGi) y convertirlo (\"envolverlo\") en un bundle OSGi sobre la marcha durante la instalación, generando metadatos OSGi básicos.", "Para desplegar aplicaciones web (WARs)."], answer: 2 },
+                { question: "Compara las ventajas y desventajas de desplegar una aplicación usando `feature:install` versus Hot Deploy.", options: ["`feature:install` es más lento pero más seguro; Hot Deploy es más rápido pero menos seguro.", "`feature:install` ofrece control explícito y es bueno para scripting/automatización; Hot Deploy es conveniente para desarrollo rápido o despliegues simples basados en archivos. Hot Deploy puede ser menos predecible si no se gestiona con cuidado.", "Hot Deploy permite instalar dependencias automáticamente, `feature:install` no.", "`feature:install` solo funciona con archivos locales, Hot Deploy con URLs remotas."], answer: 1 }
+              ]
+            }
+          },
+          {
+            module: "Módulo 4: Resolución de Artefactos y Dependencias",
+            levels: {
+              basico: [
+                { question: "¿Qué componente de Karaf es responsable de encontrar e instalar las dependencias requeridas por una Feature?", options: ["El sistema de Logging.", "El Resolver de Features.", "La Consola Karaf.", "El módulo de seguridad JAAS."], answer: 1 },
+                { question: "Cuando instalas una Feature con dependencias, ¿Karaf intenta instalarlas automáticamente?", options: ["No, siempre hay que instalar las dependencias manualmente primero.", "Sí, el resolver intenta encontrar e instalar los bundles y features de dependencia requeridos.", "Solo si se usa la opción `--resolve`.", "Depende del tipo de bundle."], answer: 1 }
+              ],
+              intermedio: [
+                { question: "Al desinstalar una feature, ¿qué sucede con las dependencias que fueron instaladas automáticamente por ella?", options: ["Siempre permanecen instaladas.", "Se desinstalan automáticamente *solo si* no son requeridas por ninguna otra feature instalada.", "Se pregunta al usuario para cada dependencia.", "Se eliminan todos los bundles del sistema."], answer: 1 },
+                { question: "¿De dónde obtiene Karaf principalmente los artefactos (bundles, features) necesarios para la resolución?", options: ["Únicamente de la carpeta `deploy`.", "De repositorios de artefactos, típicamente repositorios Maven, especificados por URLs.", "Del sistema de archivos local exclusivamente.", "De una base de datos interna."], answer: 1 },
+                { question: "¿Qué significa OBR en el contexto de Karaf?", options: ["OSGi Boot Runtime.", "Online Bundle Repository.", "OSGi Bundle Repository (un mecanismo alternativo/complementario para la resolución basado en metadatos de bundles).", "Optimized Bundle Resolver."], answer: 2 }
+              ],
+              avanzado: [
+                { question: "¿Qué tipo de \"requisitos\" y \"capacidades\" (requirements/capabilities) utiliza el resolver de Karaf 4.x para determinar las dependencias?", options: ["Requisitos de hardware (CPU, RAM).", "Requisitos definidos en el estándar OSGi (paquetes importados/exportados, servicios, etc.) declarados en los metadatos de los bundles y las features.", "Requisitos definidos por el usuario en la consola.", "Requisitos de licencia de software."], answer: 1 },
+                { question: "¿Qué podría causar un fallo en la resolución de una feature?", options: ["Falta de conexión a internet si los artefactos están en repositorios remotos.", "Dependencias conflictivas (ej. dos features requieren rangos de versiones incompatibles del mismo paquete o bundle).", "Artefactos no encontrados en los repositorios configurados.", "Todas las anteriores."], answer: 3 },
+                { question: "¿Cómo se relaciona el comando `obr:resolve` con el resolver de features estándar?", options: ["`obr:resolve` es el único comando para resolver dependencias en Karaf.", "Es un comando específico para usar el mecanismo OBR, que puede complementar o usarse en lugar del resolver de features basado en repositorios Maven/XML para ciertos casos de uso.", "Es un alias obsoleto para `feature:install`.", "`obr:resolve` solo verifica la conexión a los repositorios."], answer: 1 }
+              ]
+            }
+          },
+           {
+            module: "Módulo 5: Customización y Creación de Distribuciones",
+            levels: {
+              basico: [
+                { question: "¿Cuál es la forma recomendada para crear una distribución personalizada de Karaf?", options: ["Copiar manualmente una instancia existente y modificarla.", "Usar el packaging `karaf-assembly` junto con el `karaf-maven-plugin`.", "Descargar un archivo ZIP especial de personalización.", "Escribir un script complejo en la consola Karaf."], answer: 1 },
+                { question: "¿Qué es un archivo KAR?", options: ["Un archivo de configuración principal de Karaf.", "Un archivo que empaqueta features y sus dependencias para facilitar el despliegue.", "Un log de errores críticos.", "Un tipo de bundle OSGi."], answer: 1 }
+              ],
+              intermedio: [
+                { question: "Al crear una distribución personalizada con Maven, ¿dónde se definen las `bootFeatures` (features que arrancarán por defecto)?", options: ["En un archivo `boot.properties` separado.", "Dentro de la configuración del `karaf-maven-plugin` en el archivo `pom.xml` del proyecto de ensamblaje.", "Directamente en el código fuente de Karaf.", "Mediante variables de entorno."], answer: 1 },
+                { question: "¿Para qué sirven los \"Maven Archetypes\" proporcionados por Karaf?", options: ["Para generar documentación automáticamente.", "Para crear esqueletos de proyectos Karaf (como bundles, features, comandos personalizados, KARs) y acelerar el desarrollo.", "Para analizar el rendimiento de Karaf.", "Para gestionar la seguridad de Karaf."], answer: 1 }
+              ],
+              avanzado: [
+                { question: "Describe el propósito principal del packaging `karaf-assembly` en Maven.", options: ["Simplemente compila el código fuente de Karaf.", "Define un tipo de empaquetado Maven que permite ensamblar una distribución Karaf completa (con sus directorios, binarios, configuraciones y features predefinidas) a partir de dependencias Maven.", "Es un plugin para ejecutar comandos Karaf desde Maven.", "Gestiona únicamente los repositorios de features."], answer: 1 },
+                { question: "¿En qué escenarios sería particularmente útil crear una distribución Karaf personalizada en lugar de usar la distribución estándar?", options: ["Para cambiar el color de la consola Karaf.", "Cuando se necesita pre-instalar un conjunto específico de features, configuraciones personalizadas, bundles propios y branding para una aplicación o producto específico.", "Solo si se quiere usar una versión de Java diferente.", "Para reducir el tamaño de la descarga inicial de Karaf (la personalización suele añadir, no quitar)."], answer: 1 },
+                { question: "¿Cómo se diferencia el despliegue de un archivo KAR del despliegue de un archivo XML de feature individual?", options: ["El KAR solo contiene bundles, el XML solo features.", "Desplegar un KAR típicamente registra el repositorio de features contenido dentro del KAR y lo hace disponible para Karaf. Luego se pueden instalar las features definidas en él. Desplegar un XML de feature directamente desde una URL lo añade a un repositorio temporal o existente. El KAR es autocontenido.", "El despliegue de KAR es más lento y menos fiable.", "Solo los KARs se pueden desplegar en caliente."], answer: 1 }
+              ]
+            }
+          },
+          {
+            module: "Módulo 6: Administración y Configuración Avanzada",
+            levels: {
+              basico: [
+                { question: "¿En qué directorio Karaf centraliza sus archivos de configuración?", options: ["bin", "data/config", "etc", "lib"], answer: 2 },
+                { question: "¿Qué sistema utiliza Karaf para la autenticación y autorización?", options: ["OAuth 2.0 exclusivamente.", "LDAP integrado.", "JAAS (Java Authentication and Authorization Service).", "Un sistema propietario llamado KarafAuth."], answer: 2 },
+                { question: "¿Qué comando de la consola permite ver las propiedades de configuración de un servicio?", options: ["log:display", "feature:list", "config:property-list <persistent-id> (o config:list para ver los PIDs)", "jaas:realm-manage"], answer: 2 }
+              ],
+              intermedio: [
+                { question: "¿Qué significa que la configuración en Karaf es \"dinámica\"?", options: ["Que los archivos de configuración cambian de nombre constantemente.", "Que Karaf detecta cambios en los archivos de configuración en la carpeta `etc` y los aplica (o notifica a los servicios correspondientes) sin necesidad de reiniciar el contenedor.", "Que la configuración se almacena exclusivamente en memoria.", "Que se necesita un lenguaje de scripting para configurar Karaf."], answer: 1 },
+                { question: "¿Qué es el \"Credential Store\" en Karaf?", options: ["Una tienda online para comprar credenciales.", "Un mecanismo para almacenar de forma segura (cifrada) contraseñas u otras credenciales sensibles utilizadas por las aplicaciones o el propio Karaf.", "Un archivo de log que registra los intentos de inicio de sesión.", "Un repositorio de features de seguridad."], answer: 1 },
+                { question: "Nombra dos formas de monitorear y administrar una instancia de Karaf.", options: ["Correo electrónico y SMS.", "Usando JMX (Java Management Extensions) con herramientas como JConsole/VisualVM, y a través de la WebConsole proporcionada por Karaf.", "Editando archivos de log manualmente y reiniciando Karaf.", "Mediante señales de humo y palomas mensajeras."], answer: 1 }
+              ],
+              avanzado: [
+                { question: "Describe brevemente cómo funciona la configuración de logging en Karaf.", options: ["Karaf solo soporta `System.out.println`.", "Utiliza Pax Logging, que actúa como un facade sobre frameworks de logging populares (Log4j2, Logback, etc.). La configuración se centraliza en `etc/org.ops4j.pax.logging.cfg`, permitiendo definir niveles de log, appenders y formatos de manera unificada para todos los bundles.", "Cada bundle debe incluir y configurar su propio framework de logging.", "El logging se configura exclusivamente mediante comandos de consola y no se persiste."], answer: 1 },
+                { question: "¿Qué es un \"Realm\" JAAS y qué son los \"Login Modules\" en Karaf?", options: ["Realm es un usuario, Login Module es un grupo.", "Un Realm representa un dominio de seguridad o fuente de datos de usuarios/roles (ej. un archivo de propiedades, LDAP, JDBC). Los Login Modules son implementaciones específicas que realizan la autenticación contra un backend determinado (ej. `PropertiesLoginModule`, `LDAPLoginModule`). Se configuran en `etc/jaas.config.cfg` (o archivos específicos).", "Realm es la consola Karaf, Login Module es un comando de seguridad.", "Son componentes obsoletos reemplazados por la WebConsole."], answer: 1 },
+                { question: "¿Qué es Karaf Decanter y cuál es su propósito principal?", options: ["Una herramienta para decantar vino mientras se administra Karaf.", "Un subsistema de Karaf enfocado en la monitorización y recolección de métricas. Permite recoger datos de diversas fuentes (JMX, logs, eventos OSGi, etc.), procesarlos y enviarlos a diferentes backends (ElasticSearch, RRD4j, logs, etc.) para análisis y alertas.", "Un plugin para integrar Karaf con bases de datos SQL.", "El nombre en clave de la próxima versión de Karaf."], answer: 1 }
+              ]
+            }
+          },
+          {
+            module: "Módulo 7: Desarrollo de Aplicaciones en Karaf",
+            levels: {
+              basico: [
+                { question: "¿Cuál de los siguientes es un modelo de componentes soportado por Karaf para definir e inyectar servicios OSGi?", options: ["Solo Java Servlets.", "Blueprint, Declarative Services (SCR), Spring.", "Angular y React.", "Python Flask."], answer: 1 },
+                { question: "Nombra una tecnología empresarial para la cual Karaf proporciona integración (features).", options: ["Edición de hojas de cálculo.", "Servicios Web (CXF), Acceso a Datos (JDBC, JPA), Mensajería (JMS).", "Diseño gráfico 3D.", "Compilación de C++."], answer: 1 }
+              ],
+              intermedio: [
+                { question: "¿Qué rol cumple Blueprint XML (o anotaciones SCR) en una aplicación Karaf?", options: ["Define la interfaz gráfica de usuario.", "Describe cómo los componentes (beans, servicios) de un bundle deben ser instanciados, configurados, conectados (inyectados) y registrados/buscados en el registro de servicios OSGi.", "Configura los parámetros de la JVM.", "Especifica los repositorios de features a utilizar."], answer: 1 },
+                { question: "¿Cómo se pueden añadir comandos personalizados a la consola Karaf?", options: ["Editando el código fuente de Karaf directamente.", "Desarrollando un bundle OSGi que implemente ciertas interfaces de Karaf (ej. usando anotaciones `@Command`) y desplegándolo en el contenedor.", "Creando un archivo de script en la carpeta `etc`.", "No es posible extender la consola con comandos personalizados."], answer: 1 },
+                { question: "¿Qué utilidad principal ofrece el `karaf-maven-plugin` durante el ciclo de desarrollo?", options: ["Solo compila código Java.", "Permite empaquetar proyectos como features, KARs, verificar dependencias, e incluso ejecutar una instancia Karaf embebida para pruebas.", "Gestiona únicamente la descarga de dependencias.", "Analiza la seguridad del código."], answer: 1 }
+              ],
+              avanzado: [
+                { question: "Compara brevemente Blueprint y Declarative Services (SCR) como modelos de componentes en OSGi/Karaf.", options: ["Blueprint usa XML, SCR usa JSON.", "Blueprint es principalmente declarativo (XML), inspirado en Spring, y maneja la dinámica de OSGi. SCR es un modelo basado en anotaciones (o XML), más integrado con el ciclo de vida de los componentes OSGi y a menudo considerado más ligero y estándar OSGi. Ambos buscan simplificar el manejo de servicios OSGi.", "SCR es más antiguo y obsoleto que Blueprint.", "Blueprint solo funciona con Spring, SCR solo con Java EE."], answer: 1 },
+                { question: "¿Qué desafíos específicos pueden surgir al desarrollar aplicaciones empresariales complejas sobre Karaf/OSGi comparado con un monolito tradicional?", options: ["La gestión de ClassLoaders y dependencias entre módulos (bundles) requiere más cuidado.", "Manejar la dinámica de los servicios OSGi (servicios que aparecen y desaparecen) puede ser complejo.", "La curva de aprendizaje de OSGi y las herramientas específicas de Karaf.", "Todas las anteriores."], answer: 3 },
+                { question: "¿Cómo se podría extender la WebConsole de Karaf con funcionalidad personalizada?", options: ["Modificando directamente los archivos HTML/JS de la WebConsole instalada.", "Desarrollando un bundle que registre Servlets o recursos (usando el servicio `HttpService` de OSGi o integraciones específicas de la WebConsole) para añadir nuevas páginas o endpoints.", "La WebConsole no es extensible.", "Configurando un proxy inverso."], answer: 1 }
+              ]
+            }
+          }
+        ];
+
+        // --- Elementos del DOM ---
+        const selectionScreen = document.getElementById('selection-screen');
+        const quizScreen = document.getElementById('quiz-screen');
+        const resultsScreen = document.getElementById('results-screen');
+
+        const moduleSelect = document.getElementById('module-select');
+        const levelSelect = document.getElementById('level-select');
+        const startQuizBtn = document.getElementById('start-quiz-btn');
+
+        const moduleTitle = document.getElementById('module-title');
+        const levelTitle = document.getElementById('level-title');
+        const questionContainer = document.getElementById('question-container');
+        const questionText = document.getElementById('question-text');
+        const optionsContainer = document.getElementById('options-container');
+        const feedback = document.getElementById('feedback');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const finishBtn = document.getElementById('finish-btn');
+        const progressText = document.getElementById('progress-text');
+
+        const resultsModuleLevel = document.getElementById('results-module-level');
+        const scoreEl = document.getElementById('score');
+        const totalQuestionsEl = document.getElementById('total-questions');
+        const summaryContainer = document.getElementById('summary-container');
+        const restartBtn = document.getElementById('restart-btn');
+
+        // --- Estado del Cuestionario ---
+        let currentModuleIndex = 0;
+        let currentLevel = 'basico';
+        let currentQuestions = [];
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let userAnswers = []; // Almacena { questionIndex, selectedOption, isCorrect }
+
+        // --- Funciones ---
+
+        // Carga las opciones de módulo en el selector
+        function populateModuleSelect() {
+            quizzes.forEach((quiz, index) => {
+                const option = document.createElement('option');
+                option.value = index;
+                option.textContent = quiz.module;
+                moduleSelect.appendChild(option);
+            });
+        }
+
+        // Inicia el cuestionario con el módulo y nivel seleccionados
+        function startQuiz() {
+            currentModuleIndex = parseInt(moduleSelect.value);
+            currentLevel = levelSelect.value;
+            const selectedQuiz = quizzes[currentModuleIndex];
+            currentQuestions = selectedQuiz.levels[currentLevel];
+
+            if (!currentQuestions || currentQuestions.length === 0) {
+                alert('No hay preguntas disponibles para este módulo y nivel.');
+                return;
+            }
+
+            // Reiniciar estado
+            currentQuestionIndex = 0;
+            score = 0;
+            userAnswers = new Array(currentQuestions.length).fill(null); // Reiniciar respuestas
+
+            // Mostrar pantalla de cuestionario y ocultar selección
+            selectionScreen.classList.add('hidden');
+            resultsScreen.classList.add('hidden');
+            quizScreen.classList.remove('hidden');
+            finishBtn.classList.add('hidden'); // Ocultar botón finalizar al inicio
+
+            // Mostrar títulos
+            moduleTitle.textContent = selectedQuiz.module;
+            levelTitle.textContent = `Nivel: ${currentLevel.charAt(0).toUpperCase() + currentLevel.slice(1)}`; // Capitalizar
+
+            displayQuestion();
+        }
+
+        // Muestra la pregunta actual y sus opciones
+        function displayQuestion() {
+            // Ocultar feedback anterior
+            feedback.classList.add('hidden');
+            feedback.textContent = '';
+
+            if (currentQuestionIndex >= currentQuestions.length) {
+                showResults();
+                return;
+            }
+
+            const questionData = currentQuestions[currentQuestionIndex];
+            questionText.textContent = `${currentQuestionIndex + 1}. ${questionData.question}`;
+            optionsContainer.innerHTML = ''; // Limpiar opciones anteriores
+
+            questionData.options.forEach((option, index) => {
+                const optionId = `option-${index}`;
+                const div = document.createElement('div');
+
+                const input = document.createElement('input');
+                input.type = 'radio';
+                input.id = optionId;
+                input.name = 'quizOption';
+                input.value = index;
+                input.classList.add('option-input'); // Clase para ocultar
+
+                const label = document.createElement('label');
+                label.htmlFor = optionId;
+                label.textContent = option;
+                label.classList.add('option-label'); // Clase para estilo y click
+
+                div.appendChild(input);
+                div.appendChild(label);
+                optionsContainer.appendChild(div);
+
+                // Añadir event listener a la etiqueta para manejar la selección
+                label.addEventListener('click', () => handleOptionSelection(index, label));
+            });
+
+            // Restaurar estado si ya se respondió esta pregunta
+            restoreAnswerState();
+            updateNavigationButtons();
+            updateProgressText();
+        }
+
+        // Maneja la selección de una opción
+        function handleOptionSelection(selectedIndex, selectedLabel) {
+            const questionData = currentQuestions[currentQuestionIndex];
+            const correctAnswerIndex = questionData.answer;
+            const isCorrect = selectedIndex === correctAnswerIndex;
+
+            // Almacenar respuesta
+            userAnswers[currentQuestionIndex] = {
+                selectedOption: selectedIndex,
+                isCorrect: isCorrect
+            };
+
+            // Deshabilitar todas las opciones y mostrar feedback visual
+            disableOptionsAndShowFeedback(selectedIndex, isCorrect, correctAnswerIndex);
+
+             // Habilitar botón siguiente si no es la última pregunta
+            if (currentQuestionIndex < currentQuestions.length - 1) {
+                nextBtn.disabled = false;
+            } else {
+                finishBtn.classList.remove('hidden'); // Mostrar botón finalizar en la última pregunta
+                nextBtn.disabled = true; // Deshabilitar siguiente en la última
+            }
+        }
+
+        // Deshabilita opciones y aplica estilos de feedback
+        function disableOptionsAndShowFeedback(selectedIndex, isCorrect, correctAnswerIndex) {
+            const optionLabels = optionsContainer.querySelectorAll('.option-label');
+            const optionInputs = optionsContainer.querySelectorAll('.option-input');
+
+            optionLabels.forEach((label, index) => {
+                const input = optionInputs[index];
+                input.disabled = true; // Deshabilitar input real
+                label.removeEventListener('click', handleOptionSelection); // Prevenir más clicks (aunque el input deshabilitado ayuda)
+                label.style.cursor = 'default'; // Cambiar cursor
+                label.classList.remove('hover:bg-gray-100'); // Quitar hover
+
+                if (index === selectedIndex) {
+                    label.classList.add(isCorrect ? 'correct-answer' : 'incorrect-answer');
+                    label.classList.add('selected-answer'); // Marcar la seleccionada
+                } else if (index === correctAnswerIndex) {
+                    // Resaltar la correcta si la seleccionada fue incorrecta
+                    if (!isCorrect) {
+                         label.classList.add('correct-answer');
+                    }
+                }
+            });
+
+            // Mostrar mensaje de feedback
+            feedback.textContent = isCorrect ? '¡Correcto!' : 'Incorrecto.';
+            feedback.classList.remove('hidden');
+            feedback.classList.toggle('text-green-700', isCorrect);
+            feedback.classList.toggle('bg-green-100', isCorrect);
+            feedback.classList.toggle('border-green-300', isCorrect);
+            feedback.classList.toggle('text-red-700', !isCorrect);
+            feedback.classList.toggle('bg-red-100', !isCorrect);
+            feedback.classList.toggle('border-red-300', !isCorrect);
+        }
+
+
+        // Restaura el estado visual si la pregunta ya fue respondida
+        function restoreAnswerState() {
+            const answeredData = userAnswers[currentQuestionIndex];
+            if (answeredData !== null) {
+                const { selectedOption, isCorrect } = answeredData;
+                const correctAnswerIndex = currentQuestions[currentQuestionIndex].answer;
+                disableOptionsAndShowFeedback(selectedOption, isCorrect, correctAnswerIndex);
+
+                // Habilitar/deshabilitar botones según corresponda
+                if (currentQuestionIndex < currentQuestions.length - 1) {
+                    nextBtn.disabled = false;
+                } else {
+                    finishBtn.classList.remove('hidden');
+                    nextBtn.disabled = true;
+                }
+            } else {
+                 // Si no ha sido respondida, deshabilitar 'siguiente' hasta que se seleccione una opción
+                 nextBtn.disabled = true;
+                 finishBtn.classList.add('hidden'); // Asegurarse que finalizar esté oculto
+            }
+        }
+
+
+        // Actualiza el estado de los botones de navegación
+        function updateNavigationButtons() {
+            prevBtn.disabled = currentQuestionIndex === 0;
+            // La habilitación de nextBtn se maneja en handleOptionSelection y restoreAnswerState
+        }
+
+        // Actualiza el texto de progreso
+        function updateProgressText() {
+            progressText.textContent = `Pregunta ${currentQuestionIndex + 1} / ${currentQuestions.length}`;
+        }
+
+        // Va a la pregunta anterior
+        function prevQuestion() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                displayQuestion();
+            }
+        }
+
+        // Va a la pregunta siguiente
+        function nextQuestion() {
+            if (currentQuestionIndex < currentQuestions.length - 1) {
+                 currentQuestionIndex++;
+                 displayQuestion();
+            } else {
+                 // Si se presiona siguiente en la última (aunque debería estar deshabilitado)
+                 showResults();
+            }
+        }
+
+        // Muestra la pantalla de resultados
+        function showResults() {
+            quizScreen.classList.add('hidden');
+            resultsScreen.classList.remove('hidden');
+
+            // Calcular puntuación final
+            score = userAnswers.filter(answer => answer !== null && answer.isCorrect).length;
+
+            const selectedQuiz = quizzes[currentModuleIndex];
+            const levelName = currentLevel.charAt(0).toUpperCase() + currentLevel.slice(1);
+            resultsModuleLevel.textContent = `${selectedQuiz.module} - Nivel: ${levelName}`;
+
+            scoreEl.textContent = score;
+            totalQuestionsEl.textContent = currentQuestions.length;
+
+            // Mostrar resumen de respuestas
+            displaySummary();
+        }
+
+        // Muestra el resumen de las respuestas
+        function displaySummary() {
+            summaryContainer.innerHTML = ''; // Limpiar resumen anterior
+            currentQuestions.forEach((questionData, index) => {
+                const userAnswerData = userAnswers[index];
+                const div = document.createElement('div');
+                div.classList.add('border-b', 'pb-2', 'mb-2');
+
+                const questionP = document.createElement('p');
+                questionP.classList.add('font-semibold', 'text-sm', 'mb-1');
+                questionP.textContent = `${index + 1}. ${questionData.question}`;
+                div.appendChild(questionP);
+
+                const correctAnswerText = questionData.options[questionData.answer];
+                let userAnswerText = "No respondida";
+                let isCorrect = false;
+
+                if (userAnswerData !== null) {
+                    userAnswerText = questionData.options[userAnswerData.selectedOption];
+                    isCorrect = userAnswerData.isCorrect;
+                }
+
+                const yourAnswerP = document.createElement('p');
+                yourAnswerP.classList.add('text-xs');
+                yourAnswerP.innerHTML = `Tu respuesta: <span class="${isCorrect ? 'text-green-600' : 'text-red-600'}">${userAnswerText}</span>`;
+                if (!isCorrect && userAnswerData !== null) {
+                    yourAnswerP.innerHTML += ` <span class="text-gray-500">(Correcta: ${correctAnswerText})</span>`;
+                } else if (userAnswerData === null) {
+                     yourAnswerP.innerHTML += ` <span class="text-gray-500">(Correcta: ${correctAnswerText})</span>`;
+                }
+                div.appendChild(yourAnswerP);
+
+                summaryContainer.appendChild(div);
+            });
+        }
+
+
+        // Reinicia el cuestionario volviendo a la pantalla de selección
+        function restartQuiz() {
+            resultsScreen.classList.add('hidden');
+            quizScreen.classList.add('hidden');
+            selectionScreen.classList.remove('hidden');
+            // No es necesario reiniciar variables aquí, se hace en startQuiz
+        }
+
+        // --- Event Listeners ---
+        startQuizBtn.addEventListener('click', startQuiz);
+        prevBtn.addEventListener('click', prevQuestion);
+        nextBtn.addEventListener('click', nextQuestion);
+        finishBtn.addEventListener('click', showResults); // Botón para finalizar explícitamente
+        restartBtn.addEventListener('click', restartQuiz);
+
+        // --- Inicialización ---
+        populateModuleSelect(); // Llenar el selector de módulos al cargar la página
+
+    </script>
+
+</body>
+</html>
