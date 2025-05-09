@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tendencias en Formación de Ingenieros de Sistemas (IA)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <style>
+        /* Estilos personalizados */
+        body {
+            font-family: 'Inter', sans-serif; /* Fuente Inter */
+            background-color: #f0f4f8; /* Fondo suave */
+        }
+        /* Estilos para la línea de tiempo */
+        .timeline-item {
+            position: relative;
+            padding-bottom: 2rem;
+            padding-left: 2.5rem; /* Espacio para el icono */
+            border-left: 2px solid #cbd5e1; /* Línea vertical gris */
+        }
+        .timeline-item:last-child {
+            border-left: none;
+            padding-bottom: 0;
+        }
+        .timeline-icon {
+            position: absolute;
+            left: -0.75rem; /* Centrar el icono en la línea */
+            top: 0;
+            width: 1.5rem;
+            height: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background-color: #3b82f6; /* Azul */
+            color: white;
+        }
+        /* Estilos para las barras de competencias */
+        .competency-bar {
+            transition: width 0.5s ease-in-out; /* Animación suave */
+        }
+        /* Estilos para las rutas estratégicas interactivas */
+        .strategic-path {
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease; /* Transiciones suaves */
+        }
+        .strategic-path:hover {
+            transform: translateY(-2px); /* Efecto hover */
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        .strategic-details {
+            display: none; /* Oculto por defecto */
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-out; /* Animación de despliegue */
+        }
+        .strategic-details.visible {
+            display: block;
+            max-height: 500px; /* Altura máxima para la animación */
+        }
+        /* Estilos para el panel adaptable */
+        .dashboard-card {
+            background-color: white;
+            border-radius: 0.75rem; /* Bordes redondeados */
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            padding: 1.5rem;
+        }
+    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="p-4 md:p-8">
+
+    <div class="max-w-7xl mx-auto">
+        <h1 class="text-3xl md:text-4xl font-bold text-center text-gray-800 mb-8">Mapa Visual: Tendencias en la Formación de Ingenieros de Sistemas en la Era de la IA</h1>
+
+        <section class="mb-12">
+            <h2 class="text-2xl font-semibold text-gray-700 mb-6">1. Cronología de Evolución</h2>
+            <div class="relative">
+                <div class="timeline-item">
+                    <div class="timeline-icon"><i class="fas fa-laptop-code"></i></div>
+                    <h3 class="text-lg font-medium text-blue-600 mb-1">Pre-IA / Tradicional</h3>
+                    <p class="text-gray-600">Énfasis en fundamentos de programación, algoritmos, estructuras de datos y codificación manual detallada. Lenguajes como Java, C++ dominantes.</p>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-icon"><i class="fas fa-brain"></i></div>
+                    <h3 class="text-lg font-medium text-blue-600 mb-1">Integración Temprana IA (Actual)</h3>
+                    <p class="text-gray-600">Introducción de IA/ML, ciencia de datos. Comienzan a usarse herramientas de asistencia (autocompletado avanzado). Python gana relevancia. Empieza el cambio hacia estrategia y diseño.</p>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-icon"><i class="fas fa-users-cog"></i></div>
+                    <h3 class="text-lg font-medium text-blue-600 mb-1">Colaboración Humano-IA (Emergente)</h3>
+                    <p class="text-gray-600">Uso extensivo de IA generativa ("vibe coding"). Foco en prompt engineering, validación de código IA, arquitectura, ética y pensamiento crítico. Habilidades blandas cruciales.</p>
+                </div>
+                 <div class="timeline-item">
+                    <div class="timeline-icon"><i class="fas fa-infinity"></i></div>
+                    <h3 class="text-lg font-medium text-blue-600 mb-1">Futuro: Supervisión y Orquestación</h3>
+                    <p class="text-gray-600">Posiblemente, los ingenieros actuarán más como orquestadores de sistemas complejos asistidos por IA, enfocándose en la estrategia global, la innovación y la gobernanza ética.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="mb-12">
+            <h2 class="text-2xl font-semibold text-gray-700 mb-6">2. Estimaciones del Cambio en Competencias</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="dashboard-card">
+                    <h3 class="text-lg font-medium text-gray-800 mb-3">Codificación Manual Detallada</h3>
+                    <p class="text-sm text-gray-500 mb-3">Importancia relativa estimada (pasado vs. futuro)</p>
+                    <div class="w-full bg-gray-200 rounded-full h-4 mb-1">
+                        <div class="competency-bar bg-red-500 h-4 rounded-full" style="width: 85%;" title="Pasado: Muy Alta"></div>
+                    </div>
+                     <div class="w-full bg-gray-200 rounded-full h-4">
+                        <div class="competency-bar bg-yellow-500 h-4 rounded-full" style="width: 30%;" title="Futuro: Moderada/Baja"></div>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-2">Menor énfasis en memorizar sintaxis, mayor en entender conceptos.</p>
+                </div>
+                <div class="dashboard-card">
+                    <h3 class="text-lg font-medium text-gray-800 mb-3">Interacción y Guía de IA (Prompting)</h3>
+                     <p class="text-sm text-gray-500 mb-3">Importancia relativa estimada (pasado vs. futuro)</p>
+                    <div class="w-full bg-gray-200 rounded-full h-4 mb-1">
+                        <div class="competency-bar bg-blue-300 h-4 rounded-full" style="width: 10%;" title="Pasado: Baja"></div>
+                    </div>
+                     <div class="w-full bg-gray-200 rounded-full h-4">
+                        <div class="competency-bar bg-green-500 h-4 rounded-full" style="width: 90%;" title="Futuro: Muy Alta"></div>
+                    </div>
+                     <p class="text-xs text-gray-500 mt-2">Habilidad clave para generar y dirigir la creación de código.</p>
+                </div>
+                <div class="dashboard-card">
+                    <h3 class="text-lg font-medium text-gray-800 mb-3">Diseño de Sistemas y Arquitectura</h3>
+                     <p class="text-sm text-gray-500 mb-3">Importancia relativa estimada (pasado vs. futuro)</p>
+                    <div class="w-full bg-gray-200 rounded-full h-4 mb-1">
+                        <div class="competency-bar bg-blue-500 h-4 rounded-full" style="width: 70%;" title="Pasado: Alta"></div>
+                    </div>
+                     <div class="w-full bg-gray-200 rounded-full h-4">
+                        <div class="competency-bar bg-green-600 h-4 rounded-full" style="width: 95%;" title="Futuro: Crítica"></div>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-2">Fundamental para guiar el desarrollo y asegurar la calidad.</p>
+                </div>
+                <div class="dashboard-card">
+                    <h3 class="text-lg font-medium text-gray-800 mb-3">Evaluación y Depuración (Código IA)</h3>
+                     <p class="text-sm text-gray-500 mb-3">Importancia relativa estimada (pasado vs. futuro)</p>
+                    <div class="w-full bg-gray-200 rounded-full h-4 mb-1">
+                        <div class="competency-bar bg-blue-300 h-4 rounded-full" style="width: 15%;" title="Pasado: Baja/Nula"></div>
+                    </div>
+                     <div class="w-full bg-gray-200 rounded-full h-4">
+                        <div class="competency-bar bg-green-500 h-4 rounded-full" style="width: 80%;" title="Futuro: Alta"></div>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-2">Necesario para validar, optimizar y asegurar el código generado.</p>
+                </div>
+                 <div class="dashboard-card">
+                    <h3 class="text-lg font-medium text-gray-800 mb-3">Pensamiento Crítico y Resolución de Problemas</h3>
+                     <p class="text-sm text-gray-500 mb-3">Importancia relativa estimada (pasado vs. futuro)</p>
+                    <div class="w-full bg-gray-200 rounded-full h-4 mb-1">
+                        <div class="competency-bar bg-blue-600 h-4 rounded-full" style="width: 90%;" title="Pasado: Muy Alta"></div>
+                    </div>
+                     <div class="w-full bg-gray-200 rounded-full h-4">
+                        <div class="competency-bar bg-green-600 h-4 rounded-full" style="width: 98%;" title="Futuro: Crítica"></div>
+                    </div>
+                     <p class="text-xs text-gray-500 mt-2">Sigue siendo esencial para abordar desafíos complejos.</p>
+                </div>
+                 <div class="dashboard-card">
+                    <h3 class="text-lg font-medium text-gray-800 mb-3">Ética en IA</h3>
+                     <p class="text-sm text-gray-500 mb-3">Importancia relativa estimada (pasado vs. futuro)</p>
+                    <div class="w-full bg-gray-200 rounded-full h-4 mb-1">
+                        <div class="competency-bar bg-blue-200 h-4 rounded-full" style="width: 5%;" title="Pasado: Muy Baja"></div>
+                    </div>
+                     <div class="w-full bg-gray-200 rounded-full h-4">
+                        <div class="competency-bar bg-green-500 h-4 rounded-full" style="width: 85%;" title="Futuro: Muy Alta"></div>
+                    </div>
+                     <p class="text-xs text-gray-500 mt-2">Fundamental para el desarrollo responsable de IA.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="mb-12">
+            <h2 class="text-2xl font-semibold text-gray-700 mb-6">3. Opciones Estratégicas para el Sector Educativo (Interactivo)</h2>
+            <p class="text-gray-600 mb-6">Haz clic en cada ruta para explorar posibles acciones:</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="strategic-path dashboard-card" onclick="toggleDetails('details-curriculum')">
+                    <div class="flex items-center mb-3">
+                        <span class="text-2xl mr-3 text-blue-500"><i class="fas fa-book-open"></i></span>
+                        <h3 class="text-lg font-semibold text-gray-800">Reforma Curricular Profunda</h3>
+                    </div>
+                    <p class="text-sm text-gray-600">Adaptar los planes de estudio al nuevo paradigma.</p>
+                    <div id="details-curriculum" class="strategic-details mt-4 text-sm text-gray-700">
+                        <ul class="list-disc list-inside space-y-1">
+                            <li>Integrar módulos de IA generativa y prompt engineering.</li>
+                            <li>Reducir horas de codificación manual, aumentar las de diseño y arquitectura.</li>
+                            <li>Incorporar ética de la IA de forma transversal.</li>
+                            <li>Enfocarse en Cloud Computing y Data Science.</li>
+                            <li>Evaluar mediante proyectos que usen herramientas IA.</li>
+                            <li>Fomentar el aprendizaje basado en problemas complejos.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="strategic-path dashboard-card" onclick="toggleDetails('details-faculty')">
+                    <div class="flex items-center mb-3">
+                        <span class="text-2xl mr-3 text-purple-500"><i class="fas fa-chalkboard-teacher"></i></span>
+                        <h3 class="text-lg font-semibold text-gray-800">Capacitación Docente Continua</h3>
+                    </div>
+                    <p class="text-sm text-gray-600">Preparar a los educadores para enseñar las nuevas competencias.</p>
+                     <div id="details-faculty" class="strategic-details mt-4 text-sm text-gray-700">
+                        <ul class="list-disc list-inside space-y-1">
+                            <li>Talleres sobre últimas herramientas y técnicas de IA.</li>
+                            <li>Formación en metodologías para enseñar pensamiento crítico y diseño.</li>
+                            <li>Creación de comunidades de práctica docente sobre IA en educación.</li>
+                            <li>Incentivos para la actualización y experimentación pedagógica.</li>
+                            <li>Colaboración con expertos de la industria.</li>
+                        </ul>
+                    </div>
+                </div>
+                 <div class="strategic-path dashboard-card" onclick="toggleDetails('details-industry')">
+                    <div class="flex items-center mb-3">
+                        <span class="text-2xl mr-3 text-teal-500"><i class="fas fa-industry"></i></span>
+                        <h3 class="text-lg font-semibold text-gray-800">Alianzas Industria-Academia</h3>
+                    </div>
+                    <p class="text-sm text-gray-600">Asegurar la relevancia de la formación con las necesidades del mercado.</p>
+                     <div id="details-industry" class="strategic-details mt-4 text-sm text-gray-700">
+                        <ul class="list-disc list-inside space-y-1">
+                            <li>Programas de mentoría y prácticas profesionales enfocadas en IA.</li>
+                            <li>Proyectos conjuntos de investigación y desarrollo.</li>
+                            <li>Charlas y talleres impartidos por profesionales del sector.</li>
+                            <li>Feedback continuo de la industria sobre el currículo.</li>
+                            <li>Acceso a plataformas y herramientas IA usadas en la industria.</li>
+                        </ul>
+                    </div>
+                </div>
+                 <div class="strategic-path dashboard-card" onclick="toggleDetails('details-softskills')">
+                    <div class="flex items-center mb-3">
+                        <span class="text-2xl mr-3 text-orange-500"><i class="fas fa-comments"></i></span>
+                        <h3 class="text-lg font-semibold text-gray-800">Énfasis en Habilidades Blandas</h3>
+                    </div>
+                    <p class="text-sm text-gray-600">Desarrollar competencias interpersonales y cognitivas clave.</p>
+                     <div id="details-softskills" class="strategic-details mt-4 text-sm text-gray-700">
+                        <ul class="list-disc list-inside space-y-1">
+                            <li>Integrar trabajo en equipo y comunicación en proyectos.</li>
+                            <li>Fomentar la creatividad en la resolución de problemas.</li>
+                            <li>Desarrollar pensamiento crítico a través de estudios de caso.</li>
+                            <li>Promover la adaptabilidad y el aprendizaje autónomo.</li>
+                            <li>Incluir módulos sobre liderazgo y gestión de proyectos.</li>
+                        </ul>
+                    </div>
+                </div>
+                 <div class="strategic-path dashboard-card" onclick="toggleDetails('details-infra')">
+                    <div class="flex items-center mb-3">
+                        <span class="text-2xl mr-3 text-indigo-500"><i class="fas fa-server"></i></span>
+                        <h3 class="text-lg font-semibold text-gray-800">Infraestructura y Herramientas</h3>
+                    </div>
+                    <p class="text-sm text-gray-600">Proveer los recursos tecnológicos necesarios.</p>
+                     <div id="details-infra" class="strategic-details mt-4 text-sm text-gray-700">
+                        <ul class="list-disc list-inside space-y-1">
+                            <li>Acceso a plataformas Cloud (AWS, Azure, GCP).</li>
+                            <li>Licencias de software y herramientas de desarrollo asistido por IA.</li>
+                            <li>Laboratorios con capacidad de cómputo para IA/ML.</li>
+                            <li>Entornos virtuales para experimentación segura.</li>
+                            <li>Actualización constante del stack tecnológico disponible.</li>
+                        </ul>
+                    </div>
+                </div>
+                 <div class="strategic-path dashboard-card" onclick="toggleDetails('details-learning')">
+                    <div class="flex items-center mb-3">
+                        <span class="text-2xl mr-3 text-lime-500"><i class="fas fa-sync-alt"></i></span>
+                        <h3 class="text-lg font-semibold text-gray-800">Cultura de Aprendizaje Continuo</h3>
+                    </div>
+                    <p class="text-sm text-gray-600">Inculcar la necesidad de actualización constante.</p>
+                     <div id="details-learning" class="strategic-details mt-4 text-sm text-gray-700">
+                        <ul class="list-disc list-inside space-y-1">
+                            <li>Promover la participación en cursos online, MOOCs y certificaciones.</li>
+                            <li>Fomentar la asistencia a conferencias y webinars.</li>
+                            <li>Integrar la lectura de artículos científicos y blogs técnicos.</li>
+                            <li>Crear clubes de estudio y grupos de interés en IA.</li>
+                            <li>Evaluar la capacidad de aprender nuevas tecnologías.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2 class="text-2xl font-semibold text-gray-700 mb-6">4. Panel Adaptable (Conceptual)</h2>
+            <div class="dashboard-card bg-gradient-to-r from-blue-50 to-indigo-100">
+                <h3 class="text-xl font-semibold text-gray-800 mb-4">Estado Actual y Próximos Pasos</h3>
+                <p class="text-gray-600 mb-4">Este panel está diseñado para ser actualizado con nuevos datos sobre tendencias, herramientas emergentes y demandas del mercado laboral. Actualmente muestra información estática.</p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+                    <div class="bg-white p-4 rounded-lg shadow">
+                        <p class="text-sm font-medium text-gray-500">Demanda de "Prompt Engineers"</p>
+                        <p class="text-2xl font-bold text-green-600">+45% <span class="text-xs">(último año)</span></p>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg shadow">
+                        <p class="text-sm font-medium text-gray-500">Adopción de Copilot/GenAI en Empresas</p>
+                        <p class="text-2xl font-bold text-blue-600">60% <span class="text-xs">(proyectado)</span></p>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg shadow">
+                        <p class="text-sm font-medium text-gray-500">Nuevas Herramientas IA Relevantes</p>
+                        <p class="text-lg font-semibold text-purple-600">Modelo X, Framework Y</p>
+                    </div>
+                </div>
+                <p class="text-xs text-gray-500 mt-4 text-center">*(Datos simulados. En una implementación real, se conectarían a fuentes de datos actualizadas)*</p>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Función para mostrar/ocultar los detalles de las rutas estratégicas
+        function toggleDetails(elementId) {
+            const detailsElement = document.getElementById(elementId);
+            // Cierra todos los demás detalles abiertos
+            document.querySelectorAll('.strategic-details.visible').forEach(openDetail => {
+                if (openDetail.id !== elementId) {
+                    openDetail.classList.remove('visible');
+                    // Cambia el icono si es necesario (ejemplo con FontAwesome)
+                     const icon = openDetail.previousElementSibling.querySelector('.fa-chevron-down, .fa-chevron-up');
+                     if (icon) {
+                        // icon.classList.remove('fa-chevron-up');
+                        // icon.classList.add('fa-chevron-down');
+                     }
+                }
+            });
+
+            // Abre o cierra el detalle actual
+            detailsElement.classList.toggle('visible');
+
+             // Cambia el icono del elemento actual (si existe)
+             const currentIcon = detailsElement.previousElementSibling.querySelector('.fa-chevron-down, .fa-chevron-up');
+             if (currentIcon) {
+                // if (detailsElement.classList.contains('visible')) {
+                //     currentIcon.classList.remove('fa-chevron-down');
+                //     currentIcon.classList.add('fa-chevron-up');
+                // } else {
+                //     currentIcon.classList.remove('fa-chevron-up');
+                //     currentIcon.classList.add('fa-chevron-down');
+                // }
+             }
+        }
+
+        // Opcional: Añadir iconos de despliegue a las tarjetas estratégicas
+        document.querySelectorAll('.strategic-path').forEach(path => {
+            // const titleElement = path.querySelector('h3');
+            // if (titleElement) {
+            //     titleElement.innerHTML += ' <i class="fas fa-chevron-down text-xs ml-2"></i>';
+            // }
+        });
+    </script>
+
+</body>
+</html>
