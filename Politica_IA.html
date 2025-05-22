@@ -8,7 +8,267 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body {
-…        // window.onload = () => {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8; /* Un fondo suave para la página */
+        }
+        .policy-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease-in-out;
+        }
+        .policy-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        .policy-card-header {
+            cursor: pointer;
+            padding: 20px;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .policy-card-header h3 {
+            font-size: 1.25rem; /* 20px */
+            font-weight: 600;
+            color: #1e3a8a; /* Azul oscuro para los títulos */
+        }
+        .policy-card-content {
+            padding: 20px;
+            display: none; /* Oculto por defecto */
+            border-top: 1px solid #e5e7eb;
+        }
+        .policy-card-content ul {
+            list-style-type: disc;
+            margin-left: 20px;
+        }
+        .policy-card-content li {
+            margin-bottom: 8px;
+        }
+        .benefits-panel {
+            background-color: #e0f2fe; /* Azul claro para el panel de beneficios */
+            border: 2px solid #7dd3fc; /* Borde azul más brillante */
+        }
+        .benefits-panel h3 {
+            color: #0c4a6e; /* Azul más oscuro para el título de beneficios */
+        }
+        .arrow {
+            transition: transform 0.3s ease;
+            width: 20px;
+            height: 20px;
+        }
+        .arrow.expanded {
+            transform: rotate(90deg);
+        }
+        .tag {
+            display: inline-block;
+            background-color: #dbeafe;
+            color: #1e40af;
+            padding: 4px 12px;
+            border-radius: 16px;
+            font-size: 0.875rem;
+            margin-right: 8px;
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+    <div class="container mx-auto max-w-6xl">
+        <header class="mb-10 text-center">
+            <h1 class="text-4xl md:text-5xl font-bold text-blue-700 mb-4">Política de Uso de la Inteligencia Artificial (IA) en Open</h1>
+            <p class="text-lg text-gray-700 mb-2"><strong>Evento Asociado:</strong> IA en Nuestra Empresa: Conceptos Clave y Desmitificación - Sentando las bases para el futuro de nuestro software y operación.</p>
+            <div class="bg-blue-100 border-l-4 border-blue-500 text-blue-700 p-6 rounded-lg shadow-md">
+                <h2 class="text-2xl font-semibold mb-3">Resumen del Propósito de la Política</h2>
+                <p class="text-base md:text-lg">
+                    Esta política establece las directrices y responsabilidades para el uso ético, seguro y eficiente de la IA en Open.
+                    Su objetivo principal es <strong>proteger los intereses de la empresa, su propiedad intelectual y su información confidencial</strong>,
+                    al tiempo que se fomenta la innovación y se asegura un uso responsable de las herramientas de IA para impulsar nuestra misión de:
+                    <em>"Empoderar a nuestros clientes con creatividad, tecnología e innovación, impulsando el éxito de su negocio."</em>
+                </p>
+            </div>
+        </header>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="md:col-span-2 space-y-6">
+                <div class="policy-card" id="seccion1">
+                    <div class="policy-card-header" onclick="toggleSection('content1', 'arrow1')">
+                        <h3>1. Propósito y Alcance</h3>
+                        <svg id="arrow1" class="arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                    </div>
+                    <div class="policy-card-content" id="content1">
+                        <h4 class="font-semibold text-lg mb-2 text-gray-800">1.1 Propósito</h4>
+                        <p class="mb-4 text-gray-700">Establecer directrices y responsabilidades para el uso ético, seguro y eficiente de la IA en Open. Proteger intereses de la empresa, propiedad intelectual e información confidencial. Fomentar innovación y uso responsable de IA para la misión de la empresa.</p>
+                        <h4 class="font-semibold text-lg mb-2 text-gray-800">1.2 Alcance</h4>
+                        <p class="text-gray-700">Aplica a todos los empleados, contratistas y terceros que utilizan, desarrollan o interactúan con sistemas de IA en nombre de Open.</p>
+                    </div>
+                </div>
+
+                <div class="policy-card" id="seccion2">
+                    <div class="policy-card-header" onclick="toggleSection('content2', 'arrow2')">
+                        <h3>2. Principios Rectores del Uso de la IA</h3>
+                        <svg id="arrow2" class="arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                    </div>
+                    <div class="policy-card-content" id="content2">
+                        <p class="mb-3 text-gray-700">Fundamentada en los Principios de IA de Open y valores fundamentales: Integridad, Compromiso, Pasión, Valentía y Humildad.</p>
+                        <ul class="text-gray-700">
+                            <li><strong>Innovación con IA:</strong> Impulsar innovación y experimentación.</li>
+                            <li><strong>Agilidad y Adaptación:</strong> Responder ágilmente a cambios del mercado.</li>
+                            <li><strong>Prudencia y Responsabilidad:</strong> Uso ético y responsable.</li>
+                            <li><strong>Comunicación Transparente:</strong> Información clara sobre soluciones IA.</li>
+                            <li><strong>Integridad y Confiabilidad:</strong> Soluciones seguras y transparentes.</li>
+                            <li><strong>Tenacidad y Perseverancia:</strong> Enfocados en objetivos a largo plazo.</li>
+                            <li><strong>Proactividad y Anticipación:</strong> Anticipar necesidades de clientes.</li>
+                            <li><strong>Compromiso con el Éxito:</strong> Fortalecer colaboración y crecimiento.</li>
+                            <li><strong>Inteligencia y Eficiencia:</strong> Mejorar toma de decisiones y optimizar procesos.</li>
+                            <li><strong>Empatía y Escucha Activa:</strong> Comprender y responder a necesidades.</li>
+                            <li><strong>Protección de la Empresa:</strong> No comprometer seguridad ni confidencialidad.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="policy-card" id="seccion3">
+                    <div class="policy-card-header" onclick="toggleSection('content3', 'arrow3')">
+                        <h3>3. Protección de la Información y PI</h3>
+                        <svg id="arrow3" class="arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                    </div>
+                    <div class="policy-card-content" id="content3">
+                        <h4 class="font-semibold text-lg mb-2 text-gray-800">3.1 Información Confidencial y Datos Sensibles</h4>
+                        <ul class="text-gray-700">
+                            <li><strong>Prohibición de Entrada Directa:</strong> No introducir información confidencial en IA de terceros no aprobadas (especialmente LLMs públicos).</li>
+                            <li><strong>Datos de Clientes y Personales:</strong> Manejar PII según políticas de privacidad; anonimizar/seudonimizar para uso en IA bajo supervisión.</li>
+                        </ul>
+                        <h4 class="font-semibold text-lg mt-4 mb-2 text-gray-800">3.2 Propiedad Intelectual de Open</h4>
+                        <ul class="text-gray-700">
+                            <li><strong>Resguardo de Activos:</strong> Output de IA usando PI de Open es propiedad de Open. Precaución para no cederla.</li>
+                            <li><strong>Claridad en la Autoría:</strong> Revisión humana y validación de contenido/código asistido por IA. Cumplir estándares de Open.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="policy-card" id="seccion4">
+                    <div class="policy-card-header" onclick="toggleSection('content4', 'arrow4')">
+                        <h3>4. Uso Responsable y Ético de la IA</h3>
+                        <svg id="arrow4" class="arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                    </div>
+                    <div class="policy-card-content" id="content4">
+                        <h4 class="font-semibold text-lg mb-2 text-gray-800">4.1 Supervisión Humana y Juicio Crítico</h4>
+                        <ul class="text-gray-700">
+                            <li><strong>Decisión Final Humana:</strong> IA es asistente, decisión final es humana. No reemplaza pensamiento crítico.</li>
+                            <li><strong>Verificación de Resultados:</strong> Outputs de IA deben ser revisados y validados.</li>
+                        </ul>
+                        <h4 class="font-semibold text-lg mt-4 mb-2 text-gray-800">4.2 Sesgos y Equidad</h4>
+                        <ul class="text-gray-700">
+                            <li><strong>Conciencia del Sesgo:</strong> Modelos IA pueden heredar sesgos.</li>
+                            <li><strong>Fomento de la Equidad:</strong> Mitigar riesgo de sesgos, buscar equidad.</li>
+                        </ul>
+                        <h4 class="font-semibold text-lg mt-4 mb-2 text-gray-800">4.3 Transparencia y Explicabilidad</h4>
+                        <ul class="text-gray-700">
+                            <li><strong>Entendimiento del Proceso:</strong> Fomentar comprensión de cómo IA llega a conclusiones.</li>
+                            <li><strong>Comunicación Clara:</strong> Transparencia sobre rol de IA en resultados.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="policy-card" id="seccion5">
+                    <div class="policy-card-header" onclick="toggleSection('content5', 'arrow5')">
+                        <h3>5. Herramientas y Plataformas de IA Aprobadas</h3>
+                        <svg id="arrow5" class="arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                    </div>
+                    <div class="policy-card-content" id="content5">
+                        <h4 class="font-semibold text-lg mb-2 text-gray-800">5.1 Herramientas Aprobadas y su Propósito</h4>
+                        <p class="mb-3 text-gray-700">Open mantendrá lista actualizada de herramientas IA aprobadas (evaluadas en seguridad, privacidad, alineación). Uso limitado a propósitos aprobados.</p>
+                        <h4 class="font-semibold text-lg mt-4 mb-2 text-gray-800">5.2 Uso de Herramientas de IA Generativa de Acceso Público</h4>
+                        <ul class="text-gray-700">
+                            <li><strong>Precaución Extrema:</strong> Permitido para exploración, aprendizaje, tareas no confidenciales.</li>
+                            <li><strong>Restricciones de Datos:</strong> NO introducir información confidencial, código propietario, PII. Asumir que datos ingresados pueden ser usados para entrenamiento del modelo.</li>
+                            <li><strong>Revisión Obligatoria:</strong> Contenido/código generado debe ser revisado exhaustivamente.</li>
+                        </ul>
+                        <h4 class="font-semibold text-lg mt-4 mb-2 text-gray-800">5.3 Proceso de Solicitud de Nuevas Herramientas</h4>
+                        <p class="text-gray-700">Solicitud formal a Dirección de Tecnología para evaluación de nuevas herramientas (seguridad, privacidad, conformidad).</p>
+                    </div>
+                </div>
+
+                <div class="policy-card" id="seccion6">
+                    <div class="policy-card-header" onclick="toggleSection('content6', 'arrow6')">
+                        <h3>6. Capacitación y Concientización</h3>
+                        <svg id="arrow6" class="arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                    </div>
+                    <div class="policy-card-content" id="content6">
+                        <h4 class="font-semibold text-lg mb-2 text-gray-800">6.1 Formación Obligatoria</h4>
+                        <p class="mb-3 text-gray-700">Empleados que usen IA deben completar formación sobre política, principios, riesgos, mejores prácticas. Actualización periódica.</p>
+                        <h4 class="font-semibold text-lg mt-4 mb-2 text-gray-800">6.2 Recursos y Soporte</h4>
+                        <p class="text-gray-700">Canales para dudas, reportar incidentes, proponer mejoras (Dirección de Tecnología). Guías prácticas y FAQ disponibles.</p>
+                    </div>
+                </div>
+                
+                <div class="policy-card" id="seccion7">
+                    <div class="policy-card-header" onclick="toggleSection('content7', 'arrow7')">
+                        <h3>7. Consecuencias del Incumplimiento</h3>
+                        <svg id="arrow7" class="arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                    </div>
+                    <div class="policy-card-content" id="content7">
+                        <h4 class="font-semibold text-lg mb-2 text-gray-800">7.1 Violaciones a la Política</h4>
+                        <p class="mb-3 text-gray-700">Incumplimiento (especialmente protección de info confidencial, PI, datos sensibles) es violación grave.</p>
+                        <h4 class="font-semibold text-lg mt-4 mb-2 text-gray-800">7.2 Acciones Disciplinarias</h4>
+                        <p class="text-gray-700">Desde capacitación adicional hasta terminación de empleo, según políticas RRHH y legislación.</p>
+                    </div>
+                </div>
+
+                <div class="policy-card" id="seccion8">
+                    <div class="policy-card-header" onclick="toggleSection('content8', 'arrow8')">
+                        <h3>8. Revisión y Actualización de la Política</h3>
+                        <svg id="arrow8" class="arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                    </div>
+                    <div class="policy-card-content" id="content8">
+                        <h4 class="font-semibold text-lg mb-2 text-gray-800">8.1 Revisión Periódica</h4>
+                        <p class="mb-3 text-gray-700">Revisión y actualización anual o ante cambios significativos (tecnología IA, regulaciones, necesidades internas).</p>
+                        <h4 class="font-semibold text-lg mt-4 mb-2 text-gray-800">8.2 Responsabilidad de Actualización</h4>
+                        <p class="text-gray-700">Departamento de Tecnología liderará revisión, en consulta con áreas relevantes.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="md:col-span-1">
+                <div class="policy-card benefits-panel p-6 sticky top-8">
+                    <h3 class="text-2xl font-bold mb-4">Beneficios y Aspectos Destacados</h3>
+                    <div class="space-y-3 text-gray-800">
+                        <p><span class="tag">Protección</span> Asegura la información confidencial y la propiedad intelectual de Open.</p>
+                        <p><span class="tag">Innovación</span> Fomenta el uso responsable de la IA para impulsar la creatividad y el crecimiento.</p>
+                        <p><span class="tag">Ética</span> Guía el desarrollo y uso de la IA con integridad y responsabilidad.</p>
+                        <p><span class="tag">Claridad</span> Establece directrices claras sobre herramientas aprobadas y manejo de datos.</p>
+                        <p><span class="tag">Supervisión</span> Enfatiza la importancia del juicio humano y la verificación de resultados.</p>
+                        <p><span class="tag">Seguridad</span> Prohíbe estrictamente el ingreso de datos sensibles en IA públicas no aprobadas.</p>
+                        <p><span class="tag">Responsabilidad</span> Define consecuencias claras para el incumplimiento de la política.</p>
+                        <p><span class="tag">Formación</span> Compromiso con la capacitación continua de los empleados.</p>
+                        <p><span class="tag">Misión</span> Alinea el uso de la IA con la misión de Open de empoderar a los clientes.</p>
+                    </div>
+                    <hr class="my-6 border-blue-300">
+                    <div class="text-sm text-gray-700">
+                        <p class="mb-1"><strong>Fecha de Emisión:</strong> [Fecha Actual]</p>
+                        <p><strong>Aprobado por:</strong> [Nombre del Liderazgo/Comité de Dirección de Open]</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Función para mostrar/ocultar el contenido de las secciones
+        function toggleSection(contentId, arrowId) {
+            const content = document.getElementById(contentId);
+            const arrow = document.getElementById(arrowId);
+            if (content.style.display === 'none' || content.style.display === '') {
+                content.style.display = 'block';
+                arrow.classList.add('expanded');
+            } else {
+                content.style.display = 'none';
+                arrow.classList.remove('expanded');
+            }
+        }
+
+        // Opcional: Abrir la primera sección por defecto
+        // window.onload = () => {
         //     toggleSection('content1', 'arrow1');
         // };
     </script>
