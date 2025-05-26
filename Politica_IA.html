@@ -42,9 +42,13 @@
         .policy-card-content ul {
             list-style-type: disc;
             margin-left: 20px;
+            padding-left: 5px; /* Added padding for better alignment of bullet points */
         }
         .policy-card-content li {
             margin-bottom: 8px;
+        }
+        .policy-card-content p { /* Added margin for paragraphs within content */
+            margin-bottom: 12px;
         }
         .benefits-panel {
             background-color: #e0f2fe; /* Azul claro para el panel de beneficios */
@@ -79,7 +83,7 @@
             color: #076295;
         }
         .summary-box-title {
-            color: #076295; /* Mantenemos el color del título del resumen, ya que el fondo del box es oscuro */
+             color: #FFFFFF; /* El título del resumen ahora será blanco para contrastar con el nuevo fondo */
         }
         .summary-box {
             background-color: #076295;
@@ -87,17 +91,12 @@
             border-left-width: 4px;
             border-color: #FFFFFF; /* Borde izquierdo blanco para contraste */
         }
-        /* Ajuste para el título dentro del summary-box si es necesario, aunque el .summary-box-title ya lo maneja */
-        .summary-box .summary-box-title {
-             color: #FFFFFF; /* El título del resumen ahora será blanco para contrastar con el nuevo fondo */
-        }
     </style>
 </head>
 <body class="p-4 md:p-8">
     <div class="container mx-auto max-w-6xl">
         <header class="mb-10 text-center">
             <h1 class="text-4xl md:text-5xl font-bold main-page-title mb-4">Política de Uso de la Inteligencia Artificial (IA) en Open</h1>
-            <p class="text-lg text-gray-700 mb-2"><strong>Evento Asociado:</strong> IA en Nuestra Empresa: Conceptos Clave y Desmitificación - Sentando las bases para el futuro de nuestro software y operación.</p>
             <div class="summary-box p-6 rounded-lg shadow-md">
                 <h2 class="text-2xl font-semibold mb-3 summary-box-title">Resumen del Propósito de la Política</h2>
                 <p class="text-base md:text-lg">
@@ -118,50 +117,51 @@
                     </div>
                     <div class="policy-card-content" id="content1">
                         <h4 class="font-semibold text-lg mb-2 text-gray-800">1.1 Propósito</h4>
-                        <p class="mb-4 text-gray-700">Establecer directrices y responsabilidades para el uso ético, seguro y eficiente de la IA en Open. Proteger intereses de la empresa, propiedad intelectual e información confidencial. Fomentar innovación y uso responsable de IA para la misión de la empresa.</p>
+                        <p class="text-gray-700">Esta política establece las directrices y responsabilidades para el uso ético, seguro y eficiente de la Inteligencia Artificial (IA) en Open. Su objetivo principal es <strong>proteger los intereses de la empresa, su propiedad intelectual y su información confidencial</strong>, al tiempo que se fomenta la innovación y se asegura un uso responsable de las herramientas de IA para impulsar nuestra misión de "Empoderar a nuestros clientes con creatividad, tecnología e innovación, impulsando el éxito de su negocio."</p>
                         <h4 class="font-semibold text-lg mb-2 text-gray-800">1.2 Alcance</h4>
-                        <p class="text-gray-700">Aplica a todos los empleados, contratistas y terceros que utilizan, desarrollan o interactúan con sistemas de IA en nombre de Open.</p>
+                        <p class="text-gray-700">Esta política aplica a todos los empleados, contratistas y terceros que utilizan, desarrollan o interactúan con sistemas de IA en nombre de Open, independientemente de su rol o departamento.</p>
                     </div>
                 </div>
 
                 <div class="policy-card" id="seccion2">
                     <div class="policy-card-header" onclick="toggleSection('content2', 'arrow2')">
-                        <h3>2. Principios Rectores del Uso de la IA</h3>
+                        <h3>2. Principios Rectores del Uso de la IA en Open</h3>
                         <svg id="arrow2" class="arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
                     </div>
                     <div class="policy-card-content" id="content2">
-                        <p class="mb-3 text-gray-700">Fundamentada en los Principios de IA de Open y valores fundamentales: Integridad, Compromiso, Pasión, Valentía y Humildad.</p>
+                        <p class="text-gray-700">Nuestra política se fundamenta en los Principios de IA de Open, así como en nuestros valores fundamentales de Integridad, Compromiso, Pasión, Valentía y Humildad. Estos principios guiarán nuestras decisiones y acciones al integrar la IA en nuestras operaciones y productos:</p>
                         <ul class="text-gray-700">
-                            <li><strong>Innovación con IA:</strong> Impulsar innovación y experimentación.</li>
-                            <li><strong>Agilidad y Adaptación:</strong> Responder ágilmente a cambios del mercado.</li>
-                            <li><strong>Prudencia y Responsabilidad:</strong> Uso ético y responsable.</li>
-                            <li><strong>Comunicación Transparente:</strong> Información clara sobre soluciones IA.</li>
-                            <li><strong>Integridad y Confiabilidad:</strong> Soluciones seguras y transparentes.</li>
-                            <li><strong>Tenacidad y Perseverancia:</strong> Enfocados en objetivos a largo plazo.</li>
-                            <li><strong>Proactividad y Anticipación:</strong> Anticipar necesidades de clientes.</li>
-                            <li><strong>Compromiso con el Éxito:</strong> Fortalecer colaboración y crecimiento.</li>
-                            <li><strong>Inteligencia y Eficiencia:</strong> Mejorar toma de decisiones y optimizar procesos.</li>
-                            <li><strong>Empatía y Escucha Activa:</strong> Comprender y responder a necesidades.</li>
-                            <li><strong>Protección de la Empresa:</strong> No comprometer seguridad ni confidencialidad.</li>
+                            <li><strong>Innovación con IA:</strong> Utilizamos la IA para impulsar la innovación, la experimentación y la búsqueda de nuevas soluciones que permitan a nuestros clientes y a nuestra empresa crecer y evolucionar continuamente.</li>
+                            <li><strong>Agilidad y Adaptación:</strong> Aprovechamos la IA para responder con agilidad a las necesidades cambiantes del mercado y de nuestros clientes, adaptando nuestras soluciones y servicios para mantenernos a la vanguardia.</li>
+                            <li><strong>Prudencia y Responsabilidad:</strong> Desarrollamos y utilizamos la IA con prudencia, responsabilidad y ética, considerando el impacto de nuestras soluciones en todos los interesados y asegurando el cumplimiento de las normas.</li>
+                            <li><strong>Comunicación Transparente:</strong> Facilitamos una comunicación transparente y efectiva con nuestros clientes y <em>stakeholders</em>, utilizando la IA para compartir información clara y precisa sobre nuestras soluciones y su impacto.</li>
+                            <li><strong>Integridad y Confiabilidad:</strong> Construimos soluciones de IA con integridad, confiabilidad y seguridad, garantizando la transparencia en nuestros procesos y la protección de la información.</li>
+                            <li><strong>Tenacidad y Perseverancia:</strong> Nos apoyamos en la IA para mantenernos enfocados en nuestros objetivos a largo plazo, superando los desafíos con tenacidad y perseverancia para alcanzar el éxito de nuestros clientes y de nuestra empresa.</li>
+                            <li><strong>Proactividad y Anticipación:</strong> Utilizamos la IA para anticipar las necesidades de nuestros clientes y del mercado, ofreciendo soluciones proactivas que les permitan alcanzar sus objetivos de manera eficiente.</li>
+                            <li><strong>Compromiso con el Éxito:</strong> Nos comprometemos con el éxito de nuestros clientes y con el desarrollo de nuestro equipo, utilizando la IA para fortalecer la colaboración, el crecimiento profesional y la creación de un entorno de trabajo positivo.</li>
+                            <li><strong>Inteligencia y Eficiencia:</strong> Aprovechamos la IA para mejorar la toma de decisiones, optimizar los procesos y aumentar la eficiencia, tanto para nuestra empresa como para nuestros clientes.</li>
+                            <li><strong>Empatía y Escucha Activa:</strong> Utilizamos la IA para comprender y responder a las necesidades de nuestros clientes con empatía, recopilando y analizando información valiosa a través de la escucha activa para ofrecer soluciones personalizadas.</li>
+                            <li><strong>Protección de la Empresa:</strong> Garantizar que el uso de la IA no comprometa la seguridad, la confidencialidad, la integridad ni la disponibilidad de los activos de información de Open, ni habilite a terceros a causar daño a la empresa.</li>
                         </ul>
                     </div>
                 </div>
 
                 <div class="policy-card" id="seccion3">
                     <div class="policy-card-header" onclick="toggleSection('content3', 'arrow3')">
-                        <h3>3. Protección de la Información y PI</h3>
+                        <h3>3. Protección de la Información y Propiedad Intelectual</h3>
                         <svg id="arrow3" class="arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
                     </div>
                     <div class="policy-card-content" id="content3">
+                        <p class="text-gray-700">Este pilar es crucial para <strong>cuidar a nuestra empresa</strong> y asegurar que el uso de la IA no habilite a externos para "hacerle daño".</p>
                         <h4 class="font-semibold text-lg mb-2 text-gray-800">3.1 Información Confidencial y Datos Sensibles</h4>
                         <ul class="text-gray-700">
-                            <li><strong>Prohibición de Entrada Directa:</strong> No introducir información confidencial en IA de terceros no aprobadas (especialmente LLMs públicos).</li>
-                            <li><strong>Datos de Clientes y Personales:</strong> Manejar PII según políticas de privacidad; anonimizar/seudonimizar para uso en IA bajo supervisión.</li>
+                            <li><strong>Prohibición de Entrada Directa:</strong> Queda estrictamente prohibido introducir información confidencial de la empresa (incluyendo, pero no limitado a, secretos comerciales, estrategias de negocio, datos financieros no públicos, propiedad intelectual y código fuente propietario de Open) en herramientas de IA de terceros no aprobadas, especialmente aquellas de acceso público o modelos de lenguaje grandes (LLMs) que puedan utilizar los datos de entrada para su entrenamiento o mejora.</li>
+                            <li><strong>Datos de Clientes y Personales:</strong> La información personal identificable (PII) de clientes, empleados o cualquier dato sensible debe ser manejada de acuerdo con las políticas de privacidad y protección de datos existentes en Open. En caso de utilizarse en sistemas de IA, deberá ser anonimizada o seudonimizada de manera efectiva, siguiendo los protocolos de seguridad establecidos y siempre bajo la supervisión y aprobación del área competente.</li>
                         </ul>
                         <h4 class="font-semibold text-lg mt-4 mb-2 text-gray-800">3.2 Propiedad Intelectual de Open</h4>
                         <ul class="text-gray-700">
-                            <li><strong>Resguardo de Activos:</strong> Output de IA usando PI de Open es propiedad de Open. Precaución para no cederla.</li>
-                            <li><strong>Claridad en la Autoría:</strong> Revisión humana y validación de contenido/código asistido por IA. Cumplir estándares de Open.</li>
+                            <li><strong>Resguardo de Activos:</strong> Todo el <em>output</em> generado por herramientas de IA que utilice <em>input</em> derivado de la propiedad intelectual de Open (código, diseños, datos internos) se considera propiedad de Open. Se deben tomar las precauciones necesarias para asegurar que nuestras creaciones no sean inadvertidamente cedidas o utilizadas para entrenar modelos de IA de terceros que puedan comprometer nuestra ventaja competitiva o propiedad.</li>
+                            <li><strong>Claridad en la Autoría:</strong> Cuando se utilicen herramientas de IA para asistir en la creación de contenido o código, se debe tener claridad sobre las implicaciones de licencia y autoría de la herramienta. Es responsabilidad del usuario asegurar que el resultado final sea revisado y validado por un ser humano, y que cumple con los estándares de calidad y ética de Open.</li>
                         </ul>
                     </div>
                 </div>
@@ -172,20 +172,21 @@
                         <svg id="arrow4" class="arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
                     </div>
                     <div class="policy-card-content" id="content4">
+                        <p class="text-gray-700">El uso de la IA en Open debe reflejar nuestros valores de Integridad, Compromiso, Pasión, Valentía y Humildad, y adherirse a nuestros principios de Prudencia y Responsabilidad, así como a la Integridad y Confiabilidad.</p>
                         <h4 class="font-semibold text-lg mb-2 text-gray-800">4.1 Supervisión Humana y Juicio Crítico</h4>
                         <ul class="text-gray-700">
-                            <li><strong>Decisión Final Humana:</strong> IA es asistente, decisión final es humana. No reemplaza pensamiento crítico.</li>
-                            <li><strong>Verificación de Resultados:</strong> Outputs de IA deben ser revisados y validados.</li>
+                            <li><strong>Decisión Final Humana:</strong> Las herramientas de IA son asistentes. La decisión final, especialmente en asuntos críticos de negocio, operativos o estratégicos, siempre debe recaer en un ser humano con el juicio y la experiencia necesarios. La IA no debe reemplazar el pensamiento crítico ni la responsabilidad individual.</li>
+                            <li><strong>Verificación de Resultados:</strong> Los <em>outputs</em> generados por IA deben ser revisados, verificados y validados por el usuario humano para asegurar su exactitud, relevancia y adecuación antes de su uso o implementación.</li>
                         </ul>
                         <h4 class="font-semibold text-lg mt-4 mb-2 text-gray-800">4.2 Sesgos y Equidad</h4>
                         <ul class="text-gray-700">
-                            <li><strong>Conciencia del Sesgo:</strong> Modelos IA pueden heredar sesgos.</li>
-                            <li><strong>Fomento de la Equidad:</strong> Mitigar riesgo de sesgos, buscar equidad.</li>
+                            <li><strong>Conciencia del Sesgo:</strong> Los usuarios deben ser conscientes de que los modelos de IA pueden heredar sesgos de los datos con los que fueron entrenados, lo que podría llevar a resultados injustos o discriminatorios.</li>
+                            <li><strong>Fomento de la Equidad:</strong> Es nuestra responsabilidad mitigar activamente el riesgo de sesgos en el desarrollo y uso de soluciones de IA, buscando la equidad y la no discriminación en sus aplicaciones.</li>
                         </ul>
                         <h4 class="font-semibold text-lg mt-4 mb-2 text-gray-800">4.3 Transparencia y Explicabilidad</h4>
                         <ul class="text-gray-700">
-                            <li><strong>Entendimiento del Proceso:</strong> Fomentar comprensión de cómo IA llega a conclusiones.</li>
-                            <li><strong>Comunicación Clara:</strong> Transparencia sobre rol de IA en resultados.</li>
+                            <li><strong>Entendimiento del Proceso:</strong> Se fomentará la comprensión de cómo las herramientas de IA llegan a sus conclusiones, siempre que sea posible. Buscamos modelos y procesos de IA que puedan ser explicados y comprendidos por los usuarios.</li>
+                            <li><strong>Comunicación Clara:</strong> Al presentar soluciones o resultados basados en IA a clientes o <em>stakeholders</em>, se debe comunicar de forma transparente el rol de la IA en la generación de esos resultados.</li>
                         </ul>
                     </div>
                 </div>
@@ -196,16 +197,20 @@
                         <svg id="arrow5" class="arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
                     </div>
                     <div class="policy-card-content" id="content5">
+                        <p class="text-gray-700">Para asegurar la seguridad y el cumplimiento de nuestras políticas, es fundamental definir qué herramientas de IA están permitidas.</p>
                         <h4 class="font-semibold text-lg mb-2 text-gray-800">5.1 Herramientas Aprobadas y su Propósito</h4>
-                        <p class="mb-3 text-gray-700">Open mantendrá lista actualizada de herramientas IA aprobadas (evaluadas en seguridad, privacidad, alineación). Uso limitado a propósitos aprobados.</p>
-                        <h4 class="font-semibold text-lg mt-4 mb-2 text-gray-800">5.2 Uso de Herramientas de IA Generativa de Acceso Público</h4>
                         <ul class="text-gray-700">
-                            <li><strong>Precaución Extrema:</strong> Permitido para exploración, aprendizaje, tareas no confidenciales.</li>
-                            <li><strong>Restricciones de Datos:</strong> NO introducir información confidencial, código propietario, PII. Asumir que datos ingresados pueden ser usados para entrenamiento del modelo.</li>
-                            <li><strong>Revisión Obligatoria:</strong> Contenido/código generado debe ser revisado exhaustivamente.</li>
+                           <li>Open mantendrá una lista actualizada de las herramientas y plataformas de IA aprobadas para su uso interno. Estas herramientas habrán pasado por un proceso de evaluación para asegurar su seguridad, privacidad y alineación con las políticas de la empresa.</li>
+                           <li>El uso de estas herramientas debe limitarse a los propósitos para los cuales fueron aprobadas.</li>
+                        </ul>
+                        <h4 class="font-semibold text-lg mt-4 mb-2 text-gray-800">5.2 Uso de Herramientas de IA Generativa de Acceso Público (ej. ChatGPT, Google Gemini)</h4>
+                        <ul class="text-gray-700">
+                            <li><strong>Precaución Extrema:</strong> El uso de herramientas de IA generativa de acceso público está permitido solo para fines de exploración, aprendizaje y soporte en tareas <strong>no confidenciales ni propietarias</strong>.</li>
+                            <li><strong>Restricciones de Datos:</strong> Bajo NINGUNA circunstancia se debe introducir información confidencial, código propietario, datos de clientes, datos personales identificables (PII) o cualquier información sensible de la empresa en estas plataformas. Se debe asumir que cualquier dato ingresado puede ser utilizado por el proveedor de la herramienta para entrenar sus modelos.</li>
+                            <li><strong>Revisión Obligatoria:</strong> Cualquier contenido o código generado por estas herramientas debe ser revisado y validado exhaustivamente por un ser humano antes de ser utilizado en cualquier contexto oficial de la empresa o en proyectos de clientes.</li>
                         </ul>
                         <h4 class="font-semibold text-lg mt-4 mb-2 text-gray-800">5.3 Proceso de Solicitud de Nuevas Herramientas</h4>
-                        <p class="text-gray-700">Solicitud formal a Dirección de Tecnología para evaluación de nuevas herramientas (seguridad, privacidad, conformidad).</p>
+                        <p class="text-gray-700">Cualquier empleado que identifique la necesidad o el deseo de utilizar una herramienta de IA no aprobada debe presentar una solicitud formal al dirección de Tecnología para su evaluación. La aprobación dependerá de una rigurosa evaluación de seguridad, privacidad y conformidad con esta política.</p>
                     </div>
                 </div>
 
@@ -215,10 +220,17 @@
                         <svg id="arrow6" class="arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
                     </div>
                     <div class="policy-card-content" id="content6">
+                        <p class="text-gray-700">Para garantizar que todos los miembros de Open comprendan y apliquen correctamente esta política, es fundamental proporcionar la formación y los recursos necesarios.</p>
                         <h4 class="font-semibold text-lg mb-2 text-gray-800">6.1 Formación Obligatoria</h4>
-                        <p class="mb-3 text-gray-700">Empleados que usen IA deben completar formación sobre política, principios, riesgos, mejores prácticas. Actualización periódica.</p>
+                        <ul class="text-gray-700">
+                            <li>Todos los empleados que utilicen o interactúen con herramientas de IA en el desarrollo de su trabajo deberán completar una formación obligatoria sobre esta política, sus principios, riesgos asociados y mejores prácticas en el uso de la IA.</li>
+                            <li>Esta formación se actualizará periódicamente para reflejar los cambios en la tecnología, la normativa y las políticas internas.</li>
+                        </ul>
                         <h4 class="font-semibold text-lg mt-4 mb-2 text-gray-800">6.2 Recursos y Soporte</h4>
-                        <p class="text-gray-700">Canales para dudas, reportar incidentes, proponer mejoras (Dirección de Tecnología). Guías prácticas y FAQ disponibles.</p>
+                        <ul class="text-gray-700">
+                            <li>Se establecerán canales claros para que los empleados puedan consultar dudas, reportar incidentes o proponer mejoras relacionadas con el uso de la IA. La dirección de Tecnología será el punto central de contacto para estos fines.</li>
+                            <li>Se pondrán a disposición recursos adicionales, como guías prácticas y preguntas frecuentes (FAQ), para facilitar la comprensión y aplicación de esta política.</li>
+                        </ul>
                     </div>
                 </div>
                 
@@ -228,10 +240,11 @@
                         <svg id="arrow7" class="arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
                     </div>
                     <div class="policy-card-content" id="content7">
+                        <p class="text-gray-700">El cumplimiento de esta política es vital para proteger a Open y garantizar un uso responsable y ético de la IA.</p>
                         <h4 class="font-semibold text-lg mb-2 text-gray-800">7.1 Violaciones a la Política</h4>
-                        <p class="mb-3 text-gray-700">Incumplimiento (especialmente protección de info confidencial, PI, datos sensibles) es violación grave.</p>
+                        <p class="text-gray-700">El incumplimiento de cualquiera de los puntos establecidos en esta política, especialmente aquellos relacionados con la protección de la información confidencial, la propiedad intelectual y los datos sensibles, se considerará una violación grave de las políticas internas de Open.</p>
                         <h4 class="font-semibold text-lg mt-4 mb-2 text-gray-800">7.2 Acciones Disciplinarias</h4>
-                        <p class="text-gray-700">Desde capacitación adicional hasta terminación de empleo, según políticas RRHH y legislación.</p>
+                        <p class="text-gray-700">Las violaciones podrán dar lugar a acciones disciplinarias que van desde la capacitación adicional hasta la terminación del empleo, de acuerdo con las políticas de recursos humanos de la empresa y la legislación aplicable.</p>
                     </div>
                 </div>
 
@@ -241,10 +254,11 @@
                         <svg id="arrow8" class="arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
                     </div>
                     <div class="policy-card-content" id="content8">
+                        <p class="text-gray-700">Esta política es un documento vivo que se adaptará a la evolución de la tecnología de IA y a las necesidades de Open.</p>
                         <h4 class="font-semibold text-lg mb-2 text-gray-800">8.1 Revisión Periódica</h4>
-                        <p class="mb-3 text-gray-700">Revisión y actualización anual o ante cambios significativos (tecnología IA, regulaciones, necesidades internas).</p>
+                        <p class="text-gray-700">La política será revisada y actualizada al menos <strong>anualmente</strong> o cuando ocurran cambios significativos en el panorama de la IA, las regulaciones aplicables o las necesidades internas de la empresa.</p>
                         <h4 class="font-semibold text-lg mt-4 mb-2 text-gray-800">8.2 Responsabilidad de Actualización</h4>
-                        <p class="text-gray-700">Departamento de Tecnología liderará revisión, en consulta con áreas relevantes.</p>
+                        <p class="text-gray-700">El departamento de Tecnología será el responsable de liderar la revisión y actualización de esta política, en consulta con las áreas relevantes de la empresa.</p>
                     </div>
                 </div>
             </div>
