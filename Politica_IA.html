@@ -32,7 +32,7 @@
         .policy-card-header h3 {
             font-size: 1.25rem; /* 20px */
             font-weight: 600;
-            color: #1e3a8a; /* Azul oscuro para los títulos */
+            color: #076295; /* Color de título actualizado */
         }
         .policy-card-content {
             padding: 20px;
@@ -51,7 +51,7 @@
             border: 2px solid #7dd3fc; /* Borde azul más brillante */
         }
         .benefits-panel h3 {
-            color: #0c4a6e; /* Azul más oscuro para el título de beneficios */
+            color: #076295; /* Color de título actualizado */
         }
         .arrow {
             transition: transform 0.3s ease;
@@ -63,23 +63,43 @@
         }
         .tag {
             display: inline-block;
-            background-color: #dbeafe;
-            color: #1e40af;
+            background-color: #FFFFFF; /* Fondo blanco para las etiquetas */
+            color: #FFB000; /* Color de texto para las etiquetas */
+            font-weight: bold; /* Texto en negrita para las etiquetas */
             padding: 4px 12px;
             border-radius: 16px;
-            font-size: 0.875rem;
+            font-size: 0.875rem; /* 14px */
             margin-right: 8px;
             margin-bottom: 8px;
+            border: 1px solid #FFB000; /* Borde para mejor visibilidad */
+        }
+
+        /* Clases personalizadas para los títulos principales */
+        .main-page-title {
+            color: #076295;
+        }
+        .summary-box-title {
+            color: #076295; /* Mantenemos el color del título del resumen, ya que el fondo del box es oscuro */
+        }
+        .summary-box {
+            background-color: #076295;
+            color: #FFFFFF;
+            border-left-width: 4px;
+            border-color: #FFFFFF; /* Borde izquierdo blanco para contraste */
+        }
+        /* Ajuste para el título dentro del summary-box si es necesario, aunque el .summary-box-title ya lo maneja */
+        .summary-box .summary-box-title {
+             color: #FFFFFF; /* El título del resumen ahora será blanco para contrastar con el nuevo fondo */
         }
     </style>
 </head>
 <body class="p-4 md:p-8">
     <div class="container mx-auto max-w-6xl">
         <header class="mb-10 text-center">
-            <h1 class="text-4xl md:text-5xl font-bold text-blue-700 mb-4">Política de Uso de la Inteligencia Artificial (IA) en Open</h1>
+            <h1 class="text-4xl md:text-5xl font-bold main-page-title mb-4">Política de Uso de la Inteligencia Artificial (IA) en Open</h1>
             <p class="text-lg text-gray-700 mb-2"><strong>Evento Asociado:</strong> IA en Nuestra Empresa: Conceptos Clave y Desmitificación - Sentando las bases para el futuro de nuestro software y operación.</p>
-            <div class="bg-blue-100 border-l-4 border-blue-500 text-blue-700 p-6 rounded-lg shadow-md">
-                <h2 class="text-2xl font-semibold mb-3">Resumen del Propósito de la Política</h2>
+            <div class="summary-box p-6 rounded-lg shadow-md">
+                <h2 class="text-2xl font-semibold mb-3 summary-box-title">Resumen del Propósito de la Política</h2>
                 <p class="text-base md:text-lg">
                     Esta política establece las directrices y responsabilidades para el uso ético, seguro y eficiente de la IA en Open.
                     Su objetivo principal es <strong>proteger los intereses de la empresa, su propiedad intelectual y su información confidencial</strong>,
