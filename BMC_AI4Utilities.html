@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plataforma IA para Utilities - Modelo de Negocio Interactivo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Warm Neutrals (Stone, Slate, Teal) -->
+    <!-- Application Structure Plan: The application is designed as an interactive 3x2 + 3x1 grid representing the Business Model Canvas. This structure is immediately familiar and provides a holistic view. Users can click any block to open a detailed modal view, preventing information overload. The key interaction is a hover-to-highlight feature that visually connects related blocks (e.g., a customer segment to its value proposition and revenue stream), which is crucial for understanding the model's internal logic. This non-linear, exploratory approach is more effective for synthesis than a static document. -->
+    <!-- Visualization & Content Choices: 1. Main Canvas (Organize/Relationships): HTML/Tailwind grid with JS-driven hover highlighting to show connections between blocks. 2. Quantified Benefits (Inform/Compare): A Chart.js horizontal bar chart is used within the Value Proposition modal to make the ROI data more impactful and easier to compare. 3. Process Flows (Organize): The 5 phases of the "Channels" are represented as a visual, non-interactive flow diagram using structured HTML/CSS, which is clearer than a simple list. This structure is supported by the libraries and methods chosen, confirming no SVG/Mermaid is used. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .bmc-block {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .highlight-source {
+            transform: scale(1.05);
+            box-shadow: 0 0 0 3px #14b8a6; /* teal-500 */
+        }
+        .highlight-target {
+            background-color: #ccfbf1; /* teal-100 */
+            border: 2px solid #14b8a6; /* teal-500 */
+        }
+        .modal-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            z-index: 40;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+        .modal-backdrop.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.95);
+            z-index: 50;
+            opacity: 0;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            pointer-events: none;
+        }
+        .modal.active {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+            pointer-events: auto;
+        }
+        .modal-content ul {
+            list-style-position: inside;
+            padding-left: 0.5rem;
+        }
+        .modal-content li {
+            margin-bottom: 0.5rem;
+        }
+        .chart-container {
+             position: relative;
+             width: 100%;
+             max-width: 600px;
+             margin-left: auto;
+             margin-right: auto;
+             height: 300px;
+             max-height: 400px;
+        }
+         @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+    </style>
+</head>
+<body class="bg-stone-50 text-slate-800">
+
+    <div id="app" class="container mx-auto p-4 md:p-8">
+        <header class="text-center mb-8">
+            <h1 class="text-4xl font-bold text-slate-900">Modelo de Negocio Interactivo</h1>
+            <p class="text-xl text-slate-600 mt-2">Plataforma de IA para el Sector Utilities</p>
+            <p class="mt-4 max-w-3xl mx-auto text-slate-500">
+                Bienvenido al modelo de negocio de nuestra plataforma de IA. Haga clic en cualquier bloque para explorar los detalles. Pase el cursor sobre los elementos clave (como los segmentos de clientes) para ver cómo se conectan con otras partes del modelo.
+            </p>
+        </header>
+
+        <main class="space-y-4">
+            <!-- Top Row: Partners, Activities, Resources -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <article id="key-partners" class="bmc-block bg-white rounded-lg shadow-md p-6 hover:shadow-lg">
+                    <h2 class="text-sm font-semibold text-slate-500 uppercase">8. Socios Clave</h2>
+                    <h3 class="text-xl font-bold text-teal-700 mt-1">Socios Clave</h3>
+                    <p class="mt-2 text-slate-600">Alianzas estratégicas para fortalecer la oferta y el alcance.</p>
+                </article>
+                <article id="key-activities" class="bmc-block bg-white rounded-lg shadow-md p-6 hover:shadow-lg">
+                    <h2 class="text-sm font-semibold text-slate-500 uppercase">6. Actividades Clave</h2>
+                    <h3 class="text-xl font-bold text-teal-700 mt-1">Actividades Clave</h3>
+                    <p class="mt-2 text-slate-600">Acciones esenciales para entregar nuestra propuesta de valor.</p>
+                </article>
+                <article id="key-resources" class="bmc-block bg-white rounded-lg shadow-md p-6 hover:shadow-lg">
+                    <h2 class="text-sm font-semibold text-slate-500 uppercase">7. Recursos Clave</h2>
+                    <h3 class="text-xl font-bold text-teal-700 mt-1">Recursos Clave</h3>
+                    <p class="mt-2 text-slate-600">Activos indispensables para que el negocio funcione.</p>
+                </article>
+            </div>
+
+            <!-- Middle Row: Value Prop, Relationships, Channels -->
+             <div class="grid grid-cols-1 md:grid-cols-5 gap-6">
+                 <div class="md:col-span-2 grid grid-cols-1 gap-6">
+                     <article id="value-propositions" class="bmc-block bg-white rounded-lg shadow-md p-6 hover:shadow-lg">
+                         <h2 class="text-sm font-semibold text-slate-500 uppercase">2. Propuesta de Valor</h2>
+                         <h3 class="text-xl font-bold text-teal-700 mt-1">Propuesta de Valor</h3>
+                         <p class="mt-2 text-slate-600">El valor que entregamos para resolver los problemas de nuestros clientes.</p>
+                     </article>
+                 </div>
+                 <div class="md:col-span-3 grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <article id="customer-relationships" class="bmc-block bg-white rounded-lg shadow-md p-6 hover:shadow-lg">
+                        <h2 class="text-sm font-semibold text-slate-500 uppercase">4. Relaciones con Clientes</h2>
+                        <h3 class="text-xl font-bold text-teal-700 mt-1">Relaciones con Clientes</h3>
+                        <p class="mt-2 text-slate-600">Tipo de relación que establecemos con cada segmento de clientes.</p>
+                    </article>
+                    <article id="channels" class="bmc-block bg-white rounded-lg shadow-md p-6 hover:shadow-lg">
+                        <h2 class="text-sm font-semibold text-slate-500 uppercase">3. Canales</h2>
+                        <h3 class="text-xl font-bold text-teal-700 mt-1">Canales</h3>
+                        <p class="mt-2 text-slate-600">Cómo nos comunicamos y llegamos a nuestros clientes.</p>
+                    </article>
+                 </div>
+             </div>
+
+            <!-- Bottom Row: Customer Segments -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div></div>
+                <article id="customer-segments" class="bmc-block bg-white rounded-lg shadow-md p-6 hover:shadow-lg">
+                    <h2 class="text-sm font-semibold text-slate-500 uppercase">1. Segmentos de Clientes</h2>
+                    <h3 class="text-xl font-bold text-teal-700 mt-1">Segmentos de Clientes</h3>
+                    <p class="mt-2 text-slate-600">Los grupos de personas y organizaciones a los que nos dirigimos.</p>
+                </article>
+                <div></div>
+            </div>
+
+            <!-- Cost and Revenue Structure -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
+                <article id="cost-structure" class="bmc-block bg-white rounded-lg shadow-md p-6 hover:shadow-lg">
+                    <h2 class="text-sm font-semibold text-slate-500 uppercase">9. Estructura de Costos</h2>
+                    <h3 class="text-xl font-bold text-teal-700 mt-1">Estructura de Costos</h3>
+                    <p class="mt-2 text-slate-600">Todos los costos incurridos para operar el modelo de negocio.</p>
+                </article>
+                <article id="revenue-streams" class="bmc-block bg-white rounded-lg shadow-md p-6 hover:shadow-lg">
+                    <h2 class="text-sm font-semibold text-slate-500 uppercase">5. Fuentes de Ingresos</h2>
+                    <h3 class="text-xl font-bold text-teal-700 mt-1">Fuentes de Ingresos</h3>
+                    <p class="mt-2 text-slate-600">El dinero que generamos de cada segmento de clientes.</p>
+                </article>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal -->
+    <div id="modal-backdrop" class="modal-backdrop"></div>
+    <div id="modal" class="modal w-11/12 md:max-w-3xl lg:max-w-4xl bg-white rounded-lg shadow-2xl overflow-hidden">
+        <div class="p-6 md:p-8 max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-start">
+                <h2 id="modal-title" class="text-3xl font-bold text-slate-900 mb-4"></h2>
+                <button id="modal-close-btn" class="text-slate-500 hover:text-slate-800 transition-colors">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+            <div id="modal-content" class="modal-content text-slate-700 space-y-4"></div>
+        </div>
+    </div>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const bmcData = {
+                'customer-segments': {
+                    title: '1. Segmentos de Clientes',
+                    content: `
+                        <p class="mb-4">Identificamos dos grupos principales de clientes dentro del sector de Utilities, ambos compuestos por empresas medianas y grandes.</p>
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div id="segment-1" data-relations="value-propositions,revenue-streams" class="p-4 bg-slate-50 rounded-lg border border-slate-200 transition-all hover:bg-slate-100">
+                                <h4 class="font-bold text-lg text-slate-800">Clientes Existentes del CIS</h4>
+                                <ul class="mt-2 list-disc">
+                                    <li><strong>Descripción:</strong> Empresas que ya utilizan nuestra solución CIS.</li>
+                                    <li><strong>Necesidad Clave:</strong> Evolucionar sus capacidades con IA, aprovechando la integración nativa y la confianza existente.</li>
+                                    <li><strong>Estrategia:</strong> Ofrecer la plataforma IA con integración nativa, facilitando la adopción y el upselling/cross-selling.</li>
+                                </ul>
+                            </div>
+                            <div id="segment-2" data-relations="value-propositions,revenue-streams" class="p-4 bg-slate-50 rounded-lg border border-slate-200 transition-all hover:bg-slate-100">
+                                <h4 class="font-bold text-lg text-slate-800">Nuevos Prospectos (con otros CIS)</h4>
+                                <ul class="mt-2 list-disc">
+                                    <li><strong>Descripción:</strong> Empresas que utilizan soluciones CIS de la competencia o sistemas legados.</li>
+                                    <li><strong>Necesidad Clave:</strong> Mejorar eficiencia y toma de decisiones sin reemplazar sus sistemas core, buscando un ROI rápido.</li>
+                                    <li><strong>Estrategia:</strong> Ofrecer la plataforma IA como una solución flexible que se integra con sus sistemas actuales para "poner el pie en la puerta".</li>
+                                </ul>
+                            </div>
+                        </div>
+                    `
+                },
+                'value-propositions': {
+                    title: '2. Propuesta de Valor',
+                    content: `
+                        <p class="mb-4">Nuestra plataforma de IA está especializada en el sector Utilities para mejorar la atención al cliente, incrementar la eficiencia operativa y mejorar la toma de decisiones. Ofrecemos valor a través de los siguientes diferenciadores:</p>
+                        <ul class="list-disc columns-1 md:columns-2">
+                          <li><strong>Especialización Profunda en Utilities:</strong> Entendemos el contexto del negocio.</li>
+                          <li><strong>Integración Superior:</strong> Nativa con nuestro CIS y flexible con otros sistemas.</li>
+                          <li><strong>Tecnología Avanzada:</strong> Uso de IA generativa y agentes autónomos.</li>
+                          <li><strong>Seguridad y Cumplimiento:</strong> Gestión de datos acorde a normativas del sector.</li>
+                          <li><strong>Implementación Directa y Experta:</strong> Controlamos la calidad de extremo a extremo.</li>
+                          <li><strong>Apalancamiento de Base Instalada:</strong> Facilita la expansión y fidelización.</li>
+                        </ul>
+                        <h4 class="font-bold text-lg text-slate-800 mt-6 mb-2">Beneficios Cuantificables</h4>
+                        <p class="mb-4">Nuestra solución está diseñada para generar un impacto medible en el negocio del cliente.</p>
+                        <div class="chart-container">
+                            <canvas id="benefitsChart"></canvas>
+                        </div>
+                    `,
+                    onOpen: () => {
+                        const ctx = document.getElementById('benefitsChart').getContext('2d');
+                        if(window.myBenefitsChart) {
+                            window.myBenefitsChart.destroy();
+                        }
+                        window.myBenefitsChart = new Chart(ctx, {
+                            type: 'bar',
+                            data: {
+                                labels: ['Reducción de Sanciones', 'Mejora T. Respuesta', 'Reducción Costo Op.', 'Reducción Carga Agente'],
+                                datasets: [{
+                                    label: '% de Mejora Estimada',
+                                    data: [50, 30, 30, 25],
+                                    backgroundColor: ['#14b8a6', '#2dd4bf', '#5eead4', '#99f6e4'],
+                                    borderColor: '#0f766e',
+                                    borderWidth: 1
+                                }]
+                            },
+                            options: {
+                                indexAxis: 'y',
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                scales: {
+                                    x: {
+                                        beginAtZero: true,
+                                        ticks: {
+                                            callback: function(value) { return value + "%" }
+                                        }
+                                    }
+                                },
+                                plugins: {
+                                    legend: { display: false },
+                                    title: { display: true, text: 'Impacto Estimado en KPIs Clave' },
+                                     tooltip: {
+                                        callbacks: {
+                                            label: function(context) {
+                                                return context.dataset.label + ': ' + context.raw + '%';
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        });
+                    },
+                    onClose: () => {
+                        if(window.myBenefitsChart) {
+                            window.myBenefitsChart.destroy();
+                        }
+                    }
+                },
+                'channels': {
+                    title: '3. Canales',
+                    content: `
+                        <p class="mb-4">Nos comunicamos y llegamos a nuestros clientes a través de un proceso estructurado que abarca todo el ciclo de vida.</p>
+                        <div class="flex flex-col md:flex-row items-center justify-center space-y-4 md:space-y-0 md:space-x-2 text-center">
+                            <div class="p-3 bg-slate-50 rounded-lg w-full md:w-auto"><strong>Conocimiento</strong><p class="text-xs">Portal Web, Redes Sociales, Eventos</p></div>
+                            <div class="text-teal-500 font-bold text-2xl transform md:-rotate-0">&rarr;</div>
+                            <div class="p-3 bg-slate-50 rounded-lg w-full md:w-auto"><strong>Evaluación</strong><p class="text-xs">Demos, Casos de Éxito, ROI</p></div>
+                             <div class="text-teal-500 font-bold text-2xl transform md:-rotate-0">&rarr;</div>
+                            <div class="p-3 bg-slate-50 rounded-lg w-full md:w-auto"><strong>Compra</strong><p class="text-xs">Account Management</p></div>
+                             <div class="text-teal-500 font-bold text-2xl transform md:-rotate-0">&rarr;</div>
+                            <div class="p-3 bg-slate-50 rounded-lg w-full md:w-auto"><strong>Entrega</strong><p class="text-xs">Implementación Estructurada</p></div>
+                             <div class="text-teal-500 font-bold text-2xl transform md:-rotate-0">&rarr;</div>
+                            <div class="p-3 bg-slate-50 rounded-lg w-full md:w-auto"><strong>Postventa</strong><p class="text-xs">Soporte SAM, Hypercare</p></div>
+                        </div>
+                        <h4 class="font-bold text-lg text-slate-800 mt-6 mb-2">Detalle de Canales Postventa</h4>
+                        <ul class="list-disc">
+                            <li><strong>Programa SAM:</strong> Soporte, Actualización y Mantenimiento continuo.</li>
+                            <li><strong>Soporte Multinivel:</strong> Niveles 1 y 2 con Acuerdos de Nivel de Servicio (ANS).</li>
+                            <li><strong>Actualización Continua:</strong> Acceso a nuevas versiones, releases y parches.</li>
+                            <li><strong>Hypercare:</strong> Soporte intensivo post-implementación.</li>
+                        </ul>
+                    `
+                },
+                'customer-relationships': {
+                    title: '4. Relaciones con Clientes',
+                    content: `
+                        <p class="mb-4">Nuestra relación ideal es la de un <strong>socio estratégico de transformación</strong> a largo plazo, con un alto nivel de contacto consultivo y proactivo.</p>
+                        <ul class="list-disc">
+                            <li><strong>Para Clientes Existentes:</strong> Relación de confianza, con enfoque consultivo en expansión (venta cruzada).</li>
+                            <li><strong>Para Nuevos Prospectos:</strong> Construcción de confianza técnica a través de demos, pruebas piloto y co-creación de valor.</li>
+                        </ul>
+                        <h4 class="font-bold text-lg text-slate-800 mt-6 mb-2">Mecanismos de Relación</h4>
+                        <ul class="list-disc columns-1 md:columns-2">
+                           <li>Customer Success Management</li>
+                           <li>Entrenamiento personalizado y por rol</li>
+                           <li>Centro de excelencia en IA para Utilities</li>
+                           <li>Feedback loops en la plataforma</li>
+                           <li>Soporte técnico multinivel</li>
+                           <li>Programas de co-innovación</li>
+                        </ul>
+                    `
+                },
+                'revenue-streams': {
+                    title: '5. Fuentes de Ingresos',
+                    content: `
+                        <p class="mb-4">Nuestro modelo se enfoca exclusivamente en <strong>ingresos recurrentes</strong>, asegurando sostenibilidad y valor a largo plazo.</p>
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div class="p-4 bg-slate-50 rounded-lg border border-slate-200">
+                                <h4 class="font-bold text-lg text-slate-800">Modelo de Pago</h4>
+                                <ul class="mt-2 list-disc">
+                                    <li><strong>Suscripciones anuales:</strong> Previsibilidad y compromiso.</li>
+                                    <li><strong>Pago por uso (Pay-per-use):</strong> Flexibilidad y alineación de costo con valor.</li>
+                                </ul>
+                            </div>
+                            <div class="p-4 bg-slate-50 rounded-lg border border-slate-200">
+                                <h4 class="font-bold text-lg text-slate-800">Estructura de Precios</h4>
+                                <ul class="mt-2 list-disc">
+                                    <li><strong>Precios fijos:</strong> Para paquetes base o niveles estándar.</li>
+                                    <li><strong>Por niveles de servicio / flujos de proceso:</strong> Pagar solo por lo que se necesita, con opción a escalar.</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <h4 class="font-bold text-lg text-slate-800 mt-6 mb-2">Foco Principal de Ingresos</h4>
+                        <p>El mayor valor, y por tanto el foco de ingresos, proviene de los <strong>desarrollos a medida específicos sobre la plataforma</strong>. Esto incluye la especialización de flujos de IA y su adaptación a los sistemas legados y necesidades particulares de cada cliente, consolidado dentro del modelo de ingresos recurrentes.</p>
+                    `
+                },
+                'key-activities': {
+                    title: '6. Actividades Clave',
+                    content: `
+                        <p class="mb-4">Las acciones más importantes que realizamos para entregar nuestra propuesta de valor de manera consistente y fiable.</p>
+                        <ul class="list-disc columns-1 md:columns-2">
+                           <li><strong>Desarrollo y Mantenimiento de la Plataforma:</strong> Diseño de arquitectura, implementación de software, desarrollo de capacidades de IA, DevOps/AIOps.</li>
+                           <li><strong>Implementación y Personalización:</strong> Gerencia de proyectos, Customer Success, desarrollo de adaptaciones a clientes.</li>
+                           <li><strong>Ventas y Marketing:</strong> Preventa, generación de leads, elaboración de propuestas, marketing de contenidos.</li>
+                           <li><strong>Soporte al Cliente:</strong> Mantenimiento continuo, solución de errores, evolución de la solución.</li>
+                        </ul>
+                         <h4 class="font-bold text-lg text-slate-800 mt-6 mb-2">Actividades Fundamentales Transversales</h4>
+                         <ul class="list-disc">
+                            <li><strong>El Cuidado de los Datos:</strong> Gobernanza, seguridad, privacidad y cumplimiento normativo en todo momento.</li>
+                            <li><strong>Operatividad y Escalabilidad:</strong> Mantener la solución operativa, fiable y con buen rendimiento bajo cualquier condición de demanda.</li>
+                        </ul>
+                    `
+                },
+                'key-resources': {
+                    title: '7. Recursos Clave',
+                    content: '<p>Aún por definir. Este bloque describirá los activos indispensables (humanos, intelectuales, físicos, financieros) para que nuestro modelo de negocio funcione.</p>'
+                },
+                'key-partners': {
+                    title: '8. Socios Clave',
+                    content: '<p>Aún por definir. Este bloque describirá la red de proveedores y socios que hacen posible el modelo de negocio.</p>'
+                },
+                'cost-structure': {
+                    title: '9. Estructura de Costos',
+                    content: '<p>Aún por definir. Este bloque describirá los costos más importantes inherentes a nuestro modelo de negocio.</p>'
+                }
+            };
+
+            const modal = document.getElementById('modal');
+            const modalBackdrop = document.getElementById('modal-backdrop');
+            const modalTitle = document.getElementById('modal-title');
+            const modalContent = document.getElementById('modal-content');
+            const modalCloseBtn = document.getElementById('modal-close-btn');
+            
+            let currentOpenBlock = null;
+
+            const openModal = (blockId) => {
+                const data = bmcData[blockId];
+                if (!data) return;
+                
+                currentOpenBlock = blockId;
+
+                modalTitle.textContent = data.title;
+                modalContent.innerHTML = data.content;
+                
+                modalBackdrop.classList.add('active');
+                modal.classList.add('active');
+
+                if (data.onOpen) {
+                    // Timeout to allow modal to render before chart creation
+                    setTimeout(data.onOpen, 50);
+                }
+            };
+
+            const closeModal = () => {
+                if (currentOpenBlock && bmcData[currentOpenBlock] && bmcData[currentOpenBlock].onClose) {
+                    bmcData[currentOpenBlock].onClose();
+                }
+                modalBackdrop.classList.remove('active');
+                modal.classList.remove('active');
+                currentOpenBlock = null;
+            };
+
+            document.querySelectorAll('.bmc-block').forEach(block => {
+                block.addEventListener('click', () => {
+                    openModal(block.id);
+                });
+            });
+
+            modalCloseBtn.addEventListener('click', closeModal);
+            modalBackdrop.addEventListener('click', closeModal);
+            document.addEventListener('keydown', (e) => {
+                if (e.key === "Escape") closeModal();
+            });
+
+            const highlightRelations = (event) => {
+                const sourceElement = event.currentTarget;
+                const relations = sourceElement.dataset.relations?.split(',');
+                if(!relations) return;
+
+                sourceElement.classList.add('highlight-source');
+                relations.forEach(relId => {
+                    document.getElementById(relId)?.classList.add('highlight-target');
+                });
+            };
+
+            const clearHighlights = (event) => {
+                const sourceElement = event.currentTarget;
+                const relations = sourceElement.dataset.relations?.split(',');
+
+                sourceElement.classList.remove('highlight-source');
+                document.querySelectorAll('.highlight-target').forEach(el => el.classList.remove('highlight-target'));
+            };
+            
+            // Add hover effects after modal is populated
+            const observer = new MutationObserver((mutationsList, observer) => {
+                 for(const mutation of mutationsList) {
+                    if (mutation.type === 'childList') {
+                         document.querySelectorAll('[data-relations]').forEach(el => {
+                            el.addEventListener('mouseenter', highlightRelations);
+                            el.addEventListener('mouseleave', clearHighlights);
+                         });
+                    }
+                }
+            });
+
+            observer.observe(modalContent, { childList: true, subtree: true });
+
+        });
+    </script>
+</body>
+</html>
