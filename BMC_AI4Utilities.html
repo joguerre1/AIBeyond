@@ -3,614 +3,212 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Plataforma IA para Utilities - Modelo de Negocio Interactivo Detallado</title>
+    <title>Mapa Visual del Modelo de Negocio - Plataforma IA para Utilities</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Chosen Palette: Warm Neutrals (Stone, Slate, Teal) -->
-    <!-- Application Structure Plan: The application uses a main content area for the 3x2 + 3x1 interactive Business Model Canvas grid and a right sidebar for a static summary/navigation list of all 9 BMC blocks. Clicking a block in the grid or its name in the sidebar opens a detailed modal. The sidebar provides constant context and alternative navigation. Hover-highlighting on grid elements linked to `data-relations` visually connects related concepts. This structure balances overview with deep-dive capability and addresses the user's request for more detail and a summary panel. -->
-    <!-- Visualization & Content Choices: 1. Main Canvas (Organize/Relationships): HTML/Tailwind grid with JS-driven hover highlighting. 2. Quantified Benefits (Inform/Compare): Chart.js horizontal bar chart in Value Proposition modal. 3. Process Flows (Organize): Structured HTML/CSS for Channels phases. 4. Modal Content (Inform/Detail): Expanded textual content from previous discussions now populates modals, providing the requested detail. 5. Sidebar (Navigate/Summarize): HTML list of BMC blocks, clickable to open modals. This structure uses specified libraries and methods, with no SVG/Mermaid. -->
+    <!-- Chosen Palette: Neutral Grays with Teal Accents (Slate, Stone, Teal) -->
+    <!-- Application Structure Plan: The application presents a static visual map of the Business Model Canvas. It uses a main two-column layout. The left/main column (approx. 75% width) displays the 9 BMC blocks organized into logical groups (Infrastructure, Offer, Customers, Finances) using a CSS grid. Each block is a distinct panel. The right column (approx. 25% width) is a dedicated sidebar panel containing a concise summary of the Value Proposition. This structure provides a clear, at-a-glance overview of the entire model, fulfilling the request for a map-like visualization with a separate value summary. -->
+    <!-- Visualization & Content Choices: Report Info (BMC Blocks) -> Goal (Organize/Inform) -> Viz/Presentation (Styled HTML/Tailwind panels with summarized text) -> Interaction (None, static map) -> Justification (Clear, direct visual overview of the entire BMC) -> Library/Method (HTML, Tailwind CSS). Value Proposition Summary -> Goal (Summarize/Highlight) -> Viz/Presentation (Dedicated sidebar panel with key bullet points) -> Interaction (None) -> Justification (Constant visibility of core value offer). No dynamic charts or complex JS needed for this static map. -->
     <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            overscroll-behavior-y: none; /* Prevents pull-to-refresh on mobile when modal is open */
+            background-color: #f8fafc; /* slate-50 */
         }
-        .bmc-block {
-            transition: all 0.3s ease;
-            cursor: pointer;
+        .bmc-panel {
+            background-color: white;
+            border-radius: 0.5rem; /* rounded-lg */
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); /* shadow-md */
+            padding: 1.5rem; /* p-6 */
+            height: 100%; /* Make panels fill their grid cell height */
         }
-        .highlight-source {
-            transform: scale(1.03); /* Subtle scale for source */
-            box-shadow: 0 0 0 3px #14b8a6; /* teal-500 */
-            z-index: 10;
-            position: relative;
+        .bmc-panel h3 {
+            color: #0d9488; /* teal-600 */
+            font-weight: 700; /* font-bold */
+            font-size: 1.125rem; /* text-lg */
+            margin-bottom: 0.75rem; /* mb-3 */
         }
-        .highlight-target {
-            background-color: #ccfbf1 !important; /* teal-100, use !important to override base bg */
-            border: 2px solid #14b8a6; /* teal-500 */
+        .bmc-panel ul {
+            list-style-type: disc;
+            padding-left: 1.25rem; /* pl-5 */
+            font-size: 0.875rem; /* text-sm */
+            color: #475569; /* slate-600 */
         }
-        .modal-backdrop {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.6);
-            z-index: 40;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            pointer-events: none;
+        .bmc-panel ul li {
+            margin-bottom: 0.375rem; /* mb-1.5 */
         }
-        .modal-backdrop.active {
-            opacity: 1;
-            pointer-events: auto;
+        .sidebar-panel {
+            background-color: #f1f5f9; /* slate-100 */
         }
-        .modal {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) scale(0.95);
-            z-index: 50;
-            opacity: 0;
-            transition: opacity 0.3s ease, transform 0.3s ease;
-            pointer-events: none;
+        .sidebar-panel h3 {
+             color: #0f766e; /* teal-700 */
         }
-        .modal.active {
-            opacity: 1;
-            transform: translate(-50%, -50%) scale(1);
-            pointer-events: auto;
-        }
-        .modal-content ul {
-            list-style-position: inside;
-            padding-left: 0rem; /* Adjusted for better alignment */
-        }
-        .modal-content li {
-            margin-bottom: 0.75rem; /* Increased spacing */
-        }
-        .modal-content h4 {
-            margin-top: 1.5rem;
-            margin-bottom: 0.5rem;
-        }
-        .chart-container {
-             position: relative;
-             width: 100%;
-             max-width: 600px;
-             margin-left: auto;
-             margin-right: auto;
-             height: 300px; /* Base height for mobile */
-             max-height: 350px;
-        }
-         @media (min-width: 768px) { /* md breakpoint */
-            .chart-container {
-                height: 320px;
-                max-height: 400px;
-            }
-        }
-        .summary-panel a {
-            transition: background-color 0.2s ease;
-        }
-        .summary-panel a:hover {
-            background-color: #f0f9ff; /* sky-100 */
-        }
-
     </style>
 </head>
-<body class="bg-stone-100 text-slate-800">
+<body class="text-slate-800">
 
-    <div id="app" class="max-w-full mx-auto">
-        <header class="text-center py-8 bg-white shadow-md">
-            <h1 class="text-3xl md:text-4xl font-bold text-slate-900">Modelo de Negocio Interactivo Detallado</h1>
-            <p class="text-lg md:text-xl text-slate-600 mt-2">Plataforma de IA para el Sector Utilities</p>
-        </header>
+    <header class="text-center py-8 bg-white shadow-md">
+        <h1 class="text-3xl md:text-4xl font-bold text-slate-900">Mapa Visual del Modelo de Negocio</h1>
+        <p class="text-lg md:text-xl text-slate-600 mt-2">Plataforma de IA para el Sector Utilities</p>
+    </header>
 
-        <div class="flex flex-col md:flex-row">
-            <!-- Main Content Area -->
-            <main class="w-full md:w-3/4 p-4 md:p-8 space-y-4">
-                 <p class="mt-1 mb-6 max-w-full text-slate-600 text-sm md:text-base">
-                    Bienvenido al modelo de negocio detallado. Haga clic en cualquier bloque de la cuadrícula o en un elemento del panel de resumen a la derecha para explorar los detalles. Pase el cursor sobre los segmentos de clientes en el modal correspondiente para ver sus relaciones directas con la propuesta de valor y las fuentes de ingresos.
-                </p>
-                <!-- Top Row: Partners, Activities, Resources -->
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-                    <article id="key-partners" class="bmc-block bg-white rounded-lg shadow-md p-4 md:p-6 hover:shadow-xl">
-                        <h2 class="text-xs md:text-sm font-semibold text-slate-500 uppercase">8. Socios Clave</h2>
-                        <h3 class="text-lg md:text-xl font-bold text-teal-700 mt-1">Socios Clave</h3>
-                        <p class="mt-2 text-xs md:text-sm text-slate-600">Alianzas estratégicas para fortalecer la oferta y el alcance.</p>
-                    </article>
-                    <article id="key-activities" class="bmc-block bg-white rounded-lg shadow-md p-4 md:p-6 hover:shadow-xl">
-                        <h2 class="text-xs md:text-sm font-semibold text-slate-500 uppercase">6. Actividades Clave</h2>
-                        <h3 class="text-lg md:text-xl font-bold text-teal-700 mt-1">Actividades Clave</h3>
-                        <p class="mt-2 text-xs md:text-sm text-slate-600">Acciones esenciales para entregar nuestra propuesta de valor.</p>
-                    </article>
-                    <article id="key-resources" class="bmc-block bg-white rounded-lg shadow-md p-4 md:p-6 hover:shadow-xl">
-                        <h2 class="text-xs md:text-sm font-semibold text-slate-500 uppercase">7. Recursos Clave</h2>
-                        <h3 class="text-lg md:text-xl font-bold text-teal-700 mt-1">Recursos Clave</h3>
-                        <p class="mt-2 text-xs md:text-sm text-slate-600">Activos indispensables para que el negocio funcione.</p>
-                    </article>
-                </div>
-
-                <!-- Middle Row: Value Prop, Relationships, Channels -->
-                <div class="grid grid-cols-1 md:grid-cols-5 gap-4 md:gap-6">
-                    <div class="md:col-span-2 grid grid-cols-1 gap-4 md:gap-6">
-                        <article id="value-propositions" class="bmc-block bg-white rounded-lg shadow-md p-4 md:p-6 hover:shadow-xl h-full flex flex-col justify-center">
-                            <h2 class="text-xs md:text-sm font-semibold text-slate-500 uppercase">2. Propuesta de Valor</h2>
-                            <h3 class="text-lg md:text-xl font-bold text-teal-700 mt-1">Propuesta de Valor</h3>
-                            <p class="mt-2 text-xs md:text-sm text-slate-600">El valor que entregamos para resolver los problemas de nuestros clientes.</p>
-                        </article>
+    <div class="flex flex-col lg:flex-row max-w-screen-2xl mx-auto mt-8">
+        <!-- BMC Main Area -->
+        <div class="w-full lg:w-3/4 p-4 md:p-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
+                <!-- Columna 1: Infraestructura -->
+                <div class="space-y-4 md:space-y-6 flex flex-col">
+                    <div id="key-partners-panel" class="bmc-panel">
+                        <h3>8. Socios Clave</h3>
+                        <ul>
+                            <li>Proveedores tecnológicos (Cloud, IA).</li>
+                            <li>Socios de consultoría e integración.</li>
+                            <li>Alianzas estratégicas sectoriales.</li>
+                        </ul>
                     </div>
-                    <div class="md:col-span-3 grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
-                        <article id="customer-relationships" class="bmc-block bg-white rounded-lg shadow-md p-4 md:p-6 hover:shadow-xl h-full flex flex-col justify-center">
-                            <h2 class="text-xs md:text-sm font-semibold text-slate-500 uppercase">4. Relaciones con Clientes</h2>
-                            <h3 class="text-lg md:text-xl font-bold text-teal-700 mt-1">Relaciones con Clientes</h3>
-                            <p class="mt-2 text-xs md:text-sm text-slate-600">Tipo de relación que establecemos con cada segmento.</p>
-                        </article>
-                        <article id="channels" class="bmc-block bg-white rounded-lg shadow-md p-4 md:p-6 hover:shadow-xl h-full flex flex-col justify-center">
-                            <h2 class="text-xs md:text-sm font-semibold text-slate-500 uppercase">3. Canales</h2>
-                            <h3 class="text-lg md:text-xl font-bold text-teal-700 mt-1">Canales</h3>
-                            <p class="mt-2 text-xs md:text-sm text-slate-600">Cómo nos comunicamos y llegamos a nuestros clientes.</p>
-                        </article>
+                    <div id="key-activities-panel" class="bmc-panel">
+                        <h3>6. Actividades Clave</h3>
+                        <ul>
+                            <li>Desarrollo y Mant. Plataforma IA.</li>
+                            <li>Implementación y Personalización.</li>
+                            <li>Ventas y Marketing especializado.</li>
+                            <li>Soporte y Customer Success.</li>
+                            <li>Gestión de Datos y Seguridad.</li>
+                            <li>Innovación continua en IA.</li>
+                        </ul>
+                    </div>
+                    <div id="key-resources-panel" class="bmc-panel">
+                        <h3>7. Recursos Clave</h3>
+                        <ul>
+                            <li><strong>Humanos:</strong> Ing. IA/ML, expertos Utilities, ventas.</li>
+                            <li><strong>Intelectuales:</strong> Plataforma IA, algoritmos, marca.</li>
+                            <li><strong>Físicos:</strong> Infraestructura Cloud.</li>
+                            <li><strong>Financieros:</strong> Capital para desarrollo/expansión.</li>
+                        </ul>
                     </div>
                 </div>
 
-                <!-- Bottom Row: Customer Segments -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
-                    <div></div>
-                    <article id="customer-segments" class="bmc-block bg-white rounded-lg shadow-md p-4 md:p-6 hover:shadow-xl h-full flex flex-col justify-center text-center">
-                        <h2 class="text-xs md:text-sm font-semibold text-slate-500 uppercase">1. Segmentos de Clientes</h2>
-                        <h3 class="text-lg md:text-xl font-bold text-teal-700 mt-1">Segmentos de Clientes</h3>
-                        <p class="mt-2 text-xs md:text-sm text-slate-600">Los grupos a los que nos dirigimos.</p>
-                    </article>
-                    <div></div>
+                <!-- Columna 2: Oferta -->
+                <div class="space-y-4 md:space-y-6 flex flex-col">
+                    <div id="value-propositions-panel-main" class="bmc-panel flex-grow">
+                        <h3>2. Propuesta de Valor</h3>
+                        <ul>
+                            <li>Plataforma IA especializada para Utilities.</li>
+                            <li>Mejora atención al cliente y personalización.</li>
+                            <li>Incrementa eficiencia operativa y reduce costos.</li>
+                            <li>Potencia toma de decisiones estratégicas.</li>
+                            <li><strong>Diferenciadores:</strong> Especialización sectorial, integración superior (nativa con CIS propio), IA avanzada (generativa), seguridad robusta, implementación experta y directa.</li>
+                            <li>Beneficios medibles y ROI acelerado.</li>
+                        </ul>
+                    </div>
                 </div>
 
-                <!-- Cost and Revenue Structure -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 pt-4">
-                    <article id="cost-structure" class="bmc-block bg-white rounded-lg shadow-md p-4 md:p-6 hover:shadow-xl">
-                        <h2 class="text-xs md:text-sm font-semibold text-slate-500 uppercase">9. Estructura de Costos</h2>
-                        <h3 class="text-lg md:text-xl font-bold text-teal-700 mt-1">Estructura de Costos</h3>
-                        <p class="mt-2 text-xs md:text-sm text-slate-600">Principales costos para operar el modelo de negocio.</p>
-                    </article>
-                    <article id="revenue-streams" class="bmc-block bg-white rounded-lg shadow-md p-4 md:p-6 hover:shadow-xl">
-                        <h2 class="text-xs md:text-sm font-semibold text-slate-500 uppercase">5. Fuentes de Ingresos</h2>
-                        <h3 class="text-lg md:text-xl font-bold text-teal-700 mt-1">Fuentes de Ingresos</h3>
-                        <p class="mt-2 text-xs md:text-sm text-slate-600">Cómo generamos ingresos de cada segmento.</p>
-                    </article>
+                <!-- Columna 3: Clientes -->
+                <div class="space-y-4 md:space-y-6 flex flex-col">
+                    <div id="customer-relationships-panel" class="bmc-panel">
+                        <h3>4. Relaciones con Clientes</h3>
+                        <ul>
+                            <li>Socio estratégico de transformación (largo plazo).</li>
+                            <li>Consultoría experta y acompañamiento.</li>
+                            <li><strong>Clientes CIS:</strong> Foco en expansión, upselling.</li>
+                            <li><strong>Nuevos Prospectos:</strong> Confianza técnica, pruebas piloto.</li>
+                            <li>Mecanismos: Customer Success Mgmt, Centro de Excelencia IA.</li>
+                        </ul>
+                    </div>
+                    <div id="channels-panel" class="bmc-panel">
+                        <h3>3. Canales</h3>
+                        <ul>
+                            <li><strong>Conocimiento:</strong> Portal web, redes, eventos (CS Week).</li>
+                            <li><strong>Evaluación:</strong> Demos vivenciales, casos de éxito, ROI.</li>
+                            <li><strong>Compra:</strong> Account Management especializado.</li>
+                            <li><strong>Entrega:</strong> Implementación estructurada y directa.</li>
+                            <li><strong>Postventa:</strong> Programa SAM, soporte multinivel, Hypercare.</li>
+                        </ul>
+                    </div>
+                    <div id="customer-segments-panel" class="bmc-panel">
+                        <h3>1. Segmentos de Clientes</h3>
+                        <ul>
+                            <li><strong>Clientes Existentes CIS:</strong> Empresas Utilities (medianas/grandes) usuarias de nuestro CIS.</li>
+                            <li><strong>Nuevos Prospectos:</strong> Empresas Utilities (medianas/grandes) con otros CIS o sistemas legados.</li>
+                            <li>Foco: Empresas prestadoras de servicios (no reguladores).</li>
+                        </ul>
+                    </div>
                 </div>
-            </main>
-
-            <!-- Summary Panel -->
-            <aside id="summary-panel" class="w-full md:w-1/4 bg-slate-50 p-6 shadow-lg md:min-h-screen">
-                <h3 class="text-xl font-semibold text-slate-800 mb-6">Resumen del Modelo</h3>
-                <nav>
-                    <ul class="space-y-2">
-                        <li><a href="#" data-blockid="customer-segments" class="block p-3 rounded-md text-slate-700 hover:bg-teal-50 font-medium">1. Segmentos de Clientes</a></li>
-                        <li><a href="#" data-blockid="value-propositions" class="block p-3 rounded-md text-slate-700 hover:bg-teal-50 font-medium">2. Propuesta de Valor</a></li>
-                        <li><a href="#" data-blockid="channels" class="block p-3 rounded-md text-slate-700 hover:bg-teal-50 font-medium">3. Canales</a></li>
-                        <li><a href="#" data-blockid="customer-relationships" class="block p-3 rounded-md text-slate-700 hover:bg-teal-50 font-medium">4. Relaciones con Clientes</a></li>
-                        <li><a href="#" data-blockid="revenue-streams" class="block p-3 rounded-md text-slate-700 hover:bg-teal-50 font-medium">5. Fuentes de Ingresos</a></li>
-                        <li><a href="#" data-blockid="key-activities" class="block p-3 rounded-md text-slate-700 hover:bg-teal-50 font-medium">6. Actividades Clave</a></li>
-                        <li><a href="#" data-blockid="key-resources" class="block p-3 rounded-md text-slate-700 hover:bg-teal-50 font-medium">7. Recursos Clave</a></li>
-                        <li><a href="#" data-blockid="key-partners" class="block p-3 rounded-md text-slate-700 hover:bg-teal-50 font-medium">8. Socios Clave</a></li>
-                        <li><a href="#" data-blockid="cost-structure" class="block p-3 rounded-md text-slate-700 hover:bg-teal-50 font-medium">9. Estructura de Costos</a></li>
-                    </ul>
-                </nav>
-                <div class="mt-8 p-4 bg-teal-600 text-white rounded-lg">
-                    <h4 class="font-bold">Nota:</h4>
-                    <p class="text-sm mt-1">Esta es una representación interactiva. El contenido detallado está disponible al hacer clic en cada bloque.</p>
-                </div>
-            </aside>
-        </div>
-    </div>
-
-    <!-- Modal -->
-    <div id="modal-backdrop" class="modal-backdrop"></div>
-    <div id="modal" class="modal w-11/12 md:max-w-3xl lg:max-w-4xl bg-white rounded-lg shadow-2xl overflow-hidden">
-        <div class="p-6 md:p-8 max-h-[90vh] overflow-y-auto">
-            <div class="flex justify-between items-start mb-4">
-                <h2 id="modal-title" class="text-2xl md:text-3xl font-bold text-slate-900"></h2>
-                <button id="modal-close-btn" class="text-slate-400 hover:text-slate-700 transition-colors p-1 -mr-1 -mt-1">
-                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                </button>
             </div>
-            <div id="modal-content" class="modal-content text-slate-700 space-y-4 text-sm md:text-base"></div>
+
+            <!-- Fila Inferior: Finanzas -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mt-4 md:mt-6">
+                <div id="cost-structure-panel" class="bmc-panel">
+                    <h3>9. Estructura de Costos</h3>
+                    <ul>
+                        <li>Desarrollo y Mantenimiento de la Plataforma IA.</li>
+                        <li>Personal altamente especializado (IA, desarrollo, ventas).</li>
+                        <li>Infraestructura Tecnológica (Cloud).</li>
+                        <li>Costos de Ventas y Marketing.</li>
+                        <li>Soporte al cliente y Customer Success.</li>
+                    </ul>
+                </div>
+                <div id="revenue-streams-panel" class="bmc-panel">
+                    <h3>5. Fuentes de Ingresos</h3>
+                    <ul>
+                        <li>Modelo de ingresos 100% recurrentes.</li>
+                        <li><strong>Suscripciones anuales</strong> a la plataforma.</li>
+                        <li><strong>Pago por uso</strong> de flujos de procesos específicos.</li>
+                        <li>Precios por niveles de servicio/flujos.</li>
+                        <li><strong>Foco:</strong> Desarrollos a medida sobre la plataforma (adaptación de flujos, integraciones) dentro del modelo recurrente.</li>
+                        <li>Precios especiales para clientes CIS existentes.</li>
+                    </ul>
+                </div>
+            </div>
         </div>
+
+        <!-- Panel Resumen Propuesta de Valor (Barra Lateral Derecha) -->
+        <aside class="w-full lg:w-1/4 sidebar-panel p-6 shadow-lg lg:min-h-screen mt-6 lg:mt-0">
+            <h3 class="text-2xl font-bold mb-6">Resumen de la Oferta de Valor</h3>
+            
+            <div class="space-y-5">
+                <div>
+                    <h4 class="text-lg font-semibold text-slate-700 mb-1">¿Qué Ofrecemos?</h4>
+                    <p class="text-sm text-slate-600">Una <strong>plataforma de Inteligencia Artificial de vanguardia</strong>, especializada y diseñada exclusivamente para optimizar las operaciones y la estrategia del sector Utilities.</p>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold text-slate-700 mb-1">Problemas que Resolvemos:</h4>
+                    <ul class="list-disc pl-5 text-sm text-slate-600 space-y-1">
+                        <li>Mejora drástica de la atención al cliente.</li>
+                        <li>Optimización de la eficiencia operativa.</li>
+                        <li>Reducción significativa de costos.</li>
+                        <li>Potenciación de la toma de decisiones estratégicas.</li>
+                        <li>Adaptación ágil a cambios regulatorios y del mercado.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold text-slate-700 mb-1">Beneficios Clave para el Cliente:</h4>
+                    <ul class="list-disc pl-5 text-sm text-slate-600 space-y-1">
+                        <li>Retorno de la Inversión (ROI) acelerado y medible.</li>
+                        <li>Procesos de negocio más inteligentes y ágiles.</li>
+                        <li>Capacidad de personalización avanzada de ofertas y servicios.</li>
+                        <li>Mejora en el cumplimiento normativo y reducción de riesgos.</li>
+                        <li>Ventaja competitiva sostenible a través de la innovación continua.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold text-slate-700 mb-1">Nuestra Diferenciación Única:</h4>
+                    <ul class="list-disc pl-5 text-sm text-slate-600 space-y-1">
+                        <li><strong>Profundo conocimiento del sector Utilities.</strong></li>
+                        <li>Integración flexible (nativa con nuestro CIS).</li>
+                        <li>Tecnología de IA de última generación (Generativa, Agentes Autónomos).</li>
+                        <li>Enfoque de <strong>socio estratégico</strong> para la transformación digital.</li>
+                        <li>Implementación directa y experta, asegurando calidad.</li>
+                    </ul>
+                </div>
+            </div>
+             <div class="mt-8 p-4 bg-teal-600 text-white rounded-lg text-center">
+                <p class="text-sm">Transformando Utilities con Inteligencia Artificial.</p>
+            </div>
+        </aside>
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const bmcData = {
-                'customer-segments': {
-                    title: '1. Segmentos de Clientes',
-                    content: `
-                        <p class="mb-4">Nos enfocamos en empresas medianas y grandes del sector Utilities (electricidad, agua, gas, saneamiento). No nos dirigimos a organismos reguladores, sino a las empresas prestadoras del servicio.</p>
-                        <div class="space-y-6">
-                            <div id="segment-1" data-relations="value-propositions,revenue-streams,customer-relationships" class="p-4 bg-slate-50 rounded-lg border border-slate-200 transition-all hover:bg-slate-100 shadow">
-                                <h4 class="font-bold text-lg text-slate-800">Clientes Existentes de nuestro Producto CIS</h4>
-                                <ul class="mt-3 list-disc pl-5 space-y-1">
-                                    <li><strong>Descripción:</strong> Empresas de distribución y comercialización de electricidad, acueducto y alcantarillado, gas y saneamiento que ya utilizan nuestro producto CIS a medida.</li>
-                                    <li><strong>Característica Clave:</strong> Ya tienen una relación con nosotros, conocen la calidad de nuestras soluciones. La integración nativa de la plataforma de IA con su CIS actual representa una barrera de entrada baja y un alto valor añadido.</li>
-                                    <li><strong>Necesidad Principal:</strong> Mejorar la atención al cliente, personalizar ofertas y ser más eficientes.</li>
-                                </ul>
-                            </div>
-                            <div id="segment-2" data-relations="value-propositions,revenue-streams,customer-relationships" class="p-4 bg-slate-50 rounded-lg border border-slate-200 transition-all hover:bg-slate-100 shadow">
-                                <h4 class="font-bold text-lg text-slate-800">Nuevos Prospectos (Empresas con otros CIS)</h4>
-                                <ul class="mt-3 list-disc pl-5 space-y-1">
-                                    <li><strong>Descripción:</strong> Empresas del sector que actualmente utilizan sistemas CIS de otros proveedores.</li>
-                                    <li><strong>Característica Clave:</strong> No buscan reemplazar su CIS actual (por tamaño, complejidad, costo). Nuestra plataforma de IA debe ofrecerse como una solución que se integre con sus sistemas existentes.</li>
-                                    <li><strong>Necesidad Principal:</strong> Resolver "dolores" como la rotación de personal, errores humanos, consolidación de información, tiempos de respuesta lentos y mejorar la precisión de la información para la toma de decisiones.</li>
-                                </ul>
-                            </div>
-                        </div>
-                         <p class="mt-6 text-sm text-slate-500">Pase el cursor sobre cada segmento para ver sus relaciones con otros bloques del modelo.</p>
-                    `
-                },
-                'value-propositions': {
-                    title: '2. Propuesta de Valor',
-                    content: `
-                        <p class="mb-4">Entregamos una plataforma de IA especializada para el sector Utilities que resuelve "dolores" clave y crea "ganancias" tangibles, enfocada en mejorar la atención al cliente, personalizar ofertas, incrementar la eficiencia operativa, reducir costos y mejorar la toma de decisiones estratégicas.</p>
-                        
-                        <h4 class="font-bold text-lg text-slate-800">Diferenciadores Clave de Nuestra Plataforma de IA:</h4>
-                        <ul class="list-disc pl-5 space-y-2 mb-6">
-                            <li><strong>Desarrollada específicamente para el sector de Utilities:</strong> Entendemos los procesos operativos, la regulación y las tendencias.</li>
-                            <li><strong>Interfaz intuitiva:</strong> Facilita la adopción y el uso.</li>
-                            <li><strong>Integración nativa y no intrusiva con CIS existentes:</strong> Especialmente con el nuestro, y fácilmente integrable con otros CIS, MDM, Work Force Manager, ERP.</li>
-                            <li><strong>Conclusiones holísticas:</strong> Al cruzar información de múltiples sistemas.</li>
-                            <li><strong>Procesos prediseñados enfocados en la industria:</strong> Acelerando la implementación y el valor.</li>
-                            <li><strong>Conocimiento del ROI:</strong> Entendemos las variables que afectan la rentabilidad en Utilities.</li>
-                            <li><strong>Gestión segura de datos:</strong> Acorde a normativas exigidas y mejores prácticas.</li>
-                            <li><strong>Uso de IA generativa y agentes autónomos:</strong> Para recomendaciones y ejecución de tareas.</li>
-                            <li><strong>Apalancamiento de base instalada existente:</strong> Facilita expansión y fidelización.</li>
-                            <li><strong>Implementadores directos:</strong> Trabajamos con toda la cadena de valor del dato, desde el origen hasta la IA, asegurando outcomes de calidad.</li>
-                        </ul>
-
-                        <h4 class="font-bold text-lg text-slate-800">Beneficios Cuantificables Estimados:</h4>
-                        <p class="mb-3">El impacto de nuestra plataforma se traduce en mejoras medibles:</p>
-                        <div class="chart-container mb-6">
-                            <canvas id="benefitsChart"></canvas>
-                        </div>
-
-                        <h4 class="font-bold text-lg text-slate-800">Propuestas de Valor Específicas de IA:</h4>
-                        <ul class="list-disc pl-5 space-y-2">
-                            <li><strong>Preservación y democratización del conocimiento experto:</strong> Mitiga la rotación de personal y pérdida de experiencia.</li>
-                            <li><strong>Estandarización y mejora de la calidad:</strong> Reduce errores humanos y uniformiza la atención al cliente.</li>
-                            <li><strong>Visión unificada y en tiempo real:</strong> Elimina silos de información y agiliza la consulta de datos.</li>
-                            <li><strong>Agilización de tiempos de respuesta:</strong> Para consultas de clientes y problemas operativos.</li>
-                            <li><strong>Toma de decisiones más informada y estratégica:</strong> Basada en análisis predictivos y datos precisos.</li>
-                            <li><strong>Aumento de productividad:</strong> Liberando al personal de tareas repetitivas.</li>
-                            <li><strong>Mejora del cumplimiento normativo:</strong> Gracias a la estandarización de procesos asistida por IA.</li>
-                        </ul>
-                    `,
-                    onOpen: () => {
-                        const ctx = document.getElementById('benefitsChart').getContext('2d');
-                        if(window.myBenefitsChart) {
-                            window.myBenefitsChart.destroy();
-                        }
-                        window.myBenefitsChart = new Chart(ctx, {
-                            type: 'bar',
-                            data: {
-                                labels: ['Reducción de Sanciones (Cumplimiento)', 'Mejora T. Respuesta Clientes', 'Reducción Costo Op. Solicitudes', 'Reducción Carga Operativa Agentes'],
-                                datasets: [{
-                                    label: '% de Mejora Estimada',
-                                    data: [50, 30, 30, 25],
-                                    backgroundColor: ['#14b8a6', '#2dd4bf', '#5eead4', '#99f6e4'],
-                                    borderColor: '#0f766e',
-                                    borderWidth: 1
-                                }]
-                            },
-                            options: {
-                                indexAxis: 'y',
-                                responsive: true,
-                                maintainAspectRatio: false,
-                                scales: {
-                                    x: {
-                                        beginAtZero: true,
-                                        ticks: {
-                                            callback: function(value) { return value + "%" },
-                                            font: { size: 10 }
-                                        }
-                                    },
-                                    y: {
-                                        ticks: {
-                                            font: { size: 10 },
-                                            autoSkip: false, // Ensure all labels are shown
-                                            maxRotation: 0,
-                                            minRotation: 0
-                                        }
-                                    }
-                                },
-                                plugins: {
-                                    legend: { display: false },
-                                    title: { display: true, text: 'Impacto Estimado en KPIs Clave', font: {size: 14} },
-                                     tooltip: {
-                                        callbacks: {
-                                            label: function(context) {
-                                                let label = context.dataset.label || '';
-                                                if (label) { label += ': '; }
-                                                if (context.parsed.x !== null) { label += context.parsed.x + '%'; }
-                                                return label;
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        });
-                    },
-                    onClose: () => {
-                        if(window.myBenefitsChart) {
-                            window.myBenefitsChart.destroy();
-                        }
-                    }
-                },
-                'channels': {
-                    title: '3. Canales',
-                    content: `
-                        <p class="mb-4">Nuestra estrategia de canales está diseñada para interactuar con los clientes a lo largo de todo su ciclo de vida, desde el conocimiento inicial hasta el soporte postventa continuo, asegurando una experiencia coherente y de alto valor.</p>
-                        
-                        <h4 class="font-bold text-lg text-slate-800">Fases y Canales Principales:</h4>
-                        <ol class="list-decimal pl-5 space-y-3 mb-6">
-                            <li><strong>Conocimiento (Awareness):</strong>
-                                <ul class="list-disc pl-6 mt-1">
-                                    <li>Portal web corporativo de clase mundial.</li>
-                                    <li>Redes sociales para comunicación y engagement.</li>
-                                    <li>Participación en eventos líderes de la industria (ej. CS WEEK - IUCX).</li>
-                                    <li>Marketing de contenidos (educar y posicionar).</li>
-                                    <li>Equipo de Ventas y Account Management (contacto directo).</li>
-                                </ul>
-                            </li>
-                            <li><strong>Evaluación (Evaluation):</strong>
-                                <ul class="list-disc pl-6 mt-1">
-                                    <li>Demostraciones vivenciales del producto (experiencia directa).</li>
-                                    <li>Presentación de casos de éxito de clientes.</li>
-                                    <li>Desarrollo de casos de negocio personalizados (demostrando ROI).</li>
-                                    <li>Documentación técnica y funcional detallada.</li>
-                                </ul>
-                            </li>
-                            <li><strong>Compra (Purchase):</strong>
-                                <ul class="list-disc pl-6 mt-1">
-                                    <li>Equipo de Account Management especializado para ventas B2B complejas.</li>
-                                    <li>Procesos de contratación flexibles y adaptados a las partes.</li>
-                                </ul>
-                            </li>
-                            <li><strong>Entrega (Delivery):</strong>
-                                <p class="mt-1 mb-2">Proceso estructurado y colaborativo que incluye:</p>
-                                <ul class="list-disc pl-6 mt-1 space-y-1">
-                                     <li><strong>Configuración y Desarrollo:</strong> Uso de Flexmanager, desarrollo colaborativo de interfaces e integraciones.</li>
-                                     <li><strong>Migración de Datos Asistida:</strong> Estrategia definida, validación y carga segura.</li>
-                                     <li><strong>Pruebas Exhaustivas:</strong> Unitarias, End-to-End, Mock Runs para asegurar calidad.</li>
-                                     <li><strong>Entrenamiento y Transferencia de Conocimiento:</strong> Vía nuestra Academia, guías, talleres, y modelo "Train-the-Trainers".</li>
-                                     <li><strong>Despliegue Estructurado:</strong> Plan detallado y validación del entorno operativo.</li>
-                                </ul>
-                            </li>
-                            <li><strong>Postventa (After Sales):</strong>
-                                <ul class="list-disc pl-6 mt-1 space-y-1">
-                                    <li><strong>Programa de Soporte, Actualización y Mantenimiento (SAM).</strong></li>
-                                    <li><strong>Soporte Multinivel:</strong> Nivel 1 (cliente, con apoyo opcional nuestro) y Nivel 2 (nuestro) con ANS definidos.</li>
-                                    <li><strong>Actualización Continua de Versiones:</strong> Acceso a nuevas versiones, releases y parches sin costo adicional (con SAM vigente).</li>
-                                    <li><strong>Gestión de Requerimientos y Cambios:</strong> Adaptación a cambios regulatorios/tributarios.</li>
-                                    <li><strong>Hypercare:</strong> Soporte intensivo post-salida en producción para estabilización.</li>
-                                    <li><strong>Monitoreo y Control:</strong> Indicadores de desempeño y plan de reversión.</li>
-                                </ul>
-                            </li>
-                        </ol>
-                        <p>Este enfoque integral asegura que no solo vendemos una solución, sino que acompañamos al cliente en su adopción, uso y evolución continua.</p>
-                    `
-                },
-                'customer-relationships': {
-                    title: '4. Relaciones con Clientes',
-                    content: `
-                        <p class="mb-4">Buscamos establecer una relación de <strong>socio estratégico de transformación</strong> con nuestros clientes. Esta relación es de alto contacto, consultiva, especializada, de largo plazo, proactiva, cercana y basada en datos, con el objetivo de entregar ROI, eficiencia y calidad operativa.</p>
-
-                        <h4 class="font-bold text-lg text-slate-800">Enfoque por Segmento de Cliente:</h4>
-                        <ul class="list-disc pl-5 space-y-2 mb-6">
-                            <li><strong>Clientes Existentes de CIS:</strong> Se espera que seamos un socio que conoce sus problemas y no llega "con la hoja en blanco", sino que propone soluciones costo-efectivas. La relación es consultiva con foco en expansión (venta cruzada de la plataforma IA) y mantenimiento de cuenta clave. El objetivo es hacer upselling/cross-selling, activando capacidades modernas incluso en clientes con obsolescencia tecnológica en el CIS.</li>
-                            <li><strong>Nuevos Prospectos (con CIS de terceros):</strong> La relación se basa en construir confianza técnica mediante demostraciones, pruebas piloto y co-creación de casos de uso. Queremos "poner el pie en la puerta" con soluciones IA disruptivas que generen valor rápido, ampliando el "arenero" más allá de las complejas ventas de CIS.</li>
-                        </ul>
-
-                        <h4 class="font-bold text-lg text-slate-800">Enfoque por Roles dentro de la Empresa Cliente:</h4>
-                        <ul class="list-disc pl-5 space-y-2 mb-6">
-                            <li><strong>Gerentes (toma de decisiones):</strong> Relación ejecutiva con foco en resultados de negocio y ROI.</li>
-                            <li><strong>Usuarios operativos (ejecutivos, analistas):</strong> Relación de acompañamiento funcional, soporte técnico y entrenamiento continuo.</li>
-                        </ul>
-                        
-                        <h4 class="font-bold text-lg text-slate-800">Objetivos Generales de la Relación:</h4>
-                        <ul class="list-disc pl-5 space-y-2 mb-6">
-                            <li>Asegurar una adopción exitosa de la plataforma.</li>
-                            <li>Generar confianza en la IA como copiloto del negocio.</li>
-                            <li>Facilitar el uso autónomo pero con soporte experto.</li>
-                            <li>Crear oportunidades de expansión y ventas recurrentes (cross-sell / up-sell).</li>
-                        </ul>
-
-                        <h4 class="font-bold text-lg text-slate-800">Mecanismos Específicos de Relación:</h4>
-                        <ul class="list-disc pl-5 space-y-2">
-                            <li><strong>Customer Success Management:</strong> Acompañamiento activo postventa para garantizar valor y expansión.</li>
-                            <li><strong>Entrenamiento Personalizado y por Rol:</strong> Para aumentar confianza y habilidades.</li>
-                            <li><strong>Centro de Excelencia en IA aplicada a Utilities:</strong> Espacio para compartir mejores prácticas, casos de uso, webinars.</li>
-                            <li><strong>Feedback Loops en la Plataforma (UX y rendimiento):</strong> Para iterar y adaptar agentes IA.</li>
-                            <li><strong>Soporte Técnico Multinivel:</strong> Respuestas ágiles y proactivas.</li>
-                            <li><strong>Programas de Co-innovación con Clientes Líderes:</strong> Para fidelización e influencia en el roadmap.</li>
-                        </ul>
-                    `
-                },
-                'revenue-streams': {
-                    title: '5. Fuentes de Ingresos',
-                    content: `
-                        <p class="mb-4">Nuestro modelo de ingresos se centra exclusivamente en la generación de <strong>ingresos recurrentes</strong>, lo que asegura la sostenibilidad y el valor a largo plazo tanto para nuestros clientes como para nuestra empresa.</p>
-
-                        <h4 class="font-bold text-lg text-slate-800">Valor por el que Pagan los Clientes:</h4>
-                        <ul class="list-disc pl-5 space-y-1 mb-6">
-                            <li>Uso de la plataforma de IA y sus funcionalidades base.</li>
-                            <li>Flujos de procesos específicos de IA, sustentados en casos de negocio robustos con un ROI claro y demostrable.</li>
-                        </ul>
-
-                        <h4 class="font-bold text-lg text-slate-800">Modelo de Pago Preferido:</h4>
-                        <ul class="list-disc pl-5 space-y-1 mb-6">
-                            <li><strong>Suscripciones anuales:</strong> Ofrecen previsibilidad de ingresos y establecen un compromiso claro.</li>
-                            <li><strong>Pago por uso (Pay-per-use):</strong> Brinda flexibilidad y alinea el costo con el valor real recibido, ideal para escalar ciertos flujos o niveles de consumo.</li>
-                        </ul>
-
-                        <h4 class="font-bold text-lg text-slate-800">Estructura de Precios:</h4>
-                        <ul class="list-disc pl-5 space-y-1 mb-6">
-                            <li><strong>Precios fijos:</strong> Para paquetes base o niveles de suscripción estándar.</li>
-                            <li><strong>Por niveles de servicio / flujos de proceso:</strong> Permite a los clientes pagar solo por lo que necesitan, con opciones de escalabilidad.</li>
-                        </ul>
-
-                        <h4 class="font-bold text-lg text-slate-800">Estrategia de Precios por Segmento:</h4>
-                        <ul class="list-disc pl-5 space-y-2 mb-6">
-                            <li><strong>Clientes Existentes de CIS:</strong> Se ofrecerá un precio especial o paquete que refleje el menor costo de adopción gracias a la integración nativa. Se buscan eficiencias en canales de venta y soporte SAM ya establecidos.</li>
-                            <li><strong>Nuevos Prospectos:</strong> El enfoque será demostrar un ROI rápido con una inversión inicial controlada, implementando un caso de negocio a medida para "poner el pie en la puerta" y construir confianza.</li>
-                        </ul>
-                        
-                        <h4 class="font-bold text-lg text-slate-800">Foco Principal de Ingresos Recurrentes Adicionales:</h4>
-                        <p>Un componente clave de nuestra oferta y fuente de ingresos son los <strong>desarrollos a medida específicos sobre la plataforma</strong>. Esto incluye la especialización de los flujos de IA predefinidos para que se adapten al negocio particular del cliente y a la tecnología de sus sistemas de legado y fuentes de datos que se conecten a la plataforma. Este servicio de alto valor se integra dentro del modelo de ingresos recurrentes.</p>
-                    `
-                },
-                'key-activities': {
-                    title: '6. Actividades Clave',
-                    content: `
-                        <p class="mb-4">Las acciones más importantes que nuestra empresa debe realizar continuamente para que el modelo de negocio funcione, entregue valor y se mantenga competitivo.</p>
-
-                        <h4 class="font-bold text-lg text-slate-800">I. Desarrollo y Mantenimiento de la Plataforma (Núcleo Tecnológico):</h4>
-                        <ul class="list-disc pl-5 space-y-2 mb-4">
-                            <li><strong>Definición y Diseño Arquitectónico:</strong> Arquitectura de la solución (servicios, despliegue, componentes, integración), diseño y gestión de infraestructura tecnológica.</li>
-                            <li><strong>Implementación de Software:</strong> Selección de stack tecnológico (lenguajes, patrones, librerías, frameworks), desarrollo Frontend y Backend.</li>
-                            <li><strong>Desarrollo de Capacidades de IA Específicas para Utilities:</strong> Implementación de casos de negocio ("Flujos AI powered for utilities"), definición de procesos de negocio predefinidos, definición de personalidades (prompts) para los agentes de IA.</li>
-                            <li><strong>Gestión del Ciclo de Vida del Desarrollo (DevOps/AIOps):</strong> Gestión de ambientes, procesos DevOps/AIOps, pruebas exhaustivas (QA), estrategias de despliegue.</li>
-                            <li><strong>Aseguramiento Continuo de la Calidad del Software.</strong></li>
-                        </ul>
-
-                        <h4 class="font-bold text-lg text-slate-800">II. Implementación y Personalización de Soluciones (Entrega de Valor al Cliente):</h4>
-                        <ul class="list-disc pl-5 space-y-2 mb-4">
-                            <li><strong>Gestión de Proyectos de Implementación:</strong> Asegurar entregas a tiempo y según requisitos.</li>
-                            <li><strong>Estrategia y Ejecución de Customer Success:</strong> Asegurar adopción y valor para el cliente.</li>
-                            <li><strong>Personalización y Adaptación:</strong> Desarrollar flujos específicos y adaptarlos a los sistemas legados del cliente.</li>
-                        </ul>
-
-                        <h4 class="font-bold text-lg text-slate-800">III. Ventas y Marketing (Llegar al Mercado):</h4>
-                        <ul class="list-disc pl-5 space-y-2 mb-4">
-                            <li><strong>Actividades de Preventa y Venta:</strong> Generación de leads, presentaciones y demos, elaboración de propuestas y casos de negocio (con ROI), gestión de cuentas.</li>
-                            <li><strong>Actividades de Marketing:</strong> Marketing de contenidos, participación en eventos de la industria.</li>
-                        </ul>
-
-                        <h4 class="font-bold text-lg text-slate-800">IV. Soporte al Cliente y Customer Success (Sostenibilidad y Crecimiento):</h4>
-                        <ul class="list-disc pl-5 space-y-2 mb-4">
-                            <li><strong>Mantenimiento Continuo de la Solución:</strong> Estrategia "Open Online" (documentación, foros), solución de errores, actualización de componentes, evolución de la solución.</li>
-                            <li><strong>Soporte Técnico y Funcional.</strong></li>
-                        </ul>
-
-                        <h4 class="font-bold text-lg text-slate-800">V. Fundamentales Transversales (Críticos para el Éxito):</h4>
-                        <ul class="list-disc pl-5 space-y-2">
-                            <li><strong>El Cuidado de los Datos (Data Governance & Security):</strong> Asegurar calidad, privacidad, cumplimiento normativo, seguridad en almacenamiento/procesamiento, y ética en IA.</li>
-                            <li><strong>La Capacidad de Mantener la Solución Operativa (Escalabilidad, Fiabilidad, Rendimiento):</strong> Diseño de arquitectura escalable, monitorización, planificación de capacidad, alta disponibilidad y recuperación ante desastres.</li>
-                        </ul>
-                    `
-                },
-                'key-resources': {
-                    title: '7. Recursos Clave',
-                    content: '<p>Aún por definir en detalle. Este bloque describirá los activos indispensables (humanos: ingenieros IA/ML, científicos de datos, desarrolladores, expertos en Utilities, ventas, customer success; intelectuales: plataforma IA, algoritmos, modelos entrenados, metodologías, marca, know-how; físicos: infraestructura cloud; financieros: capital para desarrollo y expansión) para que nuestro modelo de negocio funcione.</p>'
-                },
-                'key-partners': {
-                    title: '8. Socios Clave',
-                    content: '<p>Aún por definir en detalle. Este bloque describirá la red de proveedores (tecnológicos, cloud) y socios estratégicos (consultoras, integradores) que hacen posible y potencian el modelo de negocio.</p>'
-                },
-                'cost-structure': {
-                    title: '9. Estructura de Costos',
-                    content: '<p>Aún por definir en detalle. Este bloque describirá los costos más importantes inherentes a nuestro modelo de negocio (ej: desarrollo y mantenimiento de la plataforma, personal especializado, infraestructura cloud, ventas y marketing, soporte al cliente).</p>'
-                }
-            };
-
-            const modal = document.getElementById('modal');
-            const modalBackdrop = document.getElementById('modal-backdrop');
-            const modalTitle = document.getElementById('modal-title');
-            const modalContent = document.getElementById('modal-content');
-            const modalCloseBtn = document.getElementById('modal-close-btn');
-            const summaryPanelLinks = document.querySelectorAll('#summary-panel a[data-blockid]');
-            
-            let currentOpenBlock = null;
-            let originalBodyOverflow;
-
-            const openModal = (blockId) => {
-                const data = bmcData[blockId];
-                if (!data) return;
-                
-                currentOpenBlock = blockId;
-
-                modalTitle.textContent = data.title;
-                modalContent.innerHTML = data.content;
-                
-                originalBodyOverflow = document.body.style.overflow;
-                document.body.style.overflow = 'hidden'; // Prevent background scroll
-
-                modalBackdrop.classList.add('active');
-                modal.classList.add('active');
-
-                if (data.onOpen) {
-                    setTimeout(data.onOpen, 50); 
-                }
-                // Trigger re-evaluation of hover listeners for content within the modal
-                setTimeout(attachModalHoverListeners, 0);
-            };
-
-            const closeModal = () => {
-                if (currentOpenBlock && bmcData[currentOpenBlock] && bmcData[currentOpenBlock].onClose) {
-                    bmcData[currentOpenBlock].onClose();
-                }
-                document.body.style.overflow = originalBodyOverflow;
-                modalBackdrop.classList.remove('active');
-                modal.classList.remove('active');
-                currentOpenBlock = null;
-            };
-
-            document.querySelectorAll('.bmc-block').forEach(block => {
-                block.addEventListener('click', () => {
-                    openModal(block.id);
-                });
-            });
-
-            summaryPanelLinks.forEach(link => {
-                link.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    openModal(link.dataset.blockid);
-                });
-            });
-
-            modalCloseBtn.addEventListener('click', closeModal);
-            modalBackdrop.addEventListener('click', closeModal);
-            document.addEventListener('keydown', (e) => {
-                if (e.key === "Escape" && modal.classList.contains('active')) closeModal();
-            });
-
-            const highlightRelations = (event) => {
-                const sourceElement = event.currentTarget;
-                const relations = sourceElement.dataset.relations?.split(',');
-                if(!relations) return;
-
-                // Do not apply source highlight if it's a main BMC block, only for elements within modals
-                if (!sourceElement.classList.contains('bmc-block')) {
-                    sourceElement.classList.add('highlight-source');
-                }
-                
-                relations.forEach(relId => {
-                    document.getElementById(relId)?.classList.add('highlight-target');
-                });
-            };
-
-            const clearHighlights = (event) => {
-                const sourceElement = event.currentTarget;
-                sourceElement.classList.remove('highlight-source');
-                document.querySelectorAll('.highlight-target').forEach(el => el.classList.remove('highlight-target'));
-            };
-            
-            function attachModalHoverListeners() {
-                 modalContent.querySelectorAll('[data-relations]').forEach(el => {
-                    el.removeEventListener('mouseenter', highlightRelations); 
-                    el.removeEventListener('mouseleave', clearHighlights); 
-                    el.addEventListener('mouseenter', highlightRelations);
-                    el.addEventListener('mouseleave', clearHighlights);
-                 });
-            }
-        });
-    </script>
 </body>
 </html>
