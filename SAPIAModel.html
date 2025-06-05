@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modelo de Negocio Interactivo: Agentes IA de SAP</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chosen Palette: Warm Neutrals (Stone, White, Sky Blue Accent) -->
+    <!-- Application Structure Plan: Se ha diseñado una aplicación que replica visualmente el Business Model Canvas usando una cuadrícula de CSS. Cada bloque del canvas es una tarjeta interactiva. Al hacer clic en una tarjeta, se abre una ventana modal que muestra la información detallada de esa sección. Esta estructura fue elegida porque traduce directamente el marco conceptual del informe en una interfaz de usuario intuitiva, permitiendo a los usuarios centrarse en un área a la vez y explorar a su propio ritmo sin sentirse abrumados. -->
+    <!-- Visualization & Content Choices: Información del Informe: 9 bloques de texto del Business Model Canvas. -> Objetivo: Organizar e Informar. -> Método de Visualización/Presentación: Cuadrícula interactiva con HTML/CSS que imita el diseño del BMC. Se usan iconos Unicode para dar pistas visuales. La interacción principal es hacer clic en las tarjetas para abrir un modal con listas de texto detalladas. -> Justificación: Esta es la forma más directa y atractiva de presentar esta información cualitativa y estructurada. Forzar el uso de gráficos de datos (ej. Chart.js) sería inapropiado al no existir datos cuantitativos. La interacción con el modal mantiene la vista principal limpia y fomenta la exploración. -> Biblioteca/Método: Vanilla JS, Tailwind CSS. Se confirma que NO se usa Chart.js, NO se usan gráficos SVG y NO se usa Mermaid JS. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .bento-grid {
+            display: grid;
+            gap: 1rem;
+            grid-template-columns: repeat(1, 1fr);
+        }
+        @media (min-width: 768px) {
+            .bento-grid {
+                grid-template-columns: repeat(5, 1fr);
+                grid-template-rows: auto auto auto;
+            }
+            .grid-item-partners { grid-column: 1 / 3; grid-row: 1 / 2; }
+            .grid-item-activities { grid-column: 1 / 2; grid-row: 2 / 3; }
+            .grid-item-resources { grid-column: 2 / 3; grid-row: 2 / 3; }
+            .grid-item-value { grid-column: 3 / 4; grid-row: 1 / 3; }
+            .grid-item-relations { grid-column: 4 / 5; grid-row: 1 / 2; }
+            .grid-item-channels { grid-column: 5 / 6; grid-row: 1 / 2; }
+            .grid-item-segments { grid-column: 4 / 6; grid-row: 2 / 3; }
+            .grid-item-costs { grid-column: 1 / 4; grid-row: 3 / 4; }
+            .grid-item-revenue { grid-column: 4 / 6; grid-row: 3 / 4; }
+        }
+        .modal {
+            transition: opacity 0.25s ease;
+        }
+        .modal-content {
+            transition: transform 0.25s ease;
+        }
+        .card {
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body class="bg-stone-50 text-stone-800">
+
+    <div id="app" class="container mx-auto p-4 md:p-8">
+        
+        <header class="text-center mb-8">
+            <h1 class="text-3xl md:text-4xl font-bold text-sky-800">Modelo de Negocio Interactivo</h1>
+            <p class="mt-2 text-lg text-stone-600">Agentes de IA de SAP</p>
+            <p class="mt-4 max-w-3xl mx-auto text-stone-500">
+                Esta es una visualización interactiva del Business Model Canvas para la oferta de agentes de IA de SAP. Haga clic en cualquiera de los bloques para explorar en detalle los componentes que definen su estrategia, desde sus socios clave hasta su propuesta de valor central.
+            </p>
+        </header>
+
+        <main class="bento-grid">
+            <div id="partners" class="grid-item-partners card bg-white p-6 rounded-xl shadow-md cursor-pointer flex flex-col justify-between">
+                <div>
+                    <h2 class="font-bold text-xl text-sky-700">🤝 Socios Clave</h2>
+                    <p class="text-sm text-stone-500 mt-2">Alianzas estratégicas que potencian la oferta de IA.</p>
+                </div>
+            </div>
+
+            <div id="activities" class="grid-item-activities card bg-white p-6 rounded-xl shadow-md cursor-pointer flex flex-col justify-between">
+                <div>
+                    <h2 class="font-bold text-xl text-sky-700">⚙️ Actividades Clave</h2>
+                    <p class="text-sm text-stone-500 mt-2">Acciones esenciales para entregar la propuesta de valor.</p>
+                </div>
+            </div>
+
+            <div id="resources" class="grid-item-resources card bg-white p-6 rounded-xl shadow-md cursor-pointer flex flex-col justify-between">
+                <div>
+                    <h2 class="font-bold text-xl text-sky-700">📦 Recursos Clave</h2>
+                    <p class="text-sm text-stone-500 mt-2">Activos fundamentales del modelo de negocio.</p>
+                </div>
+            </div>
+
+            <div id="value" class="grid-item-value card bg-sky-700 text-white p-6 rounded-xl shadow-lg cursor-pointer flex flex-col justify-center items-center text-center">
+                <h2 class="font-bold text-2xl">💡 Oferta de Valor</h2>
+                <p class="text-sm text-sky-200 mt-2">El núcleo de la oferta de SAP: transformar el trabajo inteligente y optimizar la eficiencia empresarial.</p>
+            </div>
+
+            <div id="relations" class="grid-item-relations card bg-white p-6 rounded-xl shadow-md cursor-pointer flex flex-col justify-between">
+                <div>
+                    <h2 class="font-bold text-xl text-sky-700">❤️ Relación con Clientes</h2>
+                    <p class="text-sm text-stone-500 mt-2">Cómo SAP interactúa y apoya a sus clientes.</p>
+                </div>
+            </div>
+
+            <div id="channels" class="grid-item-channels card bg-white p-6 rounded-xl shadow-md cursor-pointer flex flex-col justify-between">
+                <div>
+                    <h2 class="font-bold text-xl text-sky-700">🚚 Canales</h2>
+                    <p class="text-sm text-stone-500 mt-2">Vías para llegar a los segmentos de clientes.</p>
+                </div>
+            </div>
+
+            <div id="segments" class="grid-item-segments card bg-white p-6 rounded-xl shadow-md cursor-pointer flex flex-col justify-between">
+                <div>
+                    <h2 class="font-bold text-xl text-sky-700">🎯 Segmentos de Clientes</h2>
+                    <p class="text-sm text-stone-500 mt-2">Grupos de empresas y roles a los que se dirige la oferta.</p>
+                </div>
+            </div>
+
+            <div id="costs" class="grid-item-costs card bg-white p-6 rounded-xl shadow-md cursor-pointer flex flex-col justify-between">
+                <div>
+                    <h2 class="font-bold text-xl text-sky-700">💸 Estructura de Costes</h2>
+                    <p class="text-sm text-stone-500 mt-2">Principales costes incurridos en el modelo.</p>
+                </div>
+            </div>
+            
+            <div id="revenue" class="grid-item-revenue card bg-white p-6 rounded-xl shadow-md cursor-pointer flex flex-col justify-between">
+                <div>
+                    <h2 class="font-bold text-xl text-sky-700">💰 Fuentes de Ingresos</h2>
+                    <p class="text-sm text-stone-500 mt-2">Cómo se generan los ingresos.</p>
+                </div>
+            </div>
+        </main>
+        
+        <footer class="text-center mt-12 text-stone-400 text-sm">
+            <p>Visualización basada en el análisis del modelo de negocio de agentes de IA de SAP.</p>
+        </footer>
+
+    </div>
+
+    <div id="modal" class="modal fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center p-4 z-50 opacity-0 pointer-events-none">
+        <div id="modal-content" class="modal-content bg-white rounded-lg shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col transform scale-95">
+            <header class="flex items-center justify-between p-4 border-b border-stone-200">
+                <h3 id="modal-title" class="text-2xl font-bold text-sky-800"></h3>
+                <button id="modal-close" class="text-stone-500 hover:text-stone-800 text-2xl">&times;</button>
+            </header>
+            <main id="modal-body" class="p-6 overflow-y-auto">
+            </main>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const canvasData = {
+                partners: {
+                    title: '🤝 Socios Clave',
+                    content: [
+                        "<strong>Cohere:</strong> Socio estratégico para ofrecer IA generativa confiable, escalable y segura, incluyendo modelos avanzados (Rerank, Command, Embed) y su próximo modelo de razonamiento.",
+                        "<strong>Otros proveedores de modelos de IA de terceros:</strong> Disponibles a través de SAP AI Core."
+                    ]
+                },
+                activities: {
+                    title: '⚙️ Actividades Clave',
+                    content: [
+                        "Desarrollar <strong>agentes de IA</strong> que aporten valor empresarial.",
+                        "Integrar agentes de IA (como <strong>Joule</strong>) a través de la suite de aplicaciones empresariales.",
+                        "Crear <strong>agentes Joule listos para usar</strong> en diversas áreas (finanzas, servicio, ventas).",
+                        "Permitir la <strong>creación y personalización de agentes</strong> por parte de los clientes (<strong>Joule Studio</strong>).",
+                        "<strong>Orquestar equipos de agentes</strong> para ejecutar procesos complejos de forma autónoma.",
+                        "Mantener y evolucionar <strong>plataformas de datos</strong> (Business Data Cloud) y <strong>grafos de conocimiento</strong> (Knowledge Graph).",
+                        "Establecer y gestionar <strong>asociaciones estratégicas</strong> con proveedores de tecnología de IA.",
+                        "Garantizar la <strong>confiabilidad, escalabilidad y seguridad</strong> de las soluciones de IA.",
+                        "<strong>Innovar y desarrollar nuevas capacidades de IA</strong>."
+                    ]
+                },
+                resources: {
+                    title: '📦 Recursos Clave',
+                    content: [
+                        "<strong>Joule:</strong> El copiloto de IA generativa de SAP.",
+                        "<strong>SAP Business Data Cloud:</strong> Capa de datos unificada y fiable.",
+                        "<strong>SAP Knowledge Graph:</strong> Puente semántico entre datos y procesos empresariales.",
+                        "La <strong>suite de aplicaciones empresariales de SAP.</strong>",
+                        "<strong>Joule Studio en SAP Build:</strong> Herramienta para desarrollar agentes personalizados.",
+                        "Plataformas <strong>SAP AI Core / generative AI hub</strong>.",
+                        "<strong>Modelos de IA</strong> propios de SAP y de terceros (ej. Cohere).",
+                        "<strong>Experiencia y liderazgo</strong> de SAP en IA empresarial.",
+                        "<strong>Datos fiables y contextualizados.</strong>"
+                    ]
+                },
+                value: {
+                    title: '💡 Oferta de Valor',
+                    content: [
+                        "<strong>Transformación empresarial y redefinición del trabajo inteligente.</strong>",
+                        "<strong>Optimización de procesos</strong> y mejora de la toma de decisiones, impulsando la eficiencia operativa.",
+                        "Ayudar a las empresas a superar la falta de <strong>colaboración fluida</strong> en procesos de extremo a extremo.",
+                        "Aumento de la eficiencia operativa y <strong>reducción de errores</strong>.",
+                        "<strong>Acelerar la toma de decisiones</strong> basadas en datos en tiempo real.",
+                        "Ofrecer una <strong>experiencia integrada</strong> en toda la suite con copilotos como Joule (más de 1300 habilidades).",
+                        "Permitir la <strong>ejecución rápida y fiable</strong> de procesos complejos con Joule Agents.",
+                        "Facilitar <strong>decisiones más informadas y precisas</strong> mediante el acceso a una base de conocimiento fiable y contextualizada.",
+                        "Capacidad de <strong>colaborar entre agentes</strong> para resolver problemas multifuncionales.",
+                        "Ofrecer <strong>agentes listos para su uso</strong> en áreas como finanzas, servicio y ventas.",
+                        "Permitir a las empresas <strong>desarrollar sus propios agentes</strong> con un flujo de trabajo sin código (Joule Studio).",
+                        "Transformar el concepto de copiloto en un <strong>orquestador de IA</strong>.",
+                        "Aumentar la eficiencia operativa, acelerar la resolución de problemas y <strong>mejorar la experiencia del cliente</strong>.",
+                        "Ofrecer <strong>IA generativa confiable, escalable y segura</strong> para la empresa.",
+                        "Habilitar la <strong>automatización de tareas complejas y multifuncionales</strong>."
+                    ]
+                },
+                relations: {
+                    title: '❤️ Relación con Clientes',
+                    content: [
+                        "Proporcionar una <strong>experiencia de usuario integrada.</strong>",
+                        "Ofrecer <strong>opciones de personalización</strong> y herramientas (<strong>Joule Studio</strong>).",
+                        "Proporcionar <strong>agentes pre-construidos</strong> para una adopción rápida.",
+                        "Abordar activamente los desafíos de integración, calidad de datos, gobernanza, privacidad y capacitación para fomentar la adopción y la confianza."
+                    ]
+                },
+                channels: {
+                    title: '🚚 Canales',
+                    content: [
+                        "La propia <strong>suite de aplicaciones de SAP</strong> (donde Joule está integrado).",
+                        "El <strong>ecosistema de socios de SAP.</strong>",
+                        "<strong>Canales de ventas directas</strong> de SAP.",
+                        "<strong>Comunicados de prensa y eventos</strong> (ej. SAP Sapphire, SAP TechEd) como medios para anunciar y promocionar las soluciones."
+                    ]
+                },
+                segments: {
+                    title: '🎯 Segmentos de Clientes',
+                    content: [
+                        "<strong>Empresas</strong> que buscan optimizar sus procesos y mejorar la toma de decisiones.",
+                        "<strong>Organizaciones</strong> que enfrentan desafíos de colaboración fluida en procesos de extremo a extremo.",
+                        "Empresas que operan con la <strong>suite de aplicaciones empresariales de SAP.</strong>",
+                        "Clientes en <strong>industrias altamente reguladas</strong> como finanzas, atención médica y sector público.",
+                        "<strong>Departamentos o roles</strong> dentro de las empresas, como finanzas, servicio, ventas, consultores y equipos de servicio al cliente."
+                    ]
+                },
+                costs: {
+                    title: '💸 Estructura de Costes',
+                    content: ["La información sobre la estructura de costes específica para los agentes de IA no se detalla explícitamente en las fuentes proporcionadas."]
+                },
+                revenue: {
+                    title: '💰 Fuentes de Ingresos',
+                    content: ["La información sobre las fuentes de ingresos específicas para los agentes de IA no se detalla explícitamente en las fuentes proporcionadas."]
+                }
+            };
+
+            const modal = document.getElementById('modal');
+            const modalContent = document.getElementById('modal-content');
+            const modalTitle = document.getElementById('modal-title');
+            const modalBody = document.getElementById('modal-body');
+            const modalCloseBtn = document.getElementById('modal-close');
+            const cards = document.querySelectorAll('.card');
+
+            const openModal = (id) => {
+                const data = canvasData[id];
+                if (!data) return;
+
+                modalTitle.innerHTML = data.title;
+                modalBody.innerHTML = `<ul class="space-y-3 list-disc list-inside text-stone-700">${data.content.map(item => `<li>${item}</li>`).join('')}</ul>`;
+                
+                modal.classList.remove('opacity-0', 'pointer-events-none');
+                modalContent.classList.remove('scale-95');
+            };
+
+            const closeModal = () => {
+                modal.classList.add('opacity-0');
+                modalContent.classList.add('scale-95');
+                setTimeout(() => {
+                    modal.classList.add('pointer-events-none');
+                }, 300);
+            };
+
+            cards.forEach(card => {
+                card.addEventListener('click', () => {
+                    openModal(card.id);
+                });
+            });
+
+            modalCloseBtn.addEventListener('click', closeModal);
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    closeModal();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
