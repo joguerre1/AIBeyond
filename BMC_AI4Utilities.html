@@ -9,8 +9,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <!-- Chosen Palette: Neutral Grays with Teal Accents (Slate, Stone, Teal) -->
-    <!-- Application Structure Plan: The application presents a static visual map of the Business Model Canvas. It uses a main two-column layout. The left/main column (approx. 75% width) displays the 9 BMC blocks organized into logical groups (Infrastructure, Offer, Customers, Finances) using a CSS grid. Each block is a distinct panel. The right column (approx. 25% width) is a dedicated sidebar panel containing a concise summary of the Value Proposition. This structure provides a clear, at-a-glance overview of the entire model, fulfilling the request for a map-like visualization with a separate value summary. -->
-    <!-- Visualization & Content Choices: Report Info (BMC Blocks) -> Goal (Organize/Inform) -> Viz/Presentation (Styled HTML/Tailwind panels with summarized text) -> Interaction (None, static map) -> Justification (Clear, direct visual overview of the entire BMC) -> Library/Method (HTML, Tailwind CSS). Value Proposition Summary -> Goal (Summarize/Highlight) -> Viz/Presentation (Dedicated sidebar panel with key bullet points) -> Interaction (None) -> Justification (Constant visibility of core value offer). No dynamic charts or complex JS needed for this static map. -->
+    <!-- Application Structure Plan: The application presents a static visual map of the Business Model Canvas, mirroring the layout provided in the user's image. The Value Proposition is central and prominent. Key Partners, Activities, and Resources are to its left. Customer Relationships, Channels, and Segments are to its right. Cost Structure and Revenue Streams are at the bottom. Interactive buttons in "Customer Segments" and "Value Proposition" panels trigger Gemini API calls to generate detailed personas and refine messaging, displayed in a shared modal. This adds an AI-powered exploration layer. -->
+    <!-- Visualization & Content Choices: BMC Blocks -> Goal (Organize/Inform) -> Viz/Presentation (Styled HTML/Tailwind panels with summarized text, Value Proposition refined with more concrete facts). Gemini Integration: Customer Segments -> Goal (Explore/Detail) -> Interaction (Button click -> API call -> Modal display) -> Justification (Deeper understanding of customer profiles). Value Proposition -> Goal (Refine/Optimize) -> Interaction (Button click -> API call -> Modal display) -> Justification (Improved messaging and elevator pitch). All new dynamic content displayed in a shared modal. -->
     <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
     <style>
         body {
@@ -21,194 +21,412 @@
             background-color: white;
             border-radius: 0.5rem; /* rounded-lg */
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); /* shadow-md */
-            padding: 1.5rem; /* p-6 */
-            height: 100%; /* Make panels fill their grid cell height */
+            padding: 1.25rem; /* p-5 */
+            height: 100%; 
+            display: flex;
+            flex-direction: column;
+        }
+        .bmc-panel-content {
+            flex-grow: 1;
         }
         .bmc-panel h3 {
             color: #0d9488; /* teal-600 */
             font-weight: 700; /* font-bold */
-            font-size: 1.125rem; /* text-lg */
-            margin-bottom: 0.75rem; /* mb-3 */
+            font-size: 1rem; /* text-base for titles in smaller panels */
+            margin-bottom: 0.5rem; /* mb-2 */
+        }
+        .bmc-panel h4 { /* For subheadings within VP panel */
+            color: #0f766e; /* teal-700 */
+            font-weight: 600; /* font-semibold */
+            font-size: 0.875rem; /* text-sm for sub-titles */
+            margin-top: 0.75rem; /* mt-3 */
+            margin-bottom: 0.25rem; /* mb-1 */
         }
         .bmc-panel ul {
             list-style-type: disc;
-            padding-left: 1.25rem; /* pl-5 */
-            font-size: 0.875rem; /* text-sm */
+            padding-left: 1.125rem; /* pl-4 */
+            font-size: 0.8125rem; /* text-xs equivalent for smaller text */
             color: #475569; /* slate-600 */
         }
         .bmc-panel ul li {
-            margin-bottom: 0.375rem; /* mb-1.5 */
+            margin-bottom: 0.25rem; /* mb-1 */
         }
-        .sidebar-panel {
-            background-color: #f1f5f9; /* slate-100 */
+        .value-proposition-panel {
+            background-color: #0f766e; /* teal-700 for a darker, central VP */
+            color: white;
+            padding: 1.5rem; /* p-6 */
         }
-        .sidebar-panel h3 {
-             color: #0f766e; /* teal-700 */
+        .value-proposition-panel h3 {
+            color: white;
+            font-size: 1.25rem; /* text-xl */
+            text-align: center;
         }
+         .value-proposition-panel h4 {
+            color: #ccfbf1; /* teal-100 for subheadings on dark bg */
+            font-size: 1rem; /* text-base */
+        }
+        .value-proposition-panel ul {
+            color: #e2e8f0; /* slate-200 for list items on dark bg */
+            font-size: 0.875rem; /* text-sm */
+        }
+        .value-proposition-panel p {
+            font-size: 0.875rem; /* text-sm */
+            color: #e2e8f0; /* slate-200 */
+            text-align: center; /* Default alignment for paragraphs */
+            margin-bottom: 1rem;
+        }
+        .value-proposition-panel .list-item-custom { /* Custom class for list items requiring left alignment */
+             text-align: left;
+        }
+
+        .ai-button {
+            background-color: #14b8a6; /* teal-500 */
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-top: 0.75rem; /* mt-3 */
+            transition: background-color 0.2s ease;
+            cursor: pointer;
+            border: none;
+        }
+        .ai-button:hover {
+            background-color: #0d9488; /* teal-600 */
+        }
+
+        /* Modal styles */
+        .ai-modal-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            z-index: 40;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+        .ai-modal-backdrop.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .ai-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.95);
+            z-index: 50;
+            opacity: 0;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            pointer-events: none;
+            width: 90%;
+            max-width: 600px; /* Max width for the modal */
+            background-color: white;
+            border-radius: 0.5rem; /* rounded-lg */
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+        }
+        .ai-modal.active {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+            pointer-events: auto;
+        }
+        .ai-modal-content {
+            max-height: 70vh; /* Max height for content */
+            overflow-y: auto;
+            font-size: 0.875rem; /* text-sm */
+        }
+        .ai-modal-content h5 {
+            font-size: 1rem; /* text-base */
+            font-weight: 600;
+            color: #1e293b; /* slate-800 */
+            margin-top: 0.75rem; /* mt-3 */
+            margin-bottom: 0.25rem; /* mb-1 */
+        }
+         .ai-modal-content ul {
+            list-style-type: disc;
+            padding-left: 1.25rem;
+            margin-bottom: 0.75rem;
+        }
+        .ai-modal-content p {
+            margin-bottom: 0.5rem;
+        }
+        .loader {
+            border: 4px solid #f3f3f3; /* Light grey */
+            border-top: 4px solid #14b8a6; /* Teal */
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
     </style>
 </head>
 <body class="text-slate-800">
 
-    <header class="text-center py-8 bg-white shadow-md">
-        <h1 class="text-3xl md:text-4xl font-bold text-slate-900">Mapa Visual del Modelo de Negocio</h1>
-        <p class="text-lg md:text-xl text-slate-600 mt-2">Plataforma de IA para el Sector Utilities</p>
+    <header class="text-center py-6 md:py-8 bg-white shadow-md">
+        <h1 class="text-2xl md:text-3xl font-bold text-slate-900">Modelo de Negocio Interactivo</h1>
+        <p class="text-md md:text-lg text-slate-600 mt-1">Plataforma de IA para el Sector Utilities</p>
     </header>
 
-    <div class="flex flex-col lg:flex-row max-w-screen-2xl mx-auto mt-8">
-        <!-- BMC Main Area -->
-        <div class="w-full lg:w-3/4 p-4 md:p-6">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
-                <!-- Columna 1: Infraestructura -->
-                <div class="space-y-4 md:space-y-6 flex flex-col">
-                    <div id="key-partners-panel" class="bmc-panel">
-                        <h3>8. Socios Clave</h3>
+    <div class="max-w-6xl mx-auto p-4 md:p-6 mt-6">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-5">
+            <!-- Columna Izquierda (Socios, Actividades, Recursos) -->
+            <div class="space-y-4 md:space-y-5 flex flex-col justify-between">
+                <div id="key-partners-panel" class="bmc-panel">
+                    <div class="bmc-panel-content">
+                        <h3><span class="text-yellow-500">&#128101;</span> Socios Clave</h3>
                         <ul>
                             <li>Proveedores tecnológicos (Cloud, IA).</li>
                             <li>Socios de consultoría e integración.</li>
-                            <li>Alianzas estratégicas sectoriales.</li>
+                            <li>Alianzas estratégicas sectoriales que potencian la oferta de IA.</li>
                         </ul>
                     </div>
-                    <div id="key-activities-panel" class="bmc-panel">
-                        <h3>6. Actividades Clave</h3>
+                </div>
+                <div id="key-activities-panel" class="bmc-panel">
+                     <div class="bmc-panel-content">
+                        <h3><span class="text-purple-500">&#9881;</span> Actividades Clave</h3>
                         <ul>
                             <li>Desarrollo y Mant. Plataforma IA.</li>
                             <li>Implementación y Personalización.</li>
                             <li>Ventas y Marketing especializado.</li>
                             <li>Soporte y Customer Success.</li>
-                            <li>Gestión de Datos y Seguridad.</li>
-                            <li>Innovación continua en IA.</li>
-                        </ul>
-                    </div>
-                    <div id="key-resources-panel" class="bmc-panel">
-                        <h3>7. Recursos Clave</h3>
-                        <ul>
-                            <li><strong>Humanos:</strong> Ing. IA/ML, expertos Utilities, ventas.</li>
-                            <li><strong>Intelectuales:</strong> Plataforma IA, algoritmos, marca.</li>
-                            <li><strong>Físicos:</strong> Infraestructura Cloud.</li>
-                            <li><strong>Financieros:</strong> Capital para desarrollo/expansión.</li>
+                            <li>Acciones esenciales para entregar la propuesta de valor.</li>
                         </ul>
                     </div>
                 </div>
-
-                <!-- Columna 2: Oferta -->
-                <div class="space-y-4 md:space-y-6 flex flex-col">
-                    <div id="value-propositions-panel-main" class="bmc-panel flex-grow">
-                        <h3>2. Propuesta de Valor</h3>
+                <div id="key-resources-panel" class="bmc-panel">
+                    <div class="bmc-panel-content">
+                        <h3><span class="text-orange-500">&#128230;</span> Recursos Clave</h3>
                         <ul>
-                            <li>Plataforma IA especializada para Utilities.</li>
-                            <li>Mejora atención al cliente y personalización.</li>
-                            <li>Incrementa eficiencia operativa y reduce costos.</li>
-                            <li>Potencia toma de decisiones estratégicas.</li>
-                            <li><strong>Diferenciadores:</strong> Especialización sectorial, integración superior (nativa con CIS propio), IA avanzada (generativa), seguridad robusta, implementación experta y directa.</li>
-                            <li>Beneficios medibles y ROI acelerado.</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <!-- Columna 3: Clientes -->
-                <div class="space-y-4 md:space-y-6 flex flex-col">
-                    <div id="customer-relationships-panel" class="bmc-panel">
-                        <h3>4. Relaciones con Clientes</h3>
-                        <ul>
-                            <li>Socio estratégico de transformación (largo plazo).</li>
-                            <li>Consultoría experta y acompañamiento.</li>
-                            <li><strong>Clientes CIS:</strong> Foco en expansión, upselling.</li>
-                            <li><strong>Nuevos Prospectos:</strong> Confianza técnica, pruebas piloto.</li>
-                            <li>Mecanismos: Customer Success Mgmt, Centro de Excelencia IA.</li>
-                        </ul>
-                    </div>
-                    <div id="channels-panel" class="bmc-panel">
-                        <h3>3. Canales</h3>
-                        <ul>
-                            <li><strong>Conocimiento:</strong> Portal web, redes, eventos (CS Week).</li>
-                            <li><strong>Evaluación:</strong> Demos vivenciales, casos de éxito, ROI.</li>
-                            <li><strong>Compra:</strong> Account Management especializado.</li>
-                            <li><strong>Entrega:</strong> Implementación estructurada y directa.</li>
-                            <li><strong>Postventa:</strong> Programa SAM, soporte multinivel, Hypercare.</li>
-                        </ul>
-                    </div>
-                    <div id="customer-segments-panel" class="bmc-panel">
-                        <h3>1. Segmentos de Clientes</h3>
-                        <ul>
-                            <li><strong>Clientes Existentes CIS:</strong> Empresas Utilities (medianas/grandes) usuarias de nuestro CIS.</li>
-                            <li><strong>Nuevos Prospectos:</strong> Empresas Utilities (medianas/grandes) con otros CIS o sistemas legados.</li>
-                            <li>Foco: Empresas prestadoras de servicios (no reguladores).</li>
+                            <li><strong>Humanos:</strong> Ing. IA/ML, expertos Utilities.</li>
+                            <li><strong>Intelectuales:</strong> Plataforma IA, algoritmos.</li>
+                            <li>Activos fundamentales del modelo de negocio.</li>
                         </ul>
                     </div>
                 </div>
             </div>
 
-            <!-- Fila Inferior: Finanzas -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mt-4 md:mt-6">
-                <div id="cost-structure-panel" class="bmc-panel">
-                    <h3>9. Estructura de Costos</h3>
-                    <ul>
-                        <li>Desarrollo y Mantenimiento de la Plataforma IA.</li>
-                        <li>Personal altamente especializado (IA, desarrollo, ventas).</li>
-                        <li>Infraestructura Tecnológica (Cloud).</li>
-                        <li>Costos de Ventas y Marketing.</li>
-                        <li>Soporte al cliente y Customer Success.</li>
+            <!-- Columna Central (Oferta de Valor) -->
+            <div class="value-proposition-panel bmc-panel rounded-lg flex flex-col justify-center items-center">
+                 <div class="bmc-panel-content">
+                    <h3><span class="text-yellow-300">&#128161;</span> Oferta de Valor Concreta</h3>
+                    <p class="mt-2">Nuestra plataforma de IA transforma las Utilities mediante:</p>
+                    
+                    <h4>¿Qué HACE nuestra plataforma?</h4>
+                    <ul class="list-disc pl-5 text-sm space-y-1 mb-3 text-center mx-auto" style="display: inline-block;">
+                        <li class="list-item-custom"><strong>Automatiza procesos</strong> para mejorar tiempos de respuesta a clientes (ej. hasta un 30%).</li>
+                        <li class="list-item-custom"><strong>Asiste a ejecutivos</strong> con IA, reduciendo su carga operativa (ej. hasta un 25%).</li>
+                        <li class="list-item-custom"><strong>Integra datos</strong> históricos y actuales para decisiones que pueden reducir costos operativos (ej. hasta un 30%).</li>
+                        <li class="list-item-custom"><strong>Estandariza procesos</strong> guiados por IA, pudiendo reducir sanciones (ej. hasta un 50%).</li>
                     </ul>
+                
+                    <h4>¿Por qué nos ELIGEN los clientes? (Hechos)</h4>
+                    <ul class="list-disc pl-5 text-sm space-y-1 text-center mx-auto" style="display: inline-block;">
+                        <li class="list-item-custom"><strong>Especialización comprobada:</strong> Desarrollada específicamente para Utilities, con procesos prediseñados.</li>
+                        <li class="list-item-custom"><strong>Integración eficiente:</strong> Nativa con nuestro CIS y flexible con sistemas de terceros (MDM, ERP).</li>
+                        <li class="list-item-custom"><strong>Tecnología IA avanzada:</strong> Uso de IA generativa y agentes autónomos para resultados superiores.</li>
+                        <li class="list-item-custom"><strong>Implementación experta:</strong> Somos implementadores directos, asegurando calidad de datos y outcomes.</li>
+                        <li class="list-item-custom"><strong>Resultados medibles:</strong> Aceleramos el ROI en procesos clave.</li>
+                    </ul>
+                     <p class="text-xs mt-4 italic">Cifras de impacto basadas en estimaciones y objetivos de diseño.</p>
                 </div>
-                <div id="revenue-streams-panel" class="bmc-panel">
-                    <h3>5. Fuentes de Ingresos</h3>
-                    <ul>
-                        <li>Modelo de ingresos 100% recurrentes.</li>
-                        <li><strong>Suscripciones anuales</strong> a la plataforma.</li>
-                        <li><strong>Pago por uso</strong> de flujos de procesos específicos.</li>
-                        <li>Precios por niveles de servicio/flujos.</li>
-                        <li><strong>Foco:</strong> Desarrollos a medida sobre la plataforma (adaptación de flujos, integraciones) dentro del modelo recurrente.</li>
-                        <li>Precios especiales para clientes CIS existentes.</li>
-                    </ul>
+                <button id="optimize-vp-btn" class="ai-button">✨ Optimizar Mensaje Clave con IA</button>
+            </div>
+
+            <!-- Columna Derecha (Relación, Canales, Segmentos) -->
+            <div class="space-y-4 md:space-y-5 flex flex-col justify-between">
+                <div id="customer-relationships-panel" class="bmc-panel">
+                    <div class="bmc-panel-content">
+                        <h3><span class="text-red-500">&#10084;&#65039;</span> Relación con Clientes</h3>
+                        <ul>
+                            <li>Socio estratégico de transformación.</li>
+                            <li>Consultoría experta.</li>
+                            <li>Cómo interactuamos y apoyamos a nuestros clientes.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div id="channels-panel" class="bmc-panel">
+                    <div class="bmc-panel-content">
+                        <h3><span class="text-blue-500">&#128666;</span> Canales</h3>
+                        <ul>
+                            <li><strong>Conocimiento:</strong> Web, redes, eventos.</li>
+                            <li><strong>Entrega:</strong> Implementación directa.</li>
+                            <li>Vías para llegar a los segmentos de clientes.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div id="customer-segments-panel" class="bmc-panel">
+                     <div class="bmc-panel-content">
+                        <h3><span class="text-indigo-500">&#128100;</span> Segmentos de Clientes</h3>
+                        <ul>
+                            <li>Clientes Existentes CIS (Utilities).</li>
+                            <li>Nuevos Prospectos (Utilities).</li>
+                            <li>Grupos de empresas y roles a los que se dirige la oferta.</li>
+                        </ul>
+                    </div>
+                    <button id="generate-personas-btn" class="ai-button">✨ Generar Perfiles Detallados con IA</button>
                 </div>
             </div>
         </div>
 
-        <!-- Panel Resumen Propuesta de Valor (Barra Lateral Derecha) -->
-        <aside class="w-full lg:w-1/4 sidebar-panel p-6 shadow-lg lg:min-h-screen mt-6 lg:mt-0">
-            <h3 class="text-2xl font-bold mb-6">Resumen de la Oferta de Valor</h3>
-            
-            <div class="space-y-5">
-                <div>
-                    <h4 class="text-lg font-semibold text-slate-700 mb-1">¿Qué Ofrecemos?</h4>
-                    <p class="text-sm text-slate-600">Una <strong>plataforma de Inteligencia Artificial de vanguardia</strong>, especializada y diseñada exclusivamente para optimizar las operaciones y la estrategia del sector Utilities.</p>
-                </div>
-                <div>
-                    <h4 class="text-lg font-semibold text-slate-700 mb-1">Problemas que Resolvemos:</h4>
-                    <ul class="list-disc pl-5 text-sm text-slate-600 space-y-1">
-                        <li>Mejora drástica de la atención al cliente.</li>
-                        <li>Optimización de la eficiencia operativa.</li>
-                        <li>Reducción significativa de costos.</li>
-                        <li>Potenciación de la toma de decisiones estratégicas.</li>
-                        <li>Adaptación ágil a cambios regulatorios y del mercado.</li>
-                    </ul>
-                </div>
-                <div>
-                    <h4 class="text-lg font-semibold text-slate-700 mb-1">Beneficios Clave para el Cliente:</h4>
-                    <ul class="list-disc pl-5 text-sm text-slate-600 space-y-1">
-                        <li>Retorno de la Inversión (ROI) acelerado y medible.</li>
-                        <li>Procesos de negocio más inteligentes y ágiles.</li>
-                        <li>Capacidad de personalización avanzada de ofertas y servicios.</li>
-                        <li>Mejora en el cumplimiento normativo y reducción de riesgos.</li>
-                        <li>Ventaja competitiva sostenible a través de la innovación continua.</li>
-                    </ul>
-                </div>
-                <div>
-                    <h4 class="text-lg font-semibold text-slate-700 mb-1">Nuestra Diferenciación Única:</h4>
-                    <ul class="list-disc pl-5 text-sm text-slate-600 space-y-1">
-                        <li><strong>Profundo conocimiento del sector Utilities.</strong></li>
-                        <li>Integración flexible (nativa con nuestro CIS).</li>
-                        <li>Tecnología de IA de última generación (Generativa, Agentes Autónomos).</li>
-                        <li>Enfoque de <strong>socio estratégico</strong> para la transformación digital.</li>
-                        <li>Implementación directa y experta, asegurando calidad.</li>
+        <!-- Fila Inferior (Costes e Ingresos) -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5 mt-4 md:mt-5">
+            <div id="cost-structure-panel" class="bmc-panel">
+                <div class="bmc-panel-content">
+                    <h3><span class="text-green-500">&#128179;</span> Estructura de Costes</h3>
+                    <ul>
+                        <li>Desarrollo y Mant. Plataforma IA.</li>
+                        <li>Personal especializado.</li>
+                        <li>Infraestructura Cloud.</li>
+                        <li>Principales costes incurridos en el modelo.</li>
                     </ul>
                 </div>
             </div>
-             <div class="mt-8 p-4 bg-teal-600 text-white rounded-lg text-center">
-                <p class="text-sm">Transformando Utilities con Inteligencia Artificial.</p>
+            <div id="revenue-streams-panel" class="bmc-panel">
+                 <div class="bmc-panel-content">
+                    <h3><span class="text-amber-500">&#128176;</span> Fuentes de Ingresos</h3>
+                    <ul>
+                        <li>Ingresos 100% recurrentes.</li>
+                        <li>Suscripciones anuales.</li>
+                        <li>Pago por uso (flujos específicos).</li>
+                        <li>Cómo se generan los ingresos.</li>
+                    </ul>
+                </div>
             </div>
-        </aside>
+        </div>
     </div>
 
+    <!-- AI Modal -->
+    <div id="ai-modal-backdrop" class="ai-modal-backdrop"></div>
+    <div id="ai-modal" class="ai-modal">
+        <div class="p-4 border-b border-slate-200 flex justify-between items-center">
+            <h3 id="ai-modal-title" class="text-lg font-semibold text-slate-800">Respuesta de la IA</h3>
+            <button id="ai-modal-close-btn" class="text-slate-400 hover:text-slate-600">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+        <div id="ai-modal-content-area" class="p-5 ai-modal-content">
+            <!-- AI content will be injected here -->
+            <div id="ai-loader" class="loader" style="display: none;"></div>
+            <div id="ai-response-content"></div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const generatePersonasBtn = document.getElementById('generate-personas-btn');
+            const optimizeVpBtn = document.getElementById('optimize-vp-btn');
+
+            const aiModal = document.getElementById('ai-modal');
+            const aiModalBackdrop = document.getElementById('ai-modal-backdrop');
+            const aiModalCloseBtn = document.getElementById('ai-modal-close-btn');
+            const aiModalTitle = document.getElementById('ai-modal-title');
+            const aiResponseContent = document.getElementById('ai-response-content');
+            const aiLoader = document.getElementById('ai-loader');
+
+            const openAiModal = (title) => {
+                aiModalTitle.textContent = title;
+                aiResponseContent.innerHTML = '';
+                aiLoader.style.display = 'block';
+                aiModal.classList.add('active');
+                aiModalBackdrop.classList.add('active');
+            };
+
+            const closeAiModal = () => {
+                aiModal.classList.remove('active');
+                aiModalBackdrop.classList.remove('active');
+                aiLoader.style.display = 'none';
+            };
+
+            aiModalCloseBtn.addEventListener('click', closeAiModal);
+            aiModalBackdrop.addEventListener('click', closeAiModal);
+
+            async function callGeminiAPI(prompt) {
+                openAiModal('Procesando con IA...');
+                const apiKey = ""; // API key will be injected by the Canvas environment
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+                
+                const payload = {
+                    contents: [{ role: "user", parts: [{ text: prompt }] }]
+                };
+
+                try {
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        throw new Error(`Error de API: ${response.status} - ${errorData.error?.message || 'Error desconocido'}`);
+                    }
+
+                    const result = await response.json();
+                    
+                    if (result.candidates && result.candidates.length > 0 &&
+                        result.candidates[0].content && result.candidates[0].content.parts &&
+                        result.candidates[0].content.parts.length > 0) {
+                        const text = result.candidates[0].content.parts[0].text;
+                        aiResponseContent.innerHTML = text.replace(/\n/g, '<br>'); // Simple formatting
+                    } else {
+                        aiResponseContent.textContent = 'No se pudo obtener una respuesta válida de la IA.';
+                    }
+                } catch (error) {
+                    console.error('Error llamando a la API de Gemini:', error);
+                    aiResponseContent.textContent = `Error al procesar la solicitud: ${error.message}`;
+                } finally {
+                    aiLoader.style.display = 'none';
+                }
+            }
+
+            generatePersonasBtn.addEventListener('click', () => {
+                const customerSegmentsContent = `
+                    Segmento 1: Clientes Existentes CIS (Utilities). Empresas de Utilities (medianas/grandes) usuarias de nuestro CIS.
+                    Segmento 2: Nuevos Prospectos (Utilities). Empresas de Utilities (medianas/grandes) con otros CIS o sistemas legados.
+                    Foco: Empresas prestadoras de servicios (no reguladores).
+                `;
+                const prompt = `
+                    Somos una plataforma de IA para el sector Utilities. Nuestros principales segmentos de clientes son:
+                    ${customerSegmentsContent}
+                    Basado en estos segmentos de cliente para una plataforma de IA en el sector Utilities, genera perfiles de cliente más detallados para cada uno de los dos segmentos. Para cada segmento, incluye: 
+                    1. Posibles 'dolores' o problemas específicos que enfrentan. 
+                    2. Objetivos o aspiraciones clave. 
+                    3. Canales de comunicación preferidos. 
+                    4. Motivaciones para adoptar una solución de IA como la nuestra. 
+                    Presenta la respuesta en español, de forma clara, utilizando encabezados para cada segmento y listas o párrafos concisos para cada punto.
+                `;
+                openAiModal('Generando Perfiles de Cliente Detallados...');
+                callGeminiAPI(prompt);
+            });
+
+            optimizeVpBtn.addEventListener('click', () => {
+                const valuePropositionContent = document.querySelector('.value-proposition-panel .bmc-panel-content').innerText;
+                // Basic cleanup to make the text more prompt-friendly
+                const cleanedVP = valuePropositionContent.replace(/✨.*$/m, '').replace(/\s+/g, ' ').trim();
+
+                const prompt = `
+                    Nuestra plataforma de IA para el sector Utilities tiene la siguiente oferta de valor (enfocada en hechos y datos concretos):
+                    "${cleanedVP}"
+                    Basado en esta oferta de valor para una plataforma de IA en el sector Utilities, por favor, en español: 
+                    1. Sugiere 2-3 formas alternativas y MÁS impactantes de comunicar el mensaje clave a los clientes potenciales, manteniendo el enfoque en hechos y resultados.
+                    2. Genera un 'elevator pitch' de 30 segundos (aproximadamente 60-75 palabras) que resuma esta oferta de valor de manera concreta y convincente.
+                    Presenta la respuesta de forma clara y concisa, utilizando encabezados para cada sección.
+                `;
+                openAiModal('Optimizando Mensaje Clave de VP...');
+                callGeminiAPI(prompt);
+            });
+
+        });
+    </script>
 </body>
 </html>
