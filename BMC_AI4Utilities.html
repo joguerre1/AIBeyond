@@ -261,7 +261,7 @@
             background: white;
             border-radius: 20px;
             padding: 40px;
-            max-width: 800px;
+            max-width: 700px;
             width: 90%;
             max-height: 80vh;
             overflow-y: auto;
@@ -354,28 +354,16 @@
         .content-section ul ul li::before {
             content: '↳';
         }
-        
-        .styled-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        .styled-table th, .styled-table td {
-            padding: 12px 15px;
-            text-align: left;
-            border-bottom: 1px solid #e1ecf4;
-        }
-        .styled-table th {
+        .example-block {
             background-color: #f8fbfd;
-            font-weight: 600;
-            color: #3498db;
+            border-left: 4px solid #f39c12;
+            padding: 10px 15px;
+            margin-top: 10px;
+            border-radius: 0 8px 8px 0;
         }
-        .styled-table tbody tr:hover {
-            background-color: #f0f7ff;
+        .example-block p {
+            margin: 5px 0;
         }
-        .styled-table td:nth-child(3) {
-            font-weight: 500;
-        }
-
 
         /* Responsive */
         @media (max-width: 1200px) {
@@ -548,16 +536,10 @@
                     <div class="content-section">
                         <h4>3. Actividades de Soporte y Consultoría</h4>
                         <ul>
-                            <li><strong>Gestión del Onboarding</strong>.</li>
-                            <li><strong>Gestión del Soporte y Mantenimiento (SAM)</strong>.</li>
-                            <li><strong>Gestión de la Personalización de la Solución</strong>.</li>
-                            <li><strong>Gestión del Éxito del Cliente (Customer Success) adaptativa</strong> (Para: Todos)
-                                <ul style="padding-left: 20px; list-style-type: circle; margin-top: 5px;">
-                                    <li>Actuando como <strong>socio de co-innovación</strong> (Para: Los Adoptadores)</li>
-                                    <li>Actuando como <strong>asesor y habilitador</strong> (Para: Los Creyentes)</li>
-                                    <li>Actuando como <strong>educador y guía</strong> (Para: Los Novatos)</li>
-                                </ul>
-                            </li>
+                            <li><strong>Gestión del Onboarding</strong> (Para: Todos)</li>
+                            <li><strong>Gestión del Soporte y Mantenimiento (SAM)</strong> (Para: Todos)</li>
+                            <li><strong>Gestión de la Personalización de la Solución</strong> (Para: Todos)</li>
+                            <li><strong>Gestión del Éxito del Cliente (Customer Success) adaptativa</strong> (Para: Todos)</li>
                         </ul>
                     </div>
                     <div class="content-section">
@@ -599,7 +581,6 @@
                 subtitle: "Menos complejidad, más valor. Tu mismo equipo de trabajo, más potente.",
                 content: `
                     <div class="content-section">
-                        <h4>Nuestra Promesa para Todos los Segmentos</h4>
                         <h5>Menos Complejidad: Menos clics, más rápido, más intuitivo.</h5>
                         <ul>
                             <li>Reducimos la sobrecarga de trabajo al automatizar tareas repetitivas.</li>
@@ -615,24 +596,67 @@
                     </div>
                     <hr style="margin: 25px 0; border-top: 1px solid #e1ecf4; border-bottom: 0;">
                     <div class="content-section">
-                        <h4>Oferta Enfocada por Segmento</h4>
+                        <h4>MÁS VALOR: Oferta Enfocada por Segmento</h4>
                         
-                        <h5>Para "Los Adoptadores": La Plataforma de IA Definitiva</h5>
+                        <h5>"Los Novatos": El Primer Paso hacia la Eficiencia Inteligente</h5>
                         <ul>
-                            <li><strong>Ejemplo: Orquestación de Modelos Propios.</strong> Problema: Tienen un modelo de predicción de demanda propio, pero está aislado. Solución Alexandria: Integra y alimenta tu modelo con datos en tiempo real de nuestro CIS y orquesta el flujo para optimizar automáticamente la asignación de cuadrillas. Valor: No reemplaces, potencia.</li>
-                            <li><strong>Ejemplo: Desarrollo Acelerado de Apps Internas.</strong> Problema: Tu equipo tarda meses en integrar datos para nuevas apps. Solución Alexandria: Ofrecemos una API unificada. Valor: Acelera drásticamente los ciclos de innovación.</li>
+                            <li>
+                                <strong>Resuelve un problema crítico de negocio con un ROI claro y rápido.</strong>
+                                <div class="example-block">
+                                    <p><strong>Ejemplo:</strong> Generación automática de respuestas a PQRS.</p>
+                                    <p><strong>Problema:</strong> Alta carga de personal redactando respuestas a preguntas, quejas o solicitudes.</p>
+                                    <p><strong>Solución IA:</strong> Agente generativo que propone borradores automáticos para revisión final.</p>
+                                    <p><strong>ROI rápido:</strong> Ahorro en tiempo, aceleración de cumplimiento y homogeneidad en la comunicación.</p>
+                                </div>
+                            </li>
+                             <li>
+                                <strong>Descubre el potencial oculto en los datos que ya posees.</strong>
+                                <div class="example-block">
+                                    <p><strong>Ejemplo:</strong> Identificación de patrones ocultos en reclamos.</p>
+                                    <p><strong>Potencial oculto:</strong> Detectar causas raíz invisibles y prever brotes de reclamos para actuar preventivamente.</p>
+                                    <p><strong>Valor:</strong> Menor costo operativo, mejora de reputación y cumplimiento normativo.</p>
+                                </div>
+                            </li>
+                             <li>
+                                <strong>Inicia con un proyecto piloto de bajo riesgo y alto impacto, sin complejidad técnica.</strong>
+                            </li>
                         </ul>
 
-                        <h5>Para "Los Creyentes": Tu Atajo a la Inteligencia Artificial</h5>
+                        <h5>"Los Creyentes": Tu Atajo a la Inteligencia Artificial</h5>
                         <ul>
-                            <li><strong>Ejemplo: Agente de Comunicación Proactiva de Cortes.</strong> Problema: Saturación del call center durante cortes. Solución Alexandria: Un agente detecta la anomalía, la cruza con clientes y notifica proactivamente de forma autónoma. Valor: Reduce drásticamente las llamadas y mejora la satisfacción.</li>
-                            <li><strong>Ejemplo: Agente de Cobranza Virtual.</strong> Problema: Gestión de mora costosa e inconsistente. Solución Alexandria: Un agente virtual contacta clientes, ofrece planes de pago pre-aprobados y gestiona el acuerdo. Valor: Mejora tasas de recuperación y reduce costos.</li>
+                            <li><strong>Implementa tu primer caso de uso de alto impacto en semanas, no años, con soluciones pre-empaquetadas.</strong>
+                                <div class="example-block">
+                                     <p><strong>Ejemplo 1: Agente de Comunicación Proactiva de Cortes.</strong></p>
+                                     <p><strong>Problema:</strong> Saturación del call center durante cortes. <strong>Solución Alexandria:</strong> Un agente detecta la anomalía, la cruza con clientes y notifica proactivamente de forma autónoma. <strong>Valor:</strong> Reduce drásticamente las llamadas y mejora la satisfacción.</p>
+                                </div>
+                                 <div class="example-block">
+                                     <p><strong>Ejemplo 2: Generación automática de comunicaciones personalizadas.</strong></p>
+                                     <p><strong>Problema:</strong> Comunicaciones de cobranza genéricas y poco efectivas. <strong>Solución Alexandria:</strong> La IA generativa redacta correos o SMS ajustados al perfil del cliente (tono, urgencia, empatía). <strong>Valor:</strong> Mejora la tasa de apertura y respuesta.</p>
+                                </div>
+                            </li>
+                            <li><strong>Acelera la curva de aprendizaje de tu equipo.</strong>
+                                 <div class="example-block">
+                                     <p><strong>Ejemplo 3: Panel inteligente para agentes humanos.</strong></p>
+                                     <p><strong>Lo que hace:</strong> Un copiloto IA genera sugerencias en tiempo real para los agentes sobre qué decir, cómo responder objeciones y qué plan ofrecer. <strong>Valor:</strong> Eleva la calidad de atención sin depender de la experiencia individual.</p>
+                                </div>
+                            </li>
                         </ul>
                        
-                        <h5>Para "Los Novatos": El Primer Paso hacia la Eficiencia Inteligente</h5>
+                        <h5>"Los Adoptadores": La Plataforma de IA Definitiva</h5>
                         <ul>
-                            <li><strong>Ejemplo: Generación automática de respuestas a PQRS.</strong> Problema: Alta carga de personal redactando respuestas. Solución IA: Agente generativo que propone borradores automáticos. ROI Rápido: Ahorro en tiempo y aceleración de cumplimiento.</li>
-                            <li><strong>Ejemplo: Identificación de patrones ocultos en reclamos.</strong> Problema: Causas raíz de reclamos son invisibles. Solución IA: Detectar patrones en el historial de PQRS para actuar preventivamente. Valor: Menor costo operativo y mejora de reputación.</li>
+                            <li><strong>Potencia tu IA actual con interoperabilidad y escalabilidad superior.</strong>
+                                <div class="example-block">
+                                    <p><strong>Ejemplo: Orquestación de Modelos Propios.</strong></p>
+                                    <p><strong>Problema:</strong> Tienen un modelo de predicción de demanda propio, pero está aislado. <strong>Solución Alexandria:</strong> Integra y alimenta tu modelo con datos en tiempo real de nuestro CIS y orquesta el flujo para optimizar automáticamente la asignación de cuadrillas. <strong>Valor:</strong> No reemplaces, potencia.</p>
+                                </div>
+                            </li>
+                            <li><strong>Accede a APIs flexibles para integrarlas a tus desarrollos existentes.</strong>
+                                 <div class="example-block">
+                                    <p><strong>Ejemplo: Desarrollo Acelerado de Apps Internas.</strong></p>
+                                    <p><strong>Problema:</strong> Tu equipo tarda meses en integrar datos para nuevas apps. <strong>Solución Alexandria:</strong> Ofrecemos una API unificada. <strong>Valor:</strong> Acelera drásticamente los ciclos de innovación.</p>
+                                </div>
+                            </li>
+                            <li><strong>Utiliza modelos pre-entrenados más sofisticados que los genéricos.</strong></li>
                         </ul>
                     </div>
                 `
@@ -656,62 +680,39 @@
                 subtitle: "Estrategias de comunicación y entrega para cada fase del ciclo de vida del cliente",
                 content: `
                     <div class="content-section">
-                        <table class="styled-table">
-                            <thead>
-                                <tr>
-                                    <th>Fase del Ciclo</th>
-                                    <th>Canal / Actividad Clave</th>
-                                    <th>Foco Principal por Segmento</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td rowspan="3"><strong>1. Conocimiento</strong><br>(Awareness)</td>
-                                    <td>Portal Web, Redes Sociales, Eventos (ej. CS WEEK)</td>
-                                    <td>Todos</td>
-                                </tr>
-                                <tr>
-                                    <td>Marketing de Contenidos Educativos</td>
-                                    <td>Novatos, Creyentes</td>
-                                </tr>
-                                <tr>
-                                    <td>Whitepapers Técnicos, Webinars con Arquitectos</td>
-                                    <td>Adoptadores</td>
-                                </tr>
-                                <tr>
-                                    <td rowspan="3"><strong>2. Evaluación</strong><br>(Evaluation)</td>
-                                    <td>Demos Vivenciales y Casos de Éxito</td>
-                                    <td>Creyentes, Novatos</td>
-                                </tr>
-                                 <tr>
-                                    <td>Desarrollo de Casos de Negocio (ROI)</td>
-                                    <td>Novatos, Creyentes</td>
-                                </tr>
-                                <tr>
-                                    <td>Documentación Técnica y de APIs</td>
-                                    <td>Adoptadores</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>3. Compra</strong><br>(Purchase)</td>
-                                    <td>Equipo de Account Management Especializado</td>
-                                    <td>Todos (con discurso adaptado)</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>4. Entrega</strong><br>(Delivery)</td>
-                                    <td>Onboarding liderado por Customer Success con apoyo de especialistas en implementación. Metodología estructurada.</td>
-                                    <td>Todos</td>
-                                </tr>
-                                 <tr>
-                                    <td rowspan="2"><strong>5. Postventa</strong><br>(After Sales)</td>
-                                    <td>Programa SAM (Soporte, Actualización, Mantenimiento)</td>
-                                    <td>Todos</td>
-                                </tr>
-                                <tr>
-                                    <td>Capacitación Continua y Monitoreo Proactivo</td>
-                                    <td>Creyentes, Novatos</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <h4>1. Conocimiento (Awareness)</h4>
+                        <ul>
+                            <li>Portal Web, Redes Sociales, Eventos (ej. CS WEEK) (Para: Todos)</li>
+                            <li>Marketing de Contenidos Educativos (Para: Novatos, Creyentes)</li>
+                            <li>Whitepapers Técnicos, Webinars con Arquitectos (Para: Adoptadores)</li>
+                        </ul>
+                    </div>
+                     <div class="content-section">
+                        <h4>2. Evaluación (Evaluation)</h4>
+                        <ul>
+                            <li>Demos Vivenciales y Casos de Éxito (Para: Creyentes, Novatos)</li>
+                            <li>Desarrollo de Casos de Negocio con ROI (Para: Novatos, Creyentes)</li>
+                            <li>Documentación Técnica y de APIs (Para: Adoptadores)</li>
+                        </ul>
+                    </div>
+                     <div class="content-section">
+                        <h4>3. Compra (Purchase)</h4>
+                        <ul>
+                            <li>Equipo de Account Management Especializado (Para: Todos, con discurso adaptado)</li>
+                        </ul>
+                    </div>
+                     <div class="content-section">
+                        <h4>4. Entrega (Delivery)</h4>
+                        <ul>
+                            <li>Onboarding liderado por Customer Success con apoyo de especialistas en implementación (Para: Todos)</li>
+                        </ul>
+                    </div>
+                     <div class="content-section">
+                        <h4>5. Postventa (After Sales)</h4>
+                        <ul>
+                            <li>Programa SAM (Soporte, Actualización, Mantenimiento) (Para: Todos)</li>
+                            <li>Capacitación Continua y Monitoreo Proactivo (Para: Creyentes, Novatos)</li>
+                        </ul>
                     </div>
                 `
             },
