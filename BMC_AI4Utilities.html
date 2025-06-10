@@ -261,7 +261,7 @@
             background: white;
             border-radius: 20px;
             padding: 40px;
-            max-width: 650px;
+            max-width: 800px;
             width: 90%;
             max-height: 80vh;
             overflow-y: auto;
@@ -315,9 +315,18 @@
 
         .content-section h4 {
             color: #3498db;
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             font-weight: 600;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
+            padding-bottom: 5px;
+            border-bottom: 2px solid #e8f4f8;
+        }
+        .content-section h5 {
+            color: #1e3a5f;
+            font-size: 1rem;
+            font-weight: 600;
+            margin-top: 15px;
+            margin-bottom: 5px;
         }
 
         .content-section ul {
@@ -327,7 +336,6 @@
 
         .content-section li {
             padding: 8px 0;
-            border-bottom: 1px solid #f0f7ff;
             position: relative;
             padding-left: 20px;
         }
@@ -339,6 +347,35 @@
             color: #f39c12;
             font-weight: bold;
         }
+        .content-section ul ul { /* Nested list styles */
+            padding-left: 20px;
+            margin-top: 5px;
+        }
+        .content-section ul ul li::before {
+            content: '↳';
+        }
+        
+        .styled-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .styled-table th, .styled-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #e1ecf4;
+        }
+        .styled-table th {
+            background-color: #f8fbfd;
+            font-weight: 600;
+            color: #3498db;
+        }
+        .styled-table tbody tr:hover {
+            background-color: #f0f7ff;
+        }
+        .styled-table td:nth-child(3) {
+            font-weight: 500;
+        }
+
 
         /* Responsive */
         @media (max-width: 1200px) {
@@ -401,17 +438,17 @@
         <div class="canvas-grid">
             <div class="canvas-section key-partners" onclick="openModal('partners')">
                 <h3>Socios Clave</h3>
-                <p>Alianzas que potencian nuestra capacidad de innovación y entrega.</p>
+                <p>Alianzas con proveedores Cloud/IA y consultoras estratégicas para acelerar la adopción y la innovación.</p>
             </div>
 
             <div class="canvas-section key-activities" onclick="openModal('activities')">
                 <h3>Actividades Clave</h3>
-                <p>Acciones fundamentales para crear y entregar valor.</p>
+                <p>I+D en IA, empaquetado de soluciones y creación de contenido educativo adaptado a la madurez de cada cliente.</p>
             </div>
 
             <div class="canvas-section key-resources" onclick="openModal('resources')">
                 <h3>Recursos Clave</h3>
-                <p>Activos estratégicos para una ventaja competitiva sostenible.</p>
+                <p>Equipo experto de Arquitectos de IA y Consultores, y nuestra plataforma propietaria con modelos pre-entrenados.</p>
             </div>
 
             <div class="canvas-section value-proposition" onclick="openModal('value')">
@@ -421,31 +458,32 @@
 
             <div class="canvas-section customer-relationships" onclick="openModal('relationships')">
                 <h3>Relaciones con Clientes</h3>
-                <p>Vínculos estratégicos para el éxito mutuo.</p>
+                <p>Relación adaptativa: desde socio de co-innovación para expertos, hasta guía educativo para principiantes.</p>
             </div>
 
             <div class="canvas-section channels" onclick="openModal('channels')">
                 <h3>Canales</h3>
-                <p>Estrategias de comunicación y entrega para cada segmento.</p>
+                <p>Estrategias de comunicación y entrega para cada fase del ciclo de vida del cliente, adaptadas por segmento.</p>
             </div>
 
             <div class="canvas-section customer-segments" onclick="openModal('segments')">
                 <h3>Segmentos de Cliente</h3>
-                <p>Audiencias con necesidades y madurez de IA específicas.</p>
+                <p>Clientes Utilities segmentados por su madurez en IA: 'Adoptadores', 'Creyentes' y 'Novatos'.</p>
             </div>
 
             <div class="canvas-section cost-structure" onclick="openModal('costs')">
                 <h3>Estructura de Costos</h3>
-                <p>Inversiones clave para sostener el modelo de negocio.</p>
+                <p>Costos centrados en I+D para expertos, un mayor CAC para educar a nuevos usuarios, y la inversión en personal y plataforma.</p>
             </div>
 
             <div class="canvas-section revenue-streams" onclick="openModal('revenue')">
                 <h3>Fuentes de Ingresos</h3>
-                <p>Modelos de monetización adaptados al valor entregado.</p>
+                <p>Ingresos recurrentes a través de pago por uso (APIs), paquetes de soluciones y pilotos pagados según el segmento.</p>
             </div>
         </div>
     </div>
 
+    <!-- Modal/Panel expandible -->
     <div class="modal-overlay" id="modal">
         <div class="modal-content">
             <button class="close-btn" onclick="closeModal()">&times;</button>
@@ -454,7 +492,8 @@
                 <p id="modal-subtitle">Subtítulo</p>
             </div>
             <div class="modal-body" id="modal-body">
-                </div>
+                <!-- Contenido dinámico -->
+            </div>
         </div>
     </div>
 
@@ -467,15 +506,15 @@
                     <div class="content-section">
                         <h4>Socios Tecnológicos</h4>
                         <ul>
-                            <li>Proveedores de servicios Cloud (para infraestructura escalable).</li>
-                            <li>Empresas líderes en modelos de IA (para acceso a tecnología de vanguardia).</li>
+                            <li>Proveedores de IA generativa confiable, escalable y segura.</li>
+                            <li>Proveedores de servicios de infraestructura.</li>
                         </ul>
                     </div>
                     <div class="content-section">
                         <h4>Socios Estratégicos</h4>
                         <ul>
-                            <li>Consultoras de negocio especializadas en Utilities y gestión del cambio (para 'Novatos' y 'Creyentes').</li>
-                            <li>Empresas de integración de sistemas (para implementaciones complejas con 'Adoptadores').</li>
+                            <li>Aliados especializadas en Utilities y gestión del cambio (para 'Novatos' y 'Creyentes').</li>
+                            <li>Aliados de sistemas legados que se integren a la solución (para implementaciones complejas con 'Adoptadores').</li>
                         </ul>
                     </div>
                 `
@@ -485,24 +524,47 @@
                 subtitle: "Acciones fundamentales para que Alexandria entregue valor a cada segmento",
                 content: `
                     <div class="content-section">
-                        <h4>Para "Los Adoptadores"</h4>
+                        <h4>1. Actividades Fundamentales (Core)</h4>
                         <ul>
-                            <li>I+D continuo en interoperabilidad y desarrollo de APIs robustas.</li>
-                            <li>Consultoría de alto nivel sobre arquitectura de IA.</li>
+                            <li><strong>Desarrollo y Mantenimiento de la Plataforma</strong> (Para: Todos)</li>
+                            <li><strong>IAOps</strong> (Para: Todos)</li>
+                            <li><strong>Gestión de Infraestructura</strong> (Para: Todos)</li>
+                            <li><strong>Gobernanza y Seguridad de Datos</strong> (Para: Todos)</li>
+                            <li><strong>I+D Continuo en IA y IAOps</strong> (Para: Todos)</li>
                         </ul>
                     </div>
                     <div class="content-section">
-                        <h4>Para "Los Creyentes"</h4>
+                        <h4>2. Actividades de Entrega de Valor (Customer-Centric)</h4>
                         <ul>
-                            <li>Empaquetado de soluciones de IA listas para usar (ej. Mantenimiento Predictivo).</li>
-                            <li>Creación de metodologías de implementación rápida y transferencia de conocimiento.</li>
+                            <li><strong>Desarrollar <strong>agentes de IA</strong> que aporten el valor empresarial</strong> (Para: Todos)</li>
+                            <li><strong>Integrar agentes de IA a través de Smartflex</strong> (Para: Todos)</li>
+                            <li><strong>Orquestar agentes de IA para ejecutar procesos complejos</strong> (Para: Todos)</li>
+                            <li><strong>Diseño y ejecución de PoC y pilotos</strong> (Para: Los Novatos)</li>
+                            <li><strong>Empaquetado de soluciones "End-to-End"</strong> (Para: Los Creyentes)</li>
+                            <li><strong>Creación de metodologías de despliegue rápido</strong> (Para: Los Creyentes)</li>
+                            <li><strong>Desarrollo de *Tools* y consultoría de la solución IA</strong> (Para: Los Adoptadores)</li>
                         </ul>
                     </div>
                     <div class="content-section">
-                        <h4>Para "Los Novatos"</h4>
+                        <h4>3. Actividades de Soporte y Consultoría</h4>
                         <ul>
-                            <li>Creación de contenido educativo (webinars, whitepapers, casos de uso).</li>
-                            <li>Desarrollo de pruebas piloto y calculadoras de ROI simplificadas.</li>
+                            <li><strong>Gestión del Onboarding</strong>.</li>
+                            <li><strong>Gestión del Soporte y Mantenimiento (SAM)</strong>.</li>
+                            <li><strong>Gestión de la Personalización de la Solución</strong>.</li>
+                            <li><strong>Gestión del Éxito del Cliente (Customer Success) adaptativa</strong> (Para: Todos)
+                                <ul style="padding-left: 20px; list-style-type: circle; margin-top: 5px;">
+                                    <li>Actuando como <strong>socio de co-innovación</strong> (Para: Los Adoptadores)</li>
+                                    <li>Actuando como <strong>asesor y habilitador</strong> (Para: Los Creyentes)</li>
+                                    <li>Actuando como <strong>educador y guía</strong> (Para: Los Novatos)</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="content-section">
+                        <h4>4. Actividades de Mercadeo y Administración</h4>
+                        <ul>
+                            <li><strong>Marketing y Ventas Segmentado</strong> (Para: Todos)</li>
+                            <li><strong>Licenciamiento / Facturación / Recaudo</strong> (Para: Todos)</li>
                         </ul>
                     </div>
                 `
@@ -514,18 +576,19 @@
                     <div class="content-section">
                         <h4>Recursos Humanos</h4>
                         <ul>
+                            <li><strong>Especialistas en Marketing de Producto:</strong> para educar a 'Nuevos Prospectos' y 'Novatos'.</li>
+                            <li><strong>Consultores de Adopción:</strong> para recomendar soluciones a 'Creyentes'.</li>
                             <li><strong>Arquitectos de Soluciones de IA:</strong> para diseñar soluciones complejas para 'Adoptadores'.</li>
-                            <li><strong>Consultores de Implementación:</strong> para guiar a 'Los Creyentes'.</li>
-                            <li><strong>Especialistas en Marketing de Producto:</strong> para educar a 'Los Novatos'.</li>
-                            <li>Equipo de desarrollo experto en el sector Utilities.</li>
+                            <li><strong>Equipo de desarrollo/personalización</strong>, experto en la solución y en el sector Utilities.</li>
                         </ul>
                     </div>
                     <div class="content-section">
                         <h4>Recursos Intangibles</h4>
                         <ul>
                             <li>Plataforma Alexandria (código fuente y algoritmos).</li>
-                            <li>Modelos de IA pre-entrenados para el sector Utilities.</li>
-                            <li>Metodologías de implementación probadas.</li>
+                            <li>Modelos de IA Generativa.</li>
+                            <li>Smartflex como *Tool*.</li>
+                            <li>Metodologías de implementación para Alexandria.</li>
                             <li>Marca y reputación como expertos en el sector.</li>
                         </ul>
                     </div>
@@ -536,27 +599,40 @@
                 subtitle: "Menos complejidad, más valor. Tu mismo equipo de trabajo, más potente.",
                 content: `
                     <div class="content-section">
-                        <h4>Para "Los Adoptadores": La Plataforma de IA Definitiva</h4>
+                        <h4>Nuestra Promesa para Todos los Segmentos</h4>
+                        <h5>Menos Complejidad: Menos clics, más rápido, más intuitivo.</h5>
                         <ul>
-                            <li>Potencia tu IA actual con interoperabilidad y escalabilidad superior.</li>
-                            <li>Accede a APIs flexibles para integrarlas a tus desarrollos existentes.</li>
-                            <li>Utiliza modelos pre-entrenados más sofisticados que los genéricos.</li>
+                            <li>Reducimos la sobrecarga de trabajo al automatizar tareas repetitivas.</li>
+                            <li>Entregamos una interfaz simple que no requiere conocimientos técnicos para su uso.</li>
+                            <li>Nuestros agentes de IA ejecutan procesos complejos de forma autónoma.</li>
+                        </ul>
+                        <h5>Más Potencia: Como si te pudiéramos clonar.</h5>
+                        <ul>
+                            <li>Potenciamos las habilidades de tu equipo con un copiloto de IA.</li>
+                            <li>Liberamos a tus expertos para que se enfoquen en tareas de alto valor estratégico.</li>
+                            <li>Permitimos que una persona logre el impacto de varias.</li>
                         </ul>
                     </div>
+                    <hr style="margin: 25px 0; border-top: 1px solid #e1ecf4; border-bottom: 0;">
                     <div class="content-section">
-                        <h4>Para "Los Creyentes": Tu Atajo a la Inteligencia Artificial</h4>
+                        <h4>Oferta Enfocada por Segmento</h4>
+                        
+                        <h5>Para "Los Adoptadores": La Plataforma de IA Definitiva</h5>
                         <ul>
-                            <li>Implementa tu primer caso de uso de alto impacto en semanas, no años.</li>
-                            <li>Despliega soluciones pre-empaquetadas listas para usar (listas para resolver problemas específicos).</li>
-                            <li>Acelera tu curva de aprendizaje sin necesidad de contratar un gran equipo de científicos de datos.</li>
+                            <li><strong>Ejemplo: Orquestación de Modelos Propios.</strong> Problema: Tienen un modelo de predicción de demanda propio, pero está aislado. Solución Alexandria: Integra y alimenta tu modelo con datos en tiempo real de nuestro CIS y orquesta el flujo para optimizar automáticamente la asignación de cuadrillas. Valor: No reemplaces, potencia.</li>
+                            <li><strong>Ejemplo: Desarrollo Acelerado de Apps Internas.</strong> Problema: Tu equipo tarda meses en integrar datos para nuevas apps. Solución Alexandria: Ofrecemos una API unificada. Valor: Acelera drásticamente los ciclos de innovación.</li>
                         </ul>
-                    </div>
-                    <div class="content-section">
-                        <h4>Para "Los Novatos": El Primer Paso hacia la Eficiencia Inteligente</h4>
+
+                        <h5>Para "Los Creyentes": Tu Atajo a la Inteligencia Artificial</h5>
                         <ul>
-                            <li>Resuelve un problema de negocio concreto con un ROI claro y rápido.</li>
-                            <li>Descubre el potencial oculto en los datos que ya posees.</li>
-                            <li>Inicia con un proyecto piloto de bajo riesgo y alto impacto, sin complejidad técnica.</li>
+                            <li><strong>Ejemplo: Agente de Comunicación Proactiva de Cortes.</strong> Problema: Saturación del call center durante cortes. Solución Alexandria: Un agente detecta la anomalía, la cruza con clientes y notifica proactivamente de forma autónoma. Valor: Reduce drásticamente las llamadas y mejora la satisfacción.</li>
+                            <li><strong>Ejemplo: Agente de Cobranza Virtual.</strong> Problema: Gestión de mora costosa e inconsistente. Solución Alexandria: Un agente virtual contacta clientes, ofrece planes de pago pre-aprobados y gestiona el acuerdo. Valor: Mejora tasas de recuperación y reduce costos.</li>
+                        </ul>
+                       
+                        <h5>Para "Los Novatos": El Primer Paso hacia la Eficiencia Inteligente</h5>
+                        <ul>
+                            <li><strong>Ejemplo: Generación automática de respuestas a PQRS.</strong> Problema: Alta carga de personal redactando respuestas. Solución IA: Agente generativo que propone borradores automáticos. ROI Rápido: Ahorro en tiempo y aceleración de cumplimiento.</li>
+                            <li><strong>Ejemplo: Identificación de patrones ocultos en reclamos.</strong> Problema: Causas raíz de reclamos son invisibles. Solución IA: Detectar patrones en el historial de PQRS para actuar preventivamente. Valor: Menor costo operativo y mejora de reputación.</li>
                         </ul>
                     </div>
                 `
@@ -576,16 +652,66 @@
                 `
             },
             channels: {
-                title: "Canales",
-                subtitle: "Estrategias de comunicación y entrega para cada segmento",
+                title: "Canales por Fase y Segmento",
+                subtitle: "Estrategias de comunicación y entrega para cada fase del ciclo de vida del cliente",
                 content: `
                     <div class="content-section">
-                        <h4>Canales por Tipo de Audiencia</h4>
-                        <ul>
-                            <li><strong>Para "Los Adoptadores":</strong> Canales técnicos y consultivos (Webinars con arquitectos, whitepapers técnicos, reuniones con equipo de producto).</li>
-                            <li><strong>Para "Los Creyentes":</strong> Canales orientados a soluciones (Demos de producto, casos de éxito detallados, talleres de descubrimiento).</li>
-                            <li><strong>Para "Los Novatos":</strong> Canales educativos (Seminarios introductorios, artículos de blog, calculadoras de ROI).</li>
-                        </ul>
+                        <table class="styled-table">
+                            <thead>
+                                <tr>
+                                    <th>Fase del Ciclo</th>
+                                    <th>Canal / Actividad Clave</th>
+                                    <th>Foco Principal por Segmento</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td rowspan="3"><strong>1. Conocimiento</strong><br>(Awareness)</td>
+                                    <td>Portal Web, Redes Sociales, Eventos (ej. CS WEEK)</td>
+                                    <td>Todos</td>
+                                </tr>
+                                <tr>
+                                    <td>Marketing de Contenidos Educativos</td>
+                                    <td>Novatos, Creyentes</td>
+                                </tr>
+                                <tr>
+                                    <td>Whitepapers Técnicos, Webinars con Arquitectos</td>
+                                    <td>Adoptadores</td>
+                                </tr>
+                                <tr>
+                                    <td rowspan="3"><strong>2. Evaluación</strong><br>(Evaluation)</td>
+                                    <td>Demos Vivenciales y Casos de Éxito</td>
+                                    <td>Creyentes, Novatos</td>
+                                </tr>
+                                 <tr>
+                                    <td>Desarrollo de Casos de Negocio (ROI)</td>
+                                    <td>Novatos, Creyentes</td>
+                                </tr>
+                                <tr>
+                                    <td>Documentación Técnica y de APIs</td>
+                                    <td>Adoptadores</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>3. Compra</strong><br>(Purchase)</td>
+                                    <td>Equipo de Account Management Especializado</td>
+                                    <td>Todos (con discurso adaptado)</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>4. Entrega</strong><br>(Delivery)</td>
+                                    <td>Onboarding liderado por Customer Success con apoyo de especialistas en implementación. Metodología estructurada.</td>
+                                    <td>Todos</td>
+                                </tr>
+                                 <tr>
+                                    <td rowspan="2"><strong>5. Postventa</strong><br>(After Sales)</td>
+                                    <td>Programa SAM (Soporte, Actualización, Mantenimiento)</td>
+                                    <td>Todos</td>
+                                </tr>
+                                <tr>
+                                    <td>Capacitación Continua y Monitoreo Proactivo</td>
+                                    <td>Creyentes, Novatos</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 `
             },
