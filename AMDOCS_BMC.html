@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modelo de Negocio Interactivo: Amdocs amAIz</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Warm Neutrals -->
+    <!-- Application Structure Plan: Se ha diseñado una aplicación de una sola página con desplazamiento vertical y una barra de navegación fija. Esta estructura permite una exploración fluida y narrativa del modelo de negocio, guiando al usuario desde el valor principal hasta los detalles operativos. Las secciones temáticas (Valor, Oferta, Modelo Canvas, Ecosistema) fragmentan la información de manera lógica, facilitando la comprensión sin abrumar. La navegación fija permite el acceso directo a cualquier sección, combinando la exploración lineal y no lineal para una experiencia de usuario óptima. -->
+    <!-- Visualization & Content Choices: 
+        - Propuesta de Valor: Report Info -> Métricas de mejora (AHT, tNPS) y beneficios cualitativos. Goal -> Comparar e Informar. Viz/Method -> Gráfico de barras (Chart.js) para impacto visual de los KPIs y tarjetas interactivas para los beneficios. Interaction -> Tooltips en el gráfico. Justification -> Cuantifica el valor de forma inmediata y clara.
+        - Oferta Central: Report Info -> Arquitectura de dos capas (Plataforma, Aplicaciones) y Agentes de IA. Goal -> Organizar. Viz/Method -> Diagrama de dos columnas creado con HTML/Tailwind. Interaction -> Pestañas interactivas para detallar los distintos 'amAIz Agents'. Justification -> Simplifica la arquitectura compleja en una estructura visual fácil de digerir.
+        - Modelo de Negocio: Report Info -> Los 9 bloques del Business Model Canvas. Goal -> Organizar y mostrar relaciones. Viz/Method -> Rejilla (HTML/CSS Grid) que simula el Business Model Canvas. Interaction -> Efectos hover para resaltar cada bloque. Justification -> Presenta el marco estratégico completo de una manera familiar y estructurada.
+        - Ecosistema: Report Info -> Socios tecnológicos clave. Goal -> Informar. Viz/Method -> Rejilla de logotipos textuales. Interaction -> Ninguna. Justification -> Muestra la fortaleza de las alianzas de forma rápida y visual.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        .bg-warm-gray-50 { background-color: #F9FAFB; }
+        .bg-warm-gray-100 { background-color: #F3F4F6; }
+        .text-warm-gray-800 { color: #1F2937; }
+        .text-warm-gray-600 { color: #4B5563; }
+        .border-warm-gray-200 { border-color: #E5E7EB; }
+        .accent-color { color: #3B82F6; }
+        .bg-accent-color { background-color: #3B82F6; }
+        .border-accent-color { border-color: #3B82F6; }
+        .bmc-block {
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        .bmc-block:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+        .tab-button.active {
+            border-bottom-width: 2px;
+            border-color: #3B82F6;
+            color: #3B82F6;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body class="bg-warm-gray-50 text-warm-gray-800">
+
+    <header class="bg-white/80 backdrop-blur-md sticky top-0 z-50 shadow-sm">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <h1 class="text-xl md:text-2xl font-bold text-warm-gray-800">
+                Amdocs <span class="accent-color">amAIz</span>
+            </h1>
+            <div class="hidden md:flex space-x-8">
+                <a href="#valor" class="text-warm-gray-600 hover:accent-color transition">Propuesta de Valor</a>
+                <a href="#oferta" class="text-warm-gray-600 hover:accent-color transition">La Oferta</a>
+                <a href="#modelo" class="text-warm-gray-600 hover:accent-color transition">Modelo de Negocio</a>
+                <a href="#ecosistema" class="text-warm-gray-600 hover:accent-color transition">Ecosistema</a>
+            </div>
+            <div class="md:hidden">
+                <button id="menu-btn" class="text-warm-gray-600 focus:outline-none">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                </button>
+            </div>
+        </nav>
+        <div id="mobile-menu" class="hidden md:hidden bg-white">
+            <a href="#valor" class="block py-2 px-6 text-sm text-warm-gray-600 hover:bg-warm-gray-100">Propuesta de Valor</a>
+            <a href="#oferta" class="block py-2 px-6 text-sm text-warm-gray-600 hover:bg-warm-gray-100">La Oferta</a>
+            <a href="#modelo" class="block py-2 px-6 text-sm text-warm-gray-600 hover:bg-warm-gray-100">Modelo de Negocio</a>
+            <a href="#ecosistema" class="block py-2 px-6 text-sm text-warm-gray-600 hover:bg-warm-gray-100">Ecosistema</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-6 py-8 md:py-16">
+
+        <section class="text-center mb-20">
+            <h2 class="text-3xl md:text-5xl font-bold mb-4">El Modelo de Negocio de la IA para Telcos</h2>
+            <p class="max-w-3xl mx-auto text-lg text-warm-gray-600">
+                Una exploración interactiva de cómo Amdocs amAIz está redefiniendo las operaciones, la innovación y la experiencia del cliente para los operadores de telecomunicaciones (CSPs) a través de la Inteligencia Artificial Generativa.
+            </p>
+        </section>
+
+        <section id="valor" class="mb-20 scroll-mt-20">
+            <div class="text-center mb-12">
+                <h3 class="text-3xl md:text-4xl font-bold">Propuesta de Valor Transformadora</h3>
+                <p class="mt-2 text-lg text-warm-gray-600">amAIz genera un impacto medible en las áreas más críticas para un CSP.</p>
+            </div>
+            <div class="grid md:grid-cols-2 gap-8 items-center">
+                <div class="chart-container w-full h-full">
+                    <canvas id="impactChart"></canvas>
+                </div>
+                <div class="space-y-6">
+                    <div class="bg-white p-6 rounded-lg border border-warm-gray-200">
+                        <h4 class="font-bold text-xl mb-2 flex items-center"><span class="text-2xl mr-3">🚀</span>Experiencia de Cliente Mejorada</h4>
+                        <p class="text-warm-gray-600">Ofrece interacciones hiper-personalizadas que aprenden del comportamiento del usuario, resultando en mayores niveles de satisfacción y lealtad.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg border border-warm-gray-200">
+                        <h4 class="font-bold text-xl mb-2 flex items-center"><span class="text-2xl mr-3">⚙️</span>Eficiencia y Automatización</h4>
+                        <p class="text-warm-gray-600">Automatiza tareas repetitivas y optimiza operaciones de negocio y red, liberando recursos para iniciativas estratégicas y reduciendo costes.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg border border-warm-gray-200">
+                        <h4 class="font-bold text-xl mb-2 flex items-center"><span class="text-2xl mr-3">🔒</span>Gobernanza y Confianza en la IA</h4>
+                        <p class="text-warm-gray-600">Asegura el cumplimiento de regulaciones y estándares de la industria con un marco robusto de seguridad, encriptación y anonimización de datos.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="oferta" class="mb-20 bg-warm-gray-100 -mx-6 px-6 py-16 scroll-mt-20">
+             <div class="text-center mb-12 max-w-4xl mx-auto">
+                <h3 class="text-3xl md:text-4xl font-bold">La Oferta Central: Plataforma y Suite amAIz</h3>
+                <p class="mt-2 text-lg text-warm-gray-600">La solución de Amdocs se estructura en dos capas fundamentales y productos clave que ofrecen una flexibilidad total para la adopción de la IA por parte de los CSPs.</p>
+            </div>
+            <div class="max-w-5xl mx-auto grid md:grid-cols-2 gap-8 mb-12">
+                <div class="bg-white p-6 rounded-lg border border-warm-gray-200">
+                    <h4 class="text-2xl font-bold mb-3 border-b-2 border-accent-color pb-2">Capa de Plataformas</h4>
+                    <p class="text-warm-gray-600">El núcleo tecnológico que unifica datos y potencia la IA. Incluye la **Plataforma de IA y Datos** y la **Plataforma de GenAI** entrenada para telcos (Amdocs TelcoGPT), garantizando confianza, seguridad y optimización de costes.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg border border-warm-gray-200">
+                    <h4 class="text-2xl font-bold mb-3 border-b-2 border-accent-color pb-2">Capa de Aplicaciones</h4>
+                    <p class="text-warm-gray-600">Una suite de aplicaciones y herramientas de IA específicas para el sector que operan, aprenden y optimizan continuamente. Disponibles de forma independiente o integradas en el portafolio de Amdocs.</p>
+                </div>
+            </div>
+            <div class="max-w-5xl mx-auto bg-white p-8 rounded-lg border border-warm-gray-200">
+                <h4 class="text-2xl font-bold mb-4 text-center">Productos Clave: amAIz Agents</h4>
+                 <p class="text-warm-gray-600 text-center mb-6">Agentes de GenAI probados que automatizan tareas y optimizan procesos con recomendaciones inteligentes. Selecciona un agente para ver sus beneficios.</p>
+                <div class="flex justify-center border-b border-warm-gray-200 mb-6">
+                    <button class="tab-button active py-2 px-4 text-warm-gray-600" data-tab="cliente">Atención al Cliente</button>
+                    <button class="tab-button py-2 px-4 text-warm-gray-600" data-tab="ventas">Ventas</button>
+                    <button class="tab-button py-2 px-4 text-warm-gray-600" data-tab="marketing">Marketing</button>
+                    <button class="tab-button py-2 px-4 text-warm-gray-600" data-tab="red">Red y Hogar</button>
+                </div>
+                <div id="tab-content" class="text-warm-gray-600 text-center">
+                    <p data-content="cliente">Reduce drásticamente el tiempo de manejo de llamadas (AHT) y mejora la resolución en el primer contacto.</p>
+                    <p data-content="ventas" class="hidden">Aumenta las oportunidades de venta y la conversión con recomendaciones de productos personalizadas.</p>
+                    <p data-content="marketing" class="hidden">Genera campañas más efectivas y personalizadas, mejorando el ROI.</p>
+                    <p data-content="red" class="hidden">Optimiza la gestión de la red, previene fallos y mejora la calidad del servicio en el hogar.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="modelo" class="mb-20 scroll-mt-20">
+            <div class="text-center mb-12">
+                <h3 class="text-3xl md:text-4xl font-bold">Modelo de Negocio Visualizado</h3>
+                <p class="mt-2 text-lg text-warm-gray-600">Una descomposición interactiva de la estrategia de amAIz utilizando el Business Model Canvas.</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 text-sm">
+                <div class="lg:col-span-1 md:col-span-1 p-4 bg-white rounded-lg border bmc-block">
+                    <h5 class="font-bold mb-2">Socios Clave</h5>
+                    <ul class="list-disc list-inside text-warm-gray-600 space-y-1">
+                        <li>Google Cloud</li>
+                        <li>NVIDIA</li>
+                        <li>AWS, Microsoft, Dell</li>
+                    </ul>
+                </div>
+                <div class="lg:col-span-1 md:col-span-1 space-y-4">
+                     <div class="p-4 bg-white rounded-lg border bmc-block h-full">
+                        <h5 class="font-bold mb-2">Actividades Clave</h5>
+                        <ul class="list-disc list-inside text-warm-gray-600 space-y-1">
+                            <li>Desarrollo I+D</li>
+                            <li>Comercialización</li>
+                            <li>Implementación</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="lg:col-span-1 md:col-span-2 p-4 bg-blue-100 rounded-lg border-2 border-dashed border-blue-400 bmc-block">
+                    <h5 class="font-bold mb-2 text-blue-800">Propuesta de Valor</h5>
+                    <ul class="list-disc list-inside text-blue-700 space-y-1">
+                        <li>Mejora de CX</li>
+                        <li>Eficiencia Operacional</li>
+                        <li>Gobernanza y Confianza</li>
+                        <li>Integración Rápida</li>
+                    </ul>
+                </div>
+                <div class="lg:col-span-1 md:col-span-1 space-y-4">
+                     <div class="p-4 bg-white rounded-lg border bmc-block h-full">
+                        <h5 class="font-bold mb-2">Relación con Clientes</h5>
+                        <ul class="list-disc list-inside text-warm-gray-600 space-y-1">
+                            <li>Alianza Estratégica</li>
+                            <li>Soporte y Consultoría</li>
+                            <li>Modularidad</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="lg:col-span-1 md:col-span-1 p-4 bg-white rounded-lg border bmc-block">
+                    <h5 class="font-bold mb-2">Segmentos de Clientes</h5>
+                    <p class="text-warm-gray-600">Operadores de Servicios de Telecomunicaciones (CSPs)</p>
+                </div>
+                <div class="lg:col-span-1 md:col-span-1 p-4 bg-white rounded-lg border bmc-block">
+                    <h5 class="font-bold mb-2">Recursos Clave</h5>
+                    <ul class="list-disc list-inside text-warm-gray-600 space-y-1">
+                        <li>Plataforma amAIz</li>
+                        <li>Amdocs TelcoGPT</li>
+                        <li>Capital Humano</li>
+                        <li>Amdocs AI Factory</li>
+                    </ul>
+                </div>
+                 <div class="lg:col-span-1 md:col-span-1 p-4 bg-white rounded-lg border bmc-block">
+                    <h5 class="font-bold mb-2">Canales</h5>
+                    <ul class="list-disc list-inside text-warm-gray-600 space-y-1">
+                        <li>Cloud Marketplaces</li>
+                        <li>Venta Directa</li>
+                        <li>Ecosistema de Socios</li>
+                    </ul>
+                </div>
+                <div class="lg:col-span-3 md:col-span-2 grid grid-cols-1 lg:grid-cols-2 gap-4">
+                    <div class="p-4 bg-white rounded-lg border bmc-block">
+                        <h5 class="font-bold mb-2">Estructura de Costes</h5>
+                        <ul class="list-disc list-inside text-warm-gray-600 space-y-1">
+                            <li>Investigación y Desarrollo</li>
+                            <li>Infraestructura Cloud</li>
+                            <li>Salarios y Personal</li>
+                            <li>Marketing y Ventas</li>
+                        </ul>
+                    </div>
+                    <div class="p-4 bg-white rounded-lg border bmc-block">
+                        <h5 class="font-bold mb-2">Flujos de Ingresos</h5>
+                        <ul class="list-disc list-inside text-warm-gray-600 space-y-1">
+                            <li>Venta y Licenciamiento</li>
+                            <li>Servicios Profesionales</li>
+                            <li>Revenue Sharing (vía CSPs)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="ecosistema" class="bg-warm-gray-100 -mx-6 px-6 py-16 scroll-mt-20">
+             <div class="text-center mb-12">
+                <h3 class="text-3xl md:text-4xl font-bold">Ecosistema y Despliegue</h3>
+                <p class="mt-2 text-lg text-warm-gray-600">El éxito de amAIz se potencia a través de alianzas estratégicas y una disponibilidad flexible en la nube.</p>
+            </div>
+            <div class="max-w-4xl mx-auto text-center">
+                <h4 class="font-semibold text-xl mb-4">Alianzas Estratégicas Clave</h4>
+                <div class="flex flex-wrap justify-center items-center gap-x-8 gap-y-4 text-warm-gray-600 font-semibold">
+                    <span>☁️ Google Cloud</span>
+                    <span>🤖 NVIDIA</span>
+                    <span>📦 AWS</span>
+                    <span>🪟 Microsoft</span>
+                    <span>💻 Dell</span>
+                </div>
+                <p class="mt-8 text-warm-gray-600">Estas colaboraciones combinan la tecnología más avanzada con la profunda experiencia en telecomunicaciones de Amdocs, permitiendo a los CSPs acceder a soluciones innovadoras como **GPU as a Service** y desplegar amAIz de forma segura y escalable en el **Google Cloud Marketplace**.</p>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-warm-gray-800 text-white mt-16">
+        <div class="container mx-auto px-6 py-8 text-center text-warm-gray-300">
+            <p>Visualización interactiva del modelo de negocio de Amdocs amAIz.</p>
+            <p class="text-sm mt-2 opacity-70">Este es un análisis conceptual basado en la información proporcionada.</p>
+        </div>
+    </footer>
+
+    <script>
+        const impactData = {
+            labels: ['Reducción de AHT', 'Mejora de tNPS', 'Reducción de Tokens'],
+            datasets: [{
+                label: '% de Impacto',
+                data: [63, 49, 60],
+                backgroundColor: [
+                    'rgba(59, 130, 246, 0.7)',
+                    'rgba(16, 185, 129, 0.7)',
+                    'rgba(249, 115, 22, 0.7)'
+                ],
+                borderColor: [
+                    'rgb(59, 130, 246)',
+                    'rgb(16, 185, 129)',
+                    'rgb(249, 115, 22)'
+                ],
+                borderWidth: 1
+            }]
+        };
+
+        const config = {
+            type: 'bar',
+            data: impactData,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: '#E5E7EB'
+                        },
+                        ticks: {
+                           callback: function(value) {
+                                return value + '%'
+                           },
+                           color: '#4B5563'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        },
+                         ticks: {
+                           color: '#4B5563'
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                if (context.parsed.y !== null) {
+                                    label += context.parsed.y + '%';
+                                }
+                                return label;
+                            }
+                        }
+                    }
+                }
+            }
+        };
+
+        const impactChart = new Chart(
+            document.getElementById('impactChart'),
+            config
+        );
+
+        const menuBtn = document.getElementById('menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        menuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+        
+        document.querySelectorAll('#mobile-menu a').forEach(link => {
+            link.addEventListener('click', () => {
+                 mobileMenu.classList.add('hidden');
+            });
+        });
+
+        const tabButtons = document.querySelectorAll('.tab-button');
+        const tabContents = document.querySelectorAll('#tab-content p');
+
+        tabButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const tab = button.dataset.tab;
+
+                tabButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+
+                tabContents.forEach(content => {
+                    if (content.dataset.content === tab) {
+                        content.classList.remove('hidden');
+                    } else {
+                        content.classList.add('hidden');
+                    }
+                });
+            });
+        });
+
+    </script>
+</body>
+</html>
