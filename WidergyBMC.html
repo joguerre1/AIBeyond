@@ -27,7 +27,7 @@
             min-height: 80vh;
         }
         .canvas-block {
-            background-color: #f9fafb;
+            background-color: #f9fafb; /* Default light background */
             border-radius: 10px;
             padding: 1rem;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
@@ -38,6 +38,8 @@
             transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
             cursor: pointer;
             border: 1px solid #e2e8f0;
+            position: relative; /* For icon positioning */
+            overflow: hidden; /* Ensure content doesn't spill out */
         }
         .canvas-block:hover {
             transform: translateY(-5px);
@@ -48,61 +50,46 @@
             font-weight: 700;
             margin-bottom: 0.75rem;
             color: #1e293b;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
         .canvas-block p {
             font-size: 0.875rem;
             line-height: 1.5;
             color: #475569;
+            flex-grow: 1; /* Allow content to grow */
+            overflow: hidden; /* Hide overflow */
+            text-overflow: ellipsis; /* Add ellipsis for overflow text */
+            display: -webkit-box;
+            -webkit-line-clamp: 4; /* Limit to 4 lines */
+            -webkit-box-orient: vertical;
         }
-        .key-partnerships {
-            grid-column: 1 / 2;
-            grid-row: 1 / 3;
+        .canvas-block .icon {
+            font-size: 1.5rem; /* Adjust emoji size */
+            margin-right: 0.5rem;
         }
-        .key-activities {
-            grid-column: 2 / 3;
-            grid-row: 1 / 2;
-        }
-        .key-resources {
-            grid-column: 2 / 3;
-            grid-row: 2 / 3;
-        }
-        .value-propositions {
-            grid-column: 3 / 4;
-            grid-row: 1 / 3;
-            display: flex;
-            flex-direction: column;
-            justify-content: center; /* Centrar contenido verticalmente */
-        }
-        .customer-relationships {
-            grid-column: 4 / 5;
-            grid-row: 1 / 2;
-        }
-        .channels {
-            grid-column: 4 / 5;
-            grid-row: 2 / 3;
-        }
-        .customer-segments {
-            grid-column: 5 / 6;
-            grid-row: 1 / 3;
-        }
-        .cost-structure {
-            grid-column: 1 / 3;
-            grid-row: 3 / 4;
-        }
-        .revenue-streams {
-            grid-column: 4 / 6;
-            grid-row: 3 / 4;
-        }
+        /* Specific block grid positioning */
+        .key-partnerships { grid-column: 1 / 2; grid-row: 1 / 3; background-color: #e0f2fe; } /* blue-100 */
+        .key-activities { grid-column: 2 / 3; grid-row: 1 / 2; background-color: #d1fae5; } /* green-100 */
+        .key-resources { grid-column: 2 / 3; grid-row: 2 / 3; background-color: #fffde7; } /* yellow-100 */
+        .value-propositions { grid-column: 3 / 4; grid-row: 1 / 3; background-color: #f3e8ff; display: flex; flex-direction: column; justify-content: center; } /* purple-100 */
+        .customer-relationships { grid-column: 4 / 5; grid-row: 1 / 2; background-color: #ffe4e6; } /* rose-100 */
+        .channels { grid-column: 4 / 5; grid-row: 2 / 3; background-color: #e0f7fa; } /* cyan-100 */
+        .customer-segments { grid-column: 5 / 6; grid-row: 1 / 3; background-color: #fee2e2; } /* red-100 */
+        .cost-structure { grid-column: 1 / 3; grid-row: 3 / 4; background-color: #f2f4f8; } /* gray-100 */
+        .revenue-streams { grid-column: 4 / 6; grid-row: 3 / 4; background-color: #dcfce7; } /* lime-100 */
+
         .modal {
-            display: none; /* Hidden by default */
-            position: fixed; /* Stay in place */
-            z-index: 1000; /* Sit on top */
+            display: none;
+            position: fixed;
+            z-index: 1000;
             left: 0;
             top: 0;
-            width: 100%; /* Full width */
-            height: 100%; /* Full height */
-            overflow: auto; /* Enable scroll if needed */
-            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
             align-items: center;
             justify-content: center;
             padding: 20px;
@@ -113,8 +100,10 @@
             padding: 30px;
             border-radius: 15px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-            max-width: 600px;
+            max-width: 700px; /* Slightly wider for more content */
             width: 90%;
+            max-height: 80vh; /* Limit modal height */
+            overflow-y: auto; /* Enable scrolling for long content */
             position: relative;
             animation-name: animatetop;
             animation-duration: 0.4s;
@@ -140,17 +129,46 @@
             cursor: pointer;
         }
 
+        /* Styling for lists within modal content */
+        .modal-content ul {
+            list-style: none; /* Remove default bullet */
+            padding-left: 0;
+            margin-top: 0.5rem;
+        }
+        .modal-content ul li {
+            margin-bottom: 0.5rem;
+            padding-left: 1.5em; /* Space for custom bullet */
+            position: relative;
+        }
+        .modal-content ul li::before {
+            content: "•"; /* Custom bullet */
+            color: #6366f1; /* Indigo 500 */
+            font-weight: bold;
+            display: inline-block;
+            width: 1em;
+            margin-left: -1.5em;
+            position: absolute;
+            left: 0;
+        }
+        .modal-content ul ul li::before {
+            content: "◦"; /* Inner list bullet */
+            color: #22c55e; /* Green 500 */
+        }
+        .modal-content b {
+            color: #1e293b;
+        }
+
         /* Responsive adjustments */
         @media (max-width: 1024px) {
             .canvas-container {
                 grid-template-columns: 1fr 1fr;
-                grid-template-rows: auto; /* Auto rows for stacking */
+                grid-template-rows: auto;
             }
             .key-partnerships, .key-activities, .key-resources,
             .value-propositions, .customer-relationships, .channels,
             .customer-segments, .cost-structure, .revenue-streams {
-                grid-column: auto / auto; /* Reset column span */
-                grid-row: auto / auto; /* Reset row span */
+                grid-column: auto / auto;
+                grid-row: auto / auto;
             }
         }
 
@@ -167,9 +185,13 @@
             }
             .canvas-block p {
                 font-size: 0.8125rem;
+                -webkit-line-clamp: 3; /* Limit to 3 lines on small screens */
             }
             body {
                 padding: 10px;
+            }
+            .modal-content {
+                padding: 20px;
             }
         }
     </style>
@@ -177,58 +199,67 @@
 <body>
 
     <div class="canvas-container">
+        <!-- Socios Clave (Key Partnerships) -->
         <div class="canvas-block key-partnerships" data-block="keyPartnerships">
-            <h3>Socios Clave</h3>
+            <h3>🤝 Socios Clave</h3>
             <p>
-                Asociación con AWS (infraestructura en la nube), integradores de sistemas y firmas de consultoría.
+                Asociación con AWS (infraestructura en la nube), integradores de sistemas y firmas de consultoría. Relaciones con organismos reguladores.
             </p>
         </div>
+        <!-- Actividades Clave (Key Activities) -->
         <div class="canvas-block key-activities" data-block="keyActivities">
-            <h3>Actividades Clave</h3>
+            <h3>⚙️ Actividades Clave</h3>
             <p>
-                Desarrollo y mantenimiento de software (Agent GO!), ventas y marketing, soporte al cliente, I+D (W-Lab).
+                Desarrollo y mantenimiento de software (Agent GO!), ventas y marketing (digital), soporte al cliente y onboarding, I+D (W-Lab).
             </p>
         </div>
+        <!-- Recursos Clave (Key Resources) -->
         <div class="canvas-block key-resources" data-block="keyResources">
-            <h3>Recursos Clave</h3>
+            <h3>💎 Recursos Clave</h3>
             <p>
                 Plataforma tecnológica (Agent GO!), capital humano (desarrolladores, ventas, soporte), marca y reputación (certificaciones ISO, AWS ISV), alianzas estratégicas.
             </p>
         </div>
+        <!-- Propuestas de Valor (Value Propositions) -->
         <div class="canvas-block value-propositions" data-block="valuePropositions">
-            <h3>Propuestas de Valor</h3>
+            <h3>🌟 Propuestas de Valor</h3>
             <p>
-                Modernización y eficiencia de call center, experiencia de cliente mejorada, escalabilidad y flexibilidad, datos para toma de decisiones. Interfaz intuitiva para agentes.
+                Modernización y eficiencia de call center, experiencia de cliente mejorada, escalabilidad y flexibilidad, datos para toma de decisiones. Interfaz intuitiva para agentes. Agentes de IA especializados.
             </p>
         </div>
+        <!-- Relaciones con Clientes (Customer Relationships) -->
         <div class="canvas-block customer-relationships" data-block="customerRelationships">
-            <h3>Relaciones con Clientes</h3>
+            <h3>❤️ Relaciones con Clientes</h3>
             <p>
-                Relaciones B2B a largo plazo, soporte dedicado, co-creación (W-Lab) para desarrollo de soluciones.
+                Relaciones B2B a largo plazo, soporte dedicado, co-creación (W-Lab) para desarrollo de soluciones y asegurar la relevancia de la plataforma.
             </p>
         </div>
+        <!-- Canales (Channels) -->
         <div class="canvas-block channels" data-block="channels">
-            <h3>Canales</h3>
+            <h3>📢 Canales</h3>
             <p>
                 Equipo de ventas directo, sitio web y marketing de contenidos, asociaciones (AWS, integradores), eventos y conferencias de la industria.
             </p>
         </div>
+        <!-- Segmentos de Clientes (Customer Segments) -->
         <div class="canvas-block customer-segments" data-block="customerSegments">
-            <h3>Segmentos de Clientes</h3>
+            <h3>🎯 Segmentos de Clientes</h3>
             <p>
-                Empresas de servicios públicos (electricidad, gas, agua): grandes empresas de servicios públicos (IOUs), empresas de servicios públicos de propiedad pública (POUs) y municipios, cooperativas eléctricas.
+                Empresas de servicios públicos (electricidad, gas, agua): IOUs, POUs, municipios, cooperativas eléctricas. Personas clave: Gerente de Call Center, Director de TI, COO.
             </p>
         </div>
+        <!-- Estructura de Costos (Cost Structure) -->
         <div class="canvas-block cost-structure" data-block="costStructure">
-            <h3>Estructura de Costos</h3>
+            <h3>💸 Estructura de Costos</h3>
             <p>
                 Salarios y beneficios, costos de infraestructura en la nube (AWS), gastos de ventas y marketing, costos de investigación y desarrollo.
             </p>
         </div>
+        <!-- Flujos de Ingresos (Revenue Streams) -->
         <div class="canvas-block revenue-streams" data-block="revenueStreams">
-            <h3>Flujos de Ingresos</h3>
+            <h3>💰 Flujos de Ingresos</h3>
             <p>
-                Tarifas de suscripción SaaS (principal), servicios profesionales (implementación, personalización, capacitación), posible modelo de precios escalonado.
+                Tarifas de suscripción SaaS (principal), servicios profesionales (implementación, personalización, capacitación), posible modelo de precios escalonado y basado en el valor.
             </p>
         </div>
     </div>
@@ -238,7 +269,7 @@
         <div class="modal-content">
             <span class="close-button">&times;</span>
             <h2 id="modalTitle" class="text-2xl font-bold mb-4 text-gray-800"></h2>
-            <p id="modalContent" class="text-gray-700"></p>
+            <div id="modalContent" class="text-gray-700"></div>
         </div>
     </div>
 
@@ -249,123 +280,196 @@
                 title: "Socios Clave",
                 content: `
                     Widergy se apoya en socios estratégicos para su éxito:
-                    <ul class="list-disc pl-5 mt-2 text-sm">
+                    <ul>
                         <li><b>Socios Tecnológicos (AWS):</b> Críticos para proporcionar la infraestructura de nube para la plataforma Agent GO!. Esto asegura una base robusta y escalable.</li>
                         <li><b>Socios de Implementación:</b> Integradores de sistemas o firmas de consultoría que ayudan a los clientes a implementar la plataforma Agent GO!.</li>
                         <li><b>Organismos Reguladores:</b> Dada la solución "Worker Zone" de Widergy, es probable que mantenga relaciones con organismos reguladores para asegurar el cumplimiento.</li>
                     </ul>
-                    <b>Recomendaciones:</b> Profundizar la asociación con AWS y desarrollar un programa formal de socios.
+                    <br>
+                    <b>Recomendaciones Estratégicas:</b>
+                    <ul>
+                        <li>Profundizar la asociación con AWS para aprovechar su experiencia, recursos y red.</li>
+                        <li>Desarrollar un programa formal de socios para atraer y gestionar socios de implementación.</li>
+                        <li>Participar proactivamente con los organismos reguladores para comprender sus requisitos y asegurar que la plataforma Agent GO! cumpla con las normativas.</li>
+                    </ul>
                 `
             },
             keyActivities: {
                 title: "Actividades Clave",
                 content: `
                     Las actividades principales de Widergy para hacer funcionar su modelo de negocio incluyen:
-                    <ul class="list-disc pl-5 mt-2 text-sm">
+                    <ul>
                         <li><b>Desarrollo y Mantenimiento de Software:</b> Creación y mejora continua de la plataforma Agent GO!.</li>
-                        <li><b>Ventas y Marketing:</b> Adquisición de nuevos clientes a través de equipos de ventas directos, marketing de contenidos y marketing digital.</li>
+                        <li><b>Ventas y Marketing:</b> Adquisición de nuevos clientes a través de equipos de ventas directos, marketing de contenidos (blogs, white papers, seminarios web) y marketing digital.</li>
                         <li><b>Soporte al Cliente y Onboarding:</b> Asegurar que los clientes utilicen la plataforma de manera efectiva y obtengan valor.</li>
                         <li><b>Investigación y Desarrollo (W-Lab):</b> Innovación y co-creación de nuevas soluciones con los clientes para mantenerse a la vanguardia de la competencia.</li>
                     </ul>
-                    <b>Recomendaciones:</b> Adoptar una metodología de desarrollo ágil y centrarse en un enfoque de ventas y marketing basado en datos.
+                    <br>
+                    <b>Recomendaciones Estratégicas:</b>
+                    <ul>
+                        <li>Adoptar una metodología de desarrollo ágil para crear nuevas características de manera rápida y eficiente.</li>
+                        <li>Centrarse en un enfoque de ventas y marketing basado en datos para identificar leads prometedores y medir la efectividad de las campañas.</li>
+                        <li>Invertir en una organización de éxito del cliente de clase mundial para ayudar a los clientes a lograr sus resultados deseados.</li>
+                        <li>Fomentar una cultura de innovación donde se aliente a los empleados a experimentar y desarrollar nuevas ideas.</li>
+                    </ul>
                 `
             },
             keyResources: {
                 title: "Recursos Clave",
                 content: `
                     Los activos esenciales que Widergy necesita para operar son:
-                    <ul class="list-disc pl-5 mt-2 text-sm">
-                        <li><b>Plataforma Tecnológica:</b> El software Agent GO! y su infraestructura subyacente en la nube.</li>
+                    <ul>
+                        <li><b>Plataforma Tecnológica:</b> El software Agent GO! y su infraestructura subyacente en la nube (AWS).</li>
                         <li><b>Capital Humano:</b> Un equipo calificado de desarrolladores de software, profesionales de ventas y marketing, y personal de soporte al cliente.</li>
-                        <li><b>Marca y Reputación:</b> La marca Widergy y sus certificaciones (ISO 9001, ISO 27001, AWS ISV) que construyen confianza y credibilidad.</li>
-                        <li><b>Asociaciones:</b> Especialmente la asociación con AWS, que proporciona acceso a infraestructura de clase mundial y una amplia red de clientes potenciales.</li>
+                        <li><b>Marca y Reputación:</b> La marca Widergy y sus certificaciones (ISO 9001, ISO 27001, AWS ISV) que construyen confianza y credibilidad con los clientes.</li>
+                        <li><b>Alianzas:</b> Especialmente la asociación con AWS, que proporciona acceso a infraestructura de clase mundial y una amplia red de clientes potenciales.</li>
                     </ul>
-                    <b>Recomendaciones:</b> Invertir en talento, proteger la propiedad intelectual y fortalecer las alianzas.
+                    <br>
+                    <b>Recomendaciones Estratégicas:</b>
+                    <ul>
+                        <li>Continuar invirtiendo en la atracción y retención del mejor talento.</li>
+                        <li>Tomar medidas para proteger la propiedad intelectual asociada con la plataforma Agent GO!.</li>
+                        <li>Seguir construyendo la marca y reputación de Widergy a través del liderazgo intelectual, historias de éxito de clientes y premios de la industria.</li>
+                        <li>Fortalecer la relación con AWS y buscar activamente nuevas asociaciones que puedan impulsar el crecimiento del negocio.</li>
+                    </ul>
                 `
             },
             valuePropositions: {
                 title: "Propuestas de Valor",
                 content: `
                     La propuesta de valor de Widergy se centra en la evolución del centro de llamadas de servicios públicos:
-                    <ul class="list-disc pl-5 mt-2 text-sm">
-                        <li><b>Para Empresas de Servicios Públicos:</b>
-                            <ul class="list-circle pl-5 mt-1">
-                                <li>Modernización y Eficiencia (reducción de tiempos de llamada, mejora de la resolución en la primera llamada).</li>
-                                <li>Experiencia del Cliente Mejorada (interacciones más personalizadas y efectivas).</li>
-                                <li>Escalabilidad y Flexibilidad (modelo SaaS sin grandes inversiones iniciales).</li>
-                                <li>Datos para Toma de Decisiones (análisis de rendimiento y tendencias).</li>
-                            </ul>
-                        </li>
-                        <li><b>Para Agentes de Call Center:</b>
-                            <ul class="list-circle pl-5 mt-1">
-                                <li>Interfaz Intuitiva y Fácil de Usar (reduce el tiempo de capacitación).</li>
-                                <li>Herramientas e Información Mejoradas (acceso a todo lo necesario en un solo lugar).</li>
-                            </ul>
-                        </li>
+                    <br>
+                    <b>Para Empresas de Servicios Públicos:</b>
+                    <ul>
+                        <li>Modernización y Eficiencia: Ayuda a las empresas a pasar de sistemas obsoletos a una plataforma moderna basada en la nube, reduciendo los tiempos de llamada y los costos operativos.</li>
+                        <li>Experiencia del Cliente Mejorada: Proporciona a los agentes mejores herramientas e información, permitiendo un servicio más personalizado y efectivo.</li>
+                        <li>Escalabilidad y Flexibilidad: El modelo SaaS permite escalar operaciones sin grandes inversiones iniciales.</li>
+                        <li>Datos para Toma de Decisiones: Ofrece análisis valiosos sobre el rendimiento del centro de llamadas y el comportamiento del cliente.</li>
                     </ul>
-                    <b>Recomendaciones:</b> Cuantificar la propuesta de valor con casos de estudio y adaptar el mensaje a cada segmento de cliente.
+                    <b>Para Agentes del Centro de Llamadas:</b>
+                    <ul>
+                        <li>Interfaz Intuitiva y Fácil de Usar: Reduce el tiempo de capacitación y mejora la satisfacción del agente.</li>
+                        <li>Herramientas e Información Mejoradas: Acceso a toda la información necesaria en un solo lugar para una resolución más rápida.</li>
+                    </ul>
+                    <br>
+                    <b>Agentes de IA Específicos Ofrecidos:</b>
+                    <ul>
+                        <li><b>Sales Energy AI Agent:</b> Potencia estrategias comerciales, compara facturas y ofrece propuestas en tiempo real para captar nuevos clientes.</li>
+                        <li><b>Customer Support AI Agent:</b> Asistente conversacional inteligente que responde consultas 24/7 en lenguaje natural, acelerando tiempos de respuesta con automatización.</li>
+                        <li><b>Copilot AI Agent:</b> Asistente de IA para agentes reales, analiza historial de cuenta, políticas, tono emocional del cliente, aumentando la satisfacción y mejorando el backoffice.</li>
+                        <li><b>Doc Analyzer AI Agent:</b> Analiza imágenes y documentos subidos por usuarios para validar calidad, tipología y contenido, reduciendo errores en trámites.</li>
+                        <li><b>Billing Insight AI Agent:</b> Desglosa la factura con IA, explica cargos, identifica variaciones y presenta insights interactivos a los clientes.</li>
+                        <li><b>Energy Profile AI Agent:</b> Simulador con IA para analizar datos de consumo, identificar patrones y brindar recomendaciones de eficiencia energética.</li>
+                        <li><b>Energy Advisor AI Agent:</b> Asesor inteligente que compara electrodomésticos según su consumo y evalúa el impacto de reemplazarlos.</li>
+                    </ul>
+                    <br>
+                    <b>Recomendaciones Estratégicas:</b>
+                    <ul>
+                        <li>Cuantificar la propuesta de valor con casos de estudio y calculadoras de ROI.</li>
+                        <li>Resaltar claramente los diferenciadores competitivos, como el enfoque en la co-creación (W-Lab) y la experiencia profunda en la industria.</li>
+                        <li>Personalizar la propuesta de valor para cada segmento de cliente.</li>
+                    </ul>
                 `
             },
             customerRelationships: {
                 title: "Relaciones con Clientes",
                 content: `
                     Widergy busca construir relaciones colaborativas y a largo plazo con sus clientes:
-                    <ul class="list-disc pl-5 mt-2 text-sm">
+                    <ul>
                         <li><b>Relaciones B2B:</b> Enfoque en construir relaciones personales sólidas con las partes interesadas clave en las empresas de servicios públicos.</li>
                         <li><b>Soporte Dedicado:</b> Soporte y mantenimiento continuos para asegurar el éxito del cliente con la plataforma Agent GO!.</li>
                         <li><b>Co-creación (W-Lab):</b> Plataforma que permite a Widergy colaborar con sus clientes para desarrollar nuevas soluciones y características, fortaleciendo las relaciones y asegurando la relevancia de la plataforma.</li>
                     </ul>
-                    <b>Recomendaciones:</b> Formalizar el proceso de co-creación, desarrollar un programa de éxito del cliente y construir una comunidad de usuarios.
+                    <br>
+                    <b>Recomendaciones Estratégicas:</b>
+                    <ul>
+                        <li>Formalizar el proceso de co-creación desarrollando un proceso claro para la colaboración a través del W-Lab.</li>
+                        <li>Implementar un programa de éxito del cliente para involucrarse proactivamente con los clientes y asegurar que obtengan el máximo valor de la plataforma.</li>
+                        <li>Crear una comunidad de usuarios de Widergy donde puedan compartir mejores prácticas y aprender unos de otros.</li>
+                    </ul>
                 `
             },
             channels: {
                 title: "Canales",
                 content: `
                     Widergy utiliza una combinación de canales para llegar a sus clientes:
-                    <ul class="list-disc pl-5 mt-2 text-sm">
+                    <ul>
                         <li><b>Equipo de Ventas Directas:</b> Esencial para construir relaciones con grandes empresas de servicios públicos y navegar procesos de ventas complejos.</li>
-                        <li><b>Sitio Web y Marketing de Contenidos:</b> Recursos clave de información y herramientas de generación de leads (blogs, white papers, webinars).</li>
-                        <li><b>Asociaciones:</b> La asociación con AWS proporciona acceso a una gran red de clientes potenciales. Posibles asociaciones con otros proveedores de tecnología e integradores de sistemas.</li>
-                        <li><b>Eventos y Conferencias de la Industria:</b> Oportunidades para establecer contactos, mostrar la plataforma Agent GO! y mantenerse al día sobre las tendencias de la industria.</li>
+                        <li><b>Sitio Web y Marketing de Contenidos:</b> El sitio web sirve como un recurso clave de información y una herramienta de generación de leads, utilizando blogs, white papers y seminarios web para atraer y educar a clientes potenciales.</li>
+                        <li><b>Asociaciones:</b> La asociación con AWS es un canal clave que proporciona acceso a una gran red de clientes potenciales. Widergy también puede asociarse con otros proveedores de tecnología, integradores de sistemas y consultores.</li>
+                        <li><b>Eventos y Conferencias de la Industria:</b> Estos eventos brindan la oportunidad de establecer contactos, exhibir la plataforma Agent GO! y mantenerse al día sobre las tendencias de la industria.</li>
                     </ul>
-                    <b>Recomendaciones:</b> Fortalecer el equipo de ventas, invertir en marketing de contenidos y expandir las asociaciones de canal.
+                    <br>
+                    <b>Recomendaciones Estratégicas:</b>
+                    <ul>
+                        <li>Fortalecer el equipo de ventas invirtiendo en capacitación y desarrollo.</li>
+                        <li>Invertir en marketing de contenidos de alta calidad que aborde los desafíos y puntos débiles de las empresas de servicios públicos.</li>
+                        <li>Buscar activamente nuevos socios de canal que puedan ayudar a expandir el alcance y la credibilidad de Widergy.</li>
+                        <li>Aprovechar las técnicas de marketing digital como SEO y marketing en redes sociales para generar tráfico y leads.</li>
+                    </ul>
                 `
             },
             customerSegments: {
                 title: "Segmentos de Clientes",
                 content: `
-                    Los segmentos de clientes principales de Widergy son las empresas de servicios públicos:
-                    <ul class="list-disc pl-5 mt-2 text-sm">
-                        <li><b>Grandes Empresas de Servicios Públicos con Inversores (IOUs):</b> Grandes empresas cotizadas con operaciones complejas, enfocadas en la eficiencia y el retorno para los accionistas.</li>
-                        <li><b>Empresas de Servicios Públicos de Propiedad Pública (POUs) y Municipios:</b> Entidades gubernamentales enfocadas en servicios confiables y asequibles para sus comunidades.</li>
+                    Los segmentos de clientes principales de Widergy son las empresas de servicios públicos, incluyendo:
+                    <ul>
+                        <li><b>Grandes Empresas de Servicios Públicos con Inversión Privada (IOUs):</b> Grandes empresas cotizadas con operaciones complejas, enfocadas en la eficiencia y el retorno para los accionistas.</li>
+                        <li><b>Empresas de Servicios Públicos de Propiedad Pública (POUs) y Municipalidades:</b> Entidades gubernamentales típicamente más enfocadas en proporcionar servicios confiables y asequibles a sus comunidades.</li>
                         <li><b>Cooperativas Eléctricas:</b> Organizaciones sin fines de lucro, generalmente más pequeñas, propiedad de sus miembros y enfocadas en servir a sus comunidades locales.</li>
                     </ul>
-                    <b>Recomendaciones:</b> Desarrollar personas detalladas para diferentes tipos y tamaños de servicios públicos para adaptar los esfuerzos de marketing y ventas.
+                    <br>
+                    <b>Personas de Clientes Clave:</b>
+                    <ul>
+                        <li><b>Persona 1: El Gerente del Centro de Llamadas (Usuario):</b> Busca mejorar la eficiencia y satisfacción de los agentes, reducir costos operativos y mejorar la experiencia general del cliente.</li>
+                        <li><b>Persona 2: El Director de TI (Comprador Técnico):</b> Se enfoca en seguridad, escalabilidad y facilidad de integración con sistemas existentes.</li>
+                        <li><b>Persona 3: El Director de Operaciones (COO) (Comprador Económico):</b> Busca mejorar la eficiencia operativa, reducir costos y aumentar la satisfacción del cliente.</li>
+                    </ul>
+                    <br>
+                    <b>Recomendaciones Estratégicas:</b>
+                    <ul>
+                        <li>Adaptar los esfuerzos de marketing y ventas utilizando las personas de los clientes para crear mensajes dirigidos.</li>
+                        <li>Enfocarse inicialmente en un segmento de mercado específico para construir una sólida trayectoria.</li>
+                        <li>Desarrollar una estrategia de "Land-and-Expand" para comenzar en un departamento y expandirse con el tiempo.</li>
+                    </ul>
                 `
             },
             costStructure: {
                 title: "Estructura de Costos",
                 content: `
-                    La estructura de costos de Widergy está impulsada por:
-                    <ul class="list-disc pl-5 mt-2 text-sm">
-                        <li><b>Salarios y Beneficios:</b> El costo más significativo, relacionado con el personal.</li>
-                        <li><b>Costos de Infraestructura en la Nube:</b> Tarifas pagadas a AWS por hospedar la plataforma Agent GO!.</li>
-                        <li><b>Gastos de Ventas y Marketing:</b> Costos asociados con la adquisición de nuevos clientes.</li>
-                        <li><b>Costos de Investigación y Desarrollo:</b> Inversión en el desarrollo de nuevas características y soluciones.</li>
+                    La estructura de costos de Widergy está impulsada por los siguientes costos clave:
+                    <ul>
+                        <li><b>Salarios y Beneficios:</b> El costo más significativo, relacionado con los empleados.</li>
+                        <li><b>Costos de Infraestructura en la Nube:</b> Las tarifas pagadas a AWS por hospedar la plataforma Agent GO!.</li>
+                        <li><b>Gastos de Ventas y Marketing:</b> Los costos asociados con la adquisición de nuevos clientes.</li>
+                        <li><b>Costos de Investigación y Desarrollo:</b> La inversión en el desarrollo de nuevas características y soluciones.</li>
                     </ul>
-                    <b>Recomendaciones:</b> Optimizar los costos de la nube, medir el ROI del gasto en ventas y marketing, y enfocarse en una I+D eficiente.
+                    <br>
+                    <b>Recomendaciones Estratégicas:</b>
+                    <ul>
+                        <li>Optimizar los costos de la nube trabajando con AWS para asegurar la eficiencia de la plataforma.</li>
+                        <li>Medir el ROI del gasto en ventas y marketing utilizando datos y análisis.</li>
+                        <li>Enfocarse en un enfoque de I+D eficiente para invertir recursos en las ideas más prometedoras.</li>
+                    </ul>
                 `
             },
             revenueStreams: {
                 title: "Flujos de Ingresos",
                 content: `
                     La principal fuente de ingresos de Widergy proviene de:
-                    <ul class="list-disc pl-5 mt-2 text-sm">
+                    <ul>
                         <li><b>Tarifas de Suscripción SaaS:</b> Los clientes pagan una tarifa recurrente para acceder a la plataforma Agent GO!, proporcionando un flujo de ingresos predecible y escalable.</li>
-                        <li><b>Servicios Profesionales:</b> Ingresos por implementación, personalización y capacitación.</li>
-                        <li><b>Precios Escalonados:</b> Es probable que se utilice un modelo de precios escalonado basado en el tamaño de la empresa de servicios públicos, el número de agentes o las características incluidas.</li>
+                        <li><b>Servicios Profesionales:</b> Widergy también puede generar ingresos de servicios profesionales como implementación, personalización y capacitación.</li>
+                        <li><b>Precios Escalonados:</b> Es probable que se utilice un modelo de precios por niveles, con diferentes precios basados en el tamaño de la empresa de servicios públicos, el número de agentes o las características incluidas.</li>
                     </ul>
-                    <b>Recomendaciones:</b> Optimizar la estrategia de precios, explorar precios basados en el valor y desarrollar nuevas fuentes de ingresos (características premium, servicios de análisis de datos).
+                    Widergy está explorando modelos de precios basados en el valor entregado al cliente (por ejemplo, ahorro de costos, mejora de la satisfacción del cliente).
+                    <br>
+                    <b>Recomendaciones Estratégicas:</b>
+                    <ul>
+                        <li>Optimizar la estrategia de precios para asegurar que sea competitiva y esté alineada con el valor entregado.</li>
+                        <li>Explorar precios basados en el valor, donde el precio de la plataforma esté directamente ligado a los beneficios que ofrece al cliente.</li>
+                        <li>Desarrollar nuevas fuentes de ingresos, como la venta de características premium, servicios de análisis de datos o servicios de consultoría.</li>
+                    </ul>
                 `
             }
         };
