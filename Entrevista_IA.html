@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evaluación de Candidato - Analista de IA</title>
+    <!-- Carga de React -->
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <!-- Carga de Babel para transpilar JSX en el navegador -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- Carga de Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Estilos personalizados para el foco y animaciones */
+        @keyframes fade-in-out {
+            0% { opacity: 0; transform: translateY(10px); }
+            10% { opacity: 1; transform: translateY(0); }
+            90% { opacity: 1; transform: translateY(0); }
+            100% { opacity: 0; transform: translateY(10px); }
+        }
+        .animate-fade-in-out { animation: fade-in-out 3s ease-in-out forwards; }
+        input:focus, textarea:focus { outline: none; box-shadow: 0 0 0 2px var(--ring-color); }
+        /* Asegurar que el cuerpo ocupa toda la altura disponible */
+        html, body, #root {
+            height: 100%;
+        }
+        body {
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useMemo } = React;
+
+        // --- DATOS DEL CUESTIONARIO Y RÚBRICA (Sin cambios) ---
+        const questionnaireData = [
+            {
+                block: "Bloque 1: Colaboración y comunicación",
+                questions: [
+                    "Describe una situación en la que tuviste que explicar una solución técnica compleja a un equipo no técnico. ¿Cómo lo hiciste? ¿Cuál fue el resultado?",
+                    "Cuéntanos sobre una ocasión en que trabajaste con diferentes áreas (ej. negocio, producto, datos). ¿Qué retos enfrentaste y cómo los resolviste?",
+                    "¿Cómo gestionas los desacuerdos técnicos en un equipo multidisciplinario?"
+                ]
+            },
+            {
+                block: "Bloque 2: Pensamiento crítico y resolución de problemas",
+                questions: [
+                    "Relata un caso donde identificaste una oportunidad de mejora mediante datos o IA. ¿Cuál fue tu enfoque y qué impacto tuvo?",
+                    "¿Cómo abordas un problema cuando no tienes toda la información? Danos un ejemplo."
+                ]
+            },
+            {
+                block: "Bloque 3: Proactividad e innovación",
+                questions: [
+                    "Cuéntanos sobre una tecnología o framework de IA que hayas aprendido por iniciativa propia. ¿Cómo lo aplicaste en tu trabajo?",
+                    "¿Has propuesto o liderado alguna iniciativa de innovación basada en IA? ¿Qué aprendiste del proceso?"
+                ]
+            },
+            {
+                block: "Bloque 4: Autonomía y organización",
+                questions: [
+                    "En proyectos con alta incertidumbre, ¿cómo estructuras tus prioridades y gestionas tu tiempo?",
+                    "¿Qué haces cuando tienes múltiples tareas importantes al mismo tiempo, todas con alta prioridad?"
+                ]
+            },
+            {
+                block: "Bloque 5: Motivación y propósito",
+                questions: [
+                    "¿Qué te motiva a trabajar con inteligencia artificial? ¿Cómo conectas tu propósito profesional con este campo?"
+                ]
+            }
+        ];
+
+        const rubricData = [
+            {
+                id: "communication",
+                criterion: "Comunicación y colaboración",
+                levels: [
+                    { score: 1, title: "Bajo", description: "Comunicación confusa, aislado en el trabajo en equipo." },
+                    { score: 2, title: "Bajo", description: "Dificultades para colaborar eficazmente." },
+                    { score: 3, title: "Aceptable", description: "Comunicación funcional, pero le cuesta conectar con otras áreas." },
+                    { score: 4, title: "Bueno", description: "Se comunica con claridad y colabora, aunque con menor adaptación." },
+                    { score: 5, title: "Excelente", description: "Explica con claridad, adapta lenguaje según audiencia, escucha activamente." },
+                ]
+            },
+            {
+                id: "criticalThinking",
+                criterion: "Pensamiento crítico y resolución de problemas",
+                levels: [
+                    { score: 1, title: "Bajo", description: "Tiene dificultad para resolver problemas no guiados." },
+                    { score: 2, title: "Bajo", description: "Sigue instrucciones pero no analiza a fondo." },
+                    { score: 3, title: "Aceptable", description: "Resuelve problemas conocidos, con poco análisis estructurado." },
+                    { score: 4, title: "Bueno", description: "Tiene un proceso claro de resolución, aunque menos innovador." },
+                    { score: 5, title: "Excelente", description: "Aborda problemas complejos con estructura y enfoque innovador." },
+                ]
+            },
+            {
+                id: "proactivity",
+                criterion: "Proactividad e innovación",
+                levels: [
+                    { score: 1, title: "Bajo", description: "Espera instrucciones, evita zonas nuevas o inciertas." },
+                    { score: 2, title: "Bajo", description: "Poca iniciativa para aprender o proponer." },
+                    { score: 3, title: "Aceptable", description: "Reacciona bien a lo nuevo, pero no lo lidera." },
+                    { score: 4, title: "Bueno", description: "Muestra iniciativa y curiosidad, aplica nuevos enfoques." },
+                    { score: 5, title: "Excelente", description: "Trae ideas nuevas, se capacita autónomamente y las aplica con impacto." },
+                ]
+            },
+            {
+                id: "timeManagement",
+                criterion: "Gestión del tiempo y autonomía",
+                levels: [
+                    { score: 1, title: "Bajo", description: "Dificultades para planificar y priorizar sin supervisión." },
+                    { score: 2, title: "Bajo", description: "Se desorganiza con facilidad bajo presión." },
+                    { score: 3, title: "Aceptable", description: "Requiere guía para estructurar su trabajo." },
+                    { score: 4, title: "Bueno", description: "Gestiona su tiempo con pocas dificultades." },
+                    { score: 5, title: "Excelente", description: "Organiza tareas efectivamente y prioriza en contextos dinámicos." },
+                ]
+            },
+            {
+                id: "motivation",
+                criterion: "Motivación y propósito",
+                levels: [
+                    { score: 1, title: "Bajo", description: "Falta de interés genuino o visión de desarrollo." },
+                    { score: 2, title: "Bajo", description: "Motivación puramente extrínseca." },
+                    { score: 3, title: "Aceptable", description: "Tiene interés general, pero sin conexión clara a propósito." },
+                    { score: 4, title: "Bueno", description: "Muestra motivación e interés sostenido en el campo." },
+                    { score: 5, title: "Excelente", description: "Tiene claridad en su propósito, y lo conecta con el impacto de la IA." },
+                ]
+            },
+        ];
+
+        // --- NUEVOS COLORES CORPORATIVOS ---
+        const corporateColors = {
+            primary: '#076295', // Azul oscuro
+            primaryDark: '#054b73', // Azul más oscuro para hover
+            accent: '#FFB000',   // Amarillo/Naranja
+            lightBlue: '#07A3E8',
+            background: '#f8fafc', // Un gris muy claro para el fondo
+            textPrimary: '#1e293b',
+            textSecondary: '#475569',
+        };
+
+        // --- COMPONENTES ---
+
+        const RubricItem = ({ item, score, onScoreChange, observation, onObservationChange }) => {
+            const [isExpanded, setIsExpanded] = useState(false);
+
+            return (
+                <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 transition-shadow hover:shadow-md">
+                    <div className="flex justify-between items-center cursor-pointer" onClick={() => setIsExpanded(!isExpanded)}>
+                        <h3 className="font-semibold" style={{color: corporateColors.textPrimary}}>{item.criterion}</h3>
+                        <div className="flex items-center gap-4">
+                            <span className={`font-bold text-lg ${score > 0 ? '' : 'text-gray-400'}`} style={{color: score > 0 ? corporateColors.primary : undefined}}>
+                                {score > 0 ? score : 'N/A'}
+                            </span>
+                            {/* Icono de expansión/contracción */}
+                            <span className="text-gray-500">{isExpanded ? '▲' : '▼'}</span>
+                        </div>
+                    </div>
+                    {isExpanded && (
+                        <div className="mt-4 space-y-4">
+                            <div className="flex flex-wrap items-center justify-center gap-2">
+                                {item.levels.map(({ score: levelScore }) => (
+                                    <button
+                                        key={levelScore}
+                                        onClick={() => onScoreChange(item.id, levelScore)}
+                                        style={{
+                                            backgroundColor: score === levelScore ? corporateColors.primary : '#e5e7eb',
+                                            color: score === levelScore ? 'white' : corporateColors.textPrimary
+                                        }}
+                                        className={`px-4 py-2 text-sm rounded-full transition-all duration-200 w-16 hover:opacity-90`}
+                                    >
+                                        {levelScore}
+                                    </button>
+                                ))}
+                            </div>
+                            <div className="text-center text-sm p-2 rounded-md bg-gray-50" style={{color: corporateColors.textSecondary}}>
+                                {score > 0 ? `${item.levels[score-1].title}: ${item.levels[score-1].description}`: "Seleccione un puntaje para ver la descripción."}
+                            </div>
+                            <div>
+                                <label htmlFor={`obs-${item.id}`} className="block text-sm font-medium mb-1" style={{color: corporateColors.textSecondary}}>Observaciones:</label>
+                                <textarea
+                                    id={`obs-${item.id}`}
+                                    value={observation}
+                                    onChange={(e) => onObservationChange(item.id, e.target.value)}
+                                    placeholder="Anotar evidencias, ejemplos y comentarios..."
+                                    className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 transition"
+                                    style={{'--ring-color': corporateColors.primary, 'borderColor': '#d1d5db'}}
+                                    onFocus={(e) => e.target.style.borderColor = corporateColors.primary}
+                                    onBlur={(e) => e.target.style.borderColor = '#d1d5db'}
+                                    rows="3"
+                                ></textarea>
+                            </div>
+                        </div>
+                    )}
+                </div>
+            );
+        };
+
+
+        const QuestionBlock = ({ block, questions }) => {
+            const [isExpanded, setIsExpanded] = useState(true);
+            return (
+                <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+                    <div className="flex justify-between items-center cursor-pointer" onClick={() => setIsExpanded(!isExpanded)}>
+                        <h3 className="font-semibold" style={{color: corporateColors.textPrimary}}>{block}</h3>
+                        {/* Icono de expansión/contracción */}
+                        <span className="text-gray-500">{isExpanded ? '▲' : '▼'}</span>
+                    </div>
+                    {isExpanded && (
+                        <ul className="mt-3 list-disc list-inside space-y-2" style={{color: corporateColors.textSecondary}}>
+                            {questions.map((q, index) => <li key={index}>{q}</li>)}
+                        </ul>
+                    )}
+                </div>
+            );
+        };
+
+        // --- COMPONENTE PRINCIPAL DE LA APLICACIÓN ---
+        function App() {
+            // Initial state for a new evaluation, now stored in local storage
+            const getInitialState = () => ({
+                id: crypto.randomUUID(), // Generate a unique ID for local storage
+                candidateName: '',
+                interviewDate: new Date().toISOString().split('T')[0],
+                interviewer: '',
+                scores: rubricData.reduce((acc, item) => ({ ...acc, [item.id]: 0 }), {}),
+                observations: rubricData.reduce((acc, item) => ({ ...acc, [item.id]: '' }), {}),
+            });
+            
+            // State to manage the current evaluation form data
+            const [currentEval, setCurrentEval] = useState(getInitialState());
+            // State to manage all saved evaluations (from local storage)
+            const [savedEvals, setSavedEvals] = useState([]);
+            // State for loading indicator (not strictly needed without Firebase, but kept for consistency)
+            const [isLoading, setIsLoading] = useState(false);
+            // State for displaying temporary notifications to the user
+            const [notification, setNotification] = useState('');
+
+            // Load saved evaluations from local storage on component mount
+            useEffect(() => {
+                try {
+                    const storedEvals = localStorage.getItem('interviewEvals');
+                    if (storedEvals) {
+                        setSavedEvals(JSON.parse(storedEvals).sort((a, b) => new Date(b.savedAt) - new Date(a.savedAt)));
+                    }
+                } catch (error) {
+                    console.error("Error loading evaluations from local storage:", error);
+                    showNotification("Error al cargar evaluaciones guardadas.");
+                }
+            }, []);
+
+            // Effect to save evaluations to local storage whenever `savedEvals` changes
+            useEffect(() => {
+                try {
+                    localStorage.setItem('interviewEvals', JSON.stringify(savedEvals));
+                } catch (error) {
+                    console.error("Error saving evaluations to local storage:", error);
+                    showNotification("Error al guardar evaluaciones.");
+                }
+            }, [savedEvals]);
+
+            // Handle input changes for candidate name, date, and interviewer
+            const handleInputChange = (e) => {
+                const { name, value } = e.target;
+                setCurrentEval(prev => ({ ...prev, [name]: value }));
+            };
+
+            // Handle score changes for rubric items
+            const handleScoreChange = (id, score) => {
+                setCurrentEval(prev => ({ ...prev, scores: { ...prev.scores, [id]: score } }));
+            };
+
+            // Handle observation text changes for rubric items
+            const handleObservationChange = (id, text) => {
+                setCurrentEval(prev => ({ ...prev, observations: { ...prev.observations, [id]: text } }));
+            };
+            
+            // Show a temporary notification message
+            const showNotification = (message) => {
+                setNotification(message);
+                setTimeout(() => setNotification(''), 3000);
+            };
+
+            // Handle saving/updating an evaluation to local storage
+            const handleSave = async () => {
+                if (!currentEval.candidateName.trim()) {
+                    showNotification("Por favor, ingrese el nombre del candidato.");
+                    return;
+                }
+                
+                setIsLoading(true);
+                const dataToSave = { ...currentEval, savedAt: new Date().toISOString() };
+                
+                try {
+                    if (currentEval.id) {
+                        // Update existing evaluation
+                        setSavedEvals(prevEvals => prevEvals.map(evalItem => 
+                            evalItem.id === currentEval.id ? dataToSave : evalItem
+                        ));
+                        showNotification("Evaluación actualizada con éxito.");
+                    } else {
+                        // Add new evaluation (should not happen if initial state has ID, but as a fallback)
+                        dataToSave.id = crypto.randomUUID(); // Ensure new ID if somehow missing
+                        setSavedEvals(prevEvals => [...prevEvals, dataToSave]);
+                        setCurrentEval(prev => ({ ...prev, id: dataToSave.id }));
+                        showNotification("Evaluación guardada con éxito.");
+                    }
+                } catch (error) {
+                    console.error("Error saving evaluation: ", error);
+                    showNotification("Error al guardar la evaluación.");
+                } finally {
+                    setIsLoading(false);
+                }
+            };
+            
+            // Calculate total score based on current evaluation scores
+            const totalScore = useMemo(() => {
+                return Object.values(currentEval.scores).reduce((sum, score) => sum + score, 0);
+            }, [currentEval.scores]);
+
+            // Handle exporting the current evaluation data to a TXT file
+            const handleExport = () => {
+                if (!currentEval.candidateName) {
+                    showNotification("Agregue un nombre de candidato para exportar.");
+                    return;
+                }
+
+                let fileContent = `📋 Evaluación de Candidato – Analista de IA\n`;
+                fileContent += `=============================================\n\n`;
+                fileContent += `Nombre del candidato: ${currentEval.candidateName}\n`;
+                fileContent += `Fecha de entrevista: ${new Date(currentEval.interviewDate).toLocaleDateString()}\n`;
+                fileContent += `Entrevistador(a): ${currentEval.interviewer}\n\n`;
+                fileContent += `--- RÚBRICA Y OBSERVACIONES ---\n\n`;
+
+                rubricData.forEach(item => {
+                    const score = currentEval.scores[item.id] || 0;
+                    const observation = currentEval.observations[item.id] || 'N/A';
+                    fileContent += `▶ ${item.criterion}\n`;
+                    fileContent += `  Puntaje: ${score}/5\n`;
+                    fileContent += `  Observaciones: ${observation}\n\n`;
+                });
+
+                fileContent += `=============================================\n`;
+                fileContent += `Puntaje Total: ${totalScore} / 25\n`;
+                
+                // Create a Blob and download the file
+                const blob = new Blob([fileContent], { type: 'text/plain;charset=utf-8' });
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `Evaluacion-${currentEval.candidateName.replace(/\s+/g, '_') || 'candidato'}.txt`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url); // Clean up the URL object
+                showNotification("Evaluación exportada.");
+            };
+
+            // Reset the form to a new, empty evaluation
+            const handleNewEvaluation = () => {
+                setCurrentEval(getInitialState());
+            };
+            
+            // Load a previously saved evaluation into the form
+            const loadEvaluation = (evaluation) => {
+                setCurrentEval(evaluation);
+                window.scrollTo(0, 0); // Scroll to top after loading
+            };
+
+            // Handle deleting an evaluation from local storage
+            const handleDelete = (evalId) => {
+                // Using window.confirm for simplicity in this browser-only context.
+                // For a more robust application, consider a custom modal UI.
+                if (window.confirm("¿Está seguro de que desea eliminar esta evaluación? Esta acción no se puede deshacer.")) {
+                    try {
+                        setSavedEvals(prevEvals => prevEvals.filter(evalItem => evalItem.id !== evalId));
+                        showNotification("Evaluación eliminada.");
+                        if(currentEval.id === evalId) {
+                            handleNewEvaluation(); // If deleted current, start a new one
+                        }
+                    } catch (error) {
+                        console.error("Error deleting evaluation: ", error);
+                        showNotification("Error al eliminar la evaluación.");
+                    }
+                }
+            };
+            
+            // --- Logo Component ---
+            const Logo = () => (
+                <div className="flex items-center gap-2">
+                    <div className="flex items-end">
+                        <span className="text-4xl font-bold tracking-tighter" style={{color: corporateColors.primary}}>Open</span>
+                   </div>
+                </div>
+            );
+
+            return (
+                <div className="min-h-screen font-sans p-4 sm:p-6 lg:p-8" style={{backgroundColor: corporateColors.background, color: corporateColors.textPrimary}}>
+                    <div className="max-w-7xl mx-auto">
+                        <header className="mb-8 flex flex-col sm:flex-row justify-between items-start gap-4">
+                            <div>
+                                <Logo />
+                                <p className="text-lg mt-1" style={{color: corporateColors.textSecondary}}>Evaluación de Candidato: Analista de IA</p>
+                            </div>
+                        </header>
+
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                            <aside className="space-y-6">
+                                <div>
+                                    <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">❓ Cuestionario Guía</h2>
+                                    <div className="space-y-4">
+                                        {questionnaireData.map(item => <QuestionBlock key={item.block} {...item} />)}
+                                    </div>
+                                </div>
+                                <div>
+                                    <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">📝 Evaluaciones Guardadas</h2>
+                                    <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 max-h-96 overflow-y-auto">
+                                        {savedEvals.length > 0 ? (
+                                            <ul className="space-y-2">
+                                                {savedEvals.map(ev => (
+                                                    <li key={ev.id} className="flex justify-between items-center p-2 rounded-md hover:bg-gray-100">
+                                                        <div>
+                                                            <button onClick={() => loadEvaluation(ev)} className="font-semibold hover:underline" style={{color: corporateColors.primary}}>{ev.candidateName || "Sin Nombre"}</button>
+                                                            <p className="text-sm text-gray-500">{new Date(ev.interviewDate).toLocaleDateString()}</p>
+                                                        </div>
+                                                        <div className="flex items-center gap-3">
+                                                            <span className="font-bold" style={{color: corporateColors.textPrimary}}>{Object.values(ev.scores).reduce((a,b)=>a+b,0)}/25</span>
+                                                            <button onClick={() => handleDelete(ev.id)} className="text-gray-400 hover:text-red-600 p-1 rounded-full">🗑️</button>
+                                                        </div>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        ) : <p className="text-gray-500 text-center py-4">No hay evaluaciones guardadas.</p>}
+                                    </div>
+                                </div>
+                            </aside>
+
+                            <main className="space-y-6">
+                                <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-200 sticky top-4">
+                                    <div className="flex justify-between items-start mb-6">
+                                        <div>
+                                            <h2 className="text-2xl font-bold" style={{color: corporateColors.textPrimary}}>Formulario de Evaluación</h2>
+                                            <p style={{color: corporateColors.textSecondary}}>Completa los datos y la rúbrica.</p>
+                                        </div>
+                                        <button onClick={handleNewEvaluation} className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-colors" style={{backgroundColor: '#E0F2FE', color: corporateColors.primary}}>
+                                            ➕ Nueva
+                                        </button>
+                                    </div>
+
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                                        <div className="relative">
+                                            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">👤</span>
+                                            <input type="text" name="candidateName" placeholder="Nombre del Candidato" value={currentEval.candidateName} onChange={handleInputChange} className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:ring-2" style={{'--ring-color': corporateColors.primary}}/>
+                                        </div>
+                                        <div className="relative">
+                                            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">📅</span>
+                                            <input type="date" name="interviewDate" value={currentEval.interviewDate} onChange={handleInputChange} className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:ring-2" style={{'--ring-color': corporateColors.primary}}/>
+                                        </div>
+                                        <div className="relative col-span-1 md:col-span-2">
+                                            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">📧</span>
+                                            <input type="text" name="interviewer" placeholder="Nombre del Entrevistador(a)" value={currentEval.interviewer} onChange={handleInputChange} className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:ring-2" style={{'--ring-color': corporateColors.primary}}/>
+                                        </div>
+                                    </div>
+
+                                    <div className="space-y-4 mb-6">
+                                        {rubricData.map(item => (
+                                            <RubricItem key={item.id} item={item} score={currentEval.scores[item.id]} onScoreChange={handleScoreChange} observation={currentEval.observations[item.id]} onObservationChange={handleObservationChange} />
+                                        ))}
+                                    </div>
+
+                                    <div style={{backgroundColor: '#EFF6FF', borderColor: corporateColors.lightBlue}} className="p-4 rounded-lg border-l-4 flex flex-col sm:flex-row justify-between items-center gap-4">
+                                        <div>
+                                            <p className="text-sm font-semibold" style={{color: corporateColors.primary}}>Puntaje Total</p>
+                                            <p className="text-3xl font-bold" style={{color: corporateColors.primaryDark}}>{totalScore} / 25</p>
+                                        </div>
+                                        <div className="flex items-center gap-3">
+                                            <button
+                                                onClick={handleExport}
+                                                disabled={!currentEval.candidateName}
+                                                className="flex items-center gap-2 px-4 py-3 rounded-lg font-bold transition-all shadow-md disabled:bg-gray-400 disabled:cursor-not-allowed text-sm"
+                                                style={{backgroundColor: corporateColors.accent, color:'white'}}
+                                            >
+                                                ⬇️ Exportar
+                                            </button>
+                                            <button
+                                                onClick={handleSave}
+                                                disabled={isLoading}
+                                                className="flex items-center gap-2 px-6 py-3 rounded-lg font-bold transition-all shadow-md disabled:bg-gray-400 disabled:cursor-not-allowed text-white text-base"
+                                                style={{backgroundColor: corporateColors.primary, '--hover-bg': corporateColors.primaryDark}}
+                                                onMouseOver={e => e.currentTarget.style.backgroundColor = corporateColors.primaryDark}
+                                                onMouseOut={e => e.currentTarget.style.backgroundColor = corporateColors.primary}
+                                            >
+                                                💾
+                                                {isLoading ? 'Guardando...' : (currentEval.id ? 'Actualizar' : 'Guardar')}
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </main>
+                        </div>
+                    </div>
+                    {notification && (
+                        <div className="fixed bottom-5 right-5 text-white px-6 py-3 rounded-lg shadow-2xl animate-fade-in-out" style={{backgroundColor: corporateColors.textPrimary}}>
+                            {notification}
+                        </div>
+                    )}
+                </div>
+            );
+        }
+
+        // Montar la aplicación React en el DOM
+        // Para React 18, usar createRoot
+        ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+    </script>
+</body>
+</html>
