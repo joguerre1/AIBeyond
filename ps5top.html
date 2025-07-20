@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía de Juegos de PlayStation 5</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0F172A; /* slate-900 */
+            color: #F1F5F9; /* slate-100 */
+        }
+        .game-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            will-change: transform;
+        }
+        .game-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05), 0 0 30px -5px rgba(59, 130, 246, 0.4); /* Blue glow */
+        }
+        .filter-btn {
+            transition: all 0.2s ease-in-out;
+        }
+        .filter-btn.active {
+            background-color: #2563EB; /* blue-600 */
+            color: #FFFFFF;
+            box-shadow: 0 0 15px -2px rgba(59, 130, 246, 0.5);
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-slate-900 text-slate-100">
+
+    <!-- Header -->
+    <header class="text-center py-8 md:py-12 bg-slate-900/50 backdrop-blur-sm sticky top-0 z-20">
+        <h1 class="text-4xl md:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">Guía Definitiva de Juegos de PS5</h1>
+        <p class="mt-4 text-lg text-slate-300 max-w-3xl mx-auto px-4">Explora los títulos más influyentes y aclamados que definen la generación de PlayStation 5.</p>
+    </header>
+
+    <!-- Filter Buttons -->
+    <div id="filters" class="flex flex-wrap justify-center gap-2 md:gap-4 p-4 mb-8 sticky top-32 z-20 bg-slate-900/50 backdrop-blur-sm rounded-xl max-w-5xl mx-auto">
+        <button class="filter-btn active px-4 py-2 bg-slate-800 hover:bg-blue-500 rounded-full font-semibold" data-category="all">Todos</button>
+        <button class="filter-btn px-4 py-2 bg-slate-800 hover:bg-blue-500 rounded-full font-semibold" data-category="panteon">Panteón (Mejor Valorados)</button>
+        <button class="filter-btn px-4 py-2 bg-slate-800 hover:bg-blue-500 rounded-full font-semibold" data-category="exclusivo">Exclusivos de PlayStation</button>
+        <button class="filter-btn px-4 py-2 bg-slate-800 hover:bg-blue-500 rounded-full font-semibold" data-category="accion">Aventura y Acción</button>
+        <button class="filter-btn px-4 py-2 bg-slate-800 hover:bg-blue-500 rounded-full font-semibold" data-category="rpg">RPG</button>
+        <button class="filter-btn px-4 py-2 bg-slate-800 hover:bg-blue-500 rounded-full font-semibold" data-category="shooter">Shooters</button>
+        <button class="filter-btn px-4 py-2 bg-slate-800 hover:bg-blue-500 rounded-full font-semibold" data-category="carreras">Deportes y Carreras</button>
+    </div>
+
+    <!-- Game Grid -->
+    <main id="game-grid" class="container mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8 pb-16">
+        <!-- Game cards will be inserted here by JavaScript -->
+    </main>
+    
+    <!-- Footer -->
+    <footer class="text-center py-6 border-t border-slate-800">
+        <p class="text-slate-400">Página generada dinámicamente para la exploración de juegos de PS5.</p>
+    </footer>
+
+    <script>
+        // --- Game Data ---
+        // Data extracted and synthesized from the provided text document.
+        const games = [
+            {
+                title: "Elden Ring",
+                category: ["panteon", "rpg"],
+                metascore: 96,
+                description: "Una evolución magistral de la fórmula 'Souls-like' en un vasto mundo abierto que recompensa la curiosidad y la exploración.",
+                image: "https://placehold.co/400x500/1a202c/ffffff?text=Elden+Ring"
+            },
+            {
+                title: "Baldur's Gate 3",
+                category: ["panteon", "rpg"],
+                metascore: 96,
+                description: "Una proeza de la agencia del jugador y la profundidad narrativa, resucitando el género CRPG con una libertad sin precedentes.",
+                image: "https://placehold.co/400x500/1a202c/ffffff?text=Baldur's+Gate+3"
+            },
+            {
+                title: "Astro Bot",
+                category: ["panteon", "exclusivo"],
+                metascore: 94,
+                description: "Una celebración jubilosa de la historia de PlayStation y una obra maestra del género de plataformas 3D, rebosante de creatividad.",
+                image: "https://placehold.co/400x500/1a202c/ffffff?text=Astro+Bot"
+            },
+            {
+                title: "God of War Ragnarök",
+                category: ["panteon", "exclusivo", "accion"],
+                metascore: 94,
+                description: "El cénit crítico de las secuelas de Sony, con una narrativa emotiva, combate visceral y una impresionante construcción de mundos.",
+                image: "https://placehold.co/400x500/1a202c/ffffff?text=GoW+Ragnarök"
+            },
+            {
+                title: "Final Fantasy VII Rebirth",
+                category: ["rpg", "accion"],
+                metascore: 92,
+                description: "Una ambiciosa expansión del mundo del juego original con una evolución brillante de su sistema de combate híbrido.",
+                image: "https://placehold.co/400x500/1a202c/ffffff?text=FFVII+Rebirth"
+            },
+            {
+                title: "Marvel's Spider-Man 2",
+                category: ["exclusivo", "accion"],
+                metascore: 90,
+                description: "El pináculo del refinamiento, ofreciendo una experiencia de superhéroe más grande, rápida y emocionalmente resonante.",
+                image: "https://placehold.co/400x500/1a202c/ffffff?text=Spider-Man+2"
+            },
+            {
+                title: "Returnal",
+                category: ["exclusivo", "shooter"],
+                metascore: 86,
+                description: "Una audaz fusión de shooter, bullet hell y roguelike. Una de las experiencias más intensas y satisfactorias de la generación.",
+                image: "https://placehold.co/400x500/1a202c/ffffff?text=Returnal"
+            },
+            {
+                title: "Helldivers II",
+                category: ["exclusivo", "shooter"],
+                metascore: 82,
+                description: "Un fenómeno de shooter cooperativo con una jugabilidad caótica y divertida y una metanarrativa dirigida por la comunidad.",
+                image: "https://placehold.co/400x500/1a202c/ffffff?text=Helldivers+II"
+            },
+            {
+                title: "Stellar Blade",
+                category: ["exclusivo", "accion"],
+                metascore: 81,
+                description: "Un juego de acción estilizado con un combate deslumbrante centrado en el parry y la ejecución de combos vistosos.",
+                image: "https://placehold.co/400x500/1a202c/ffffff?text=Stellar+Blade"
+            },
+            {
+                title: "Gran Turismo 7",
+                category: ["exclusivo", "carreras"],
+                metascore: 87,
+                description: "El rey indiscutible de las carreras en PlayStation, ofreciendo un realismo visual y una física de conducción de primer nivel.",
+                image: "https://placehold.co/400x500/1a202c/ffffff?text=Gran+Turismo+7"
+            },
+            {
+                title: "Ghost of Tsushima D.C.",
+                category: ["exclusivo", "accion"],
+                metascore: 87,
+                description: "Una impresionante aventura de mundo abierto en el Japón feudal, con un combate de samuráis elegante y un estilo visual arrebatador.",
+                image: "https://placehold.co/400x500/1a202c/ffffff?text=GoT+DC"
+            },
+            {
+                title: "Cyberpunk 2077: U.E.",
+                category: ["rpg", "accion"],
+                metascore: 86,
+                description: "Night City es una de las ciudades de videojuegos más inmersivas y detalladas, con profundas narrativas ramificadas.",
+                image: "https://placehold.co/400x500/1a202c/ffffff?text=Cyberpunk+2077"
+            }
+        ];
+
+        const gameGrid = document.getElementById('game-grid');
+        const filterContainer = document.getElementById('filters');
+
+        // --- Function to display games ---
+        function displayGames(filteredGames) {
+            gameGrid.innerHTML = ''; // Clear existing games
+            filteredGames.forEach(game => {
+                const card = document.createElement('div');
+                card.className = 'game-card bg-slate-800 rounded-lg overflow-hidden shadow-lg border border-slate-700 flex flex-col fade-in';
+                card.innerHTML = `
+                    <div class="relative">
+                        <img src="${game.image}" alt="Portada de ${game.title}" class="w-full h-64 object-cover" onerror="this.onerror=null;this.src='https://placehold.co/400x500/1a202c/ffffff?text=Imagen+no+disponible';">
+                        <div class="absolute top-2 right-2 bg-blue-600 text-white text-lg font-bold rounded-full w-14 h-14 flex items-center justify-center border-2 border-slate-900">
+                            ${game.metascore}
+                        </div>
+                    </div>
+                    <div class="p-4 flex flex-col flex-grow">
+                        <h3 class="text-xl font-bold text-slate-100 mb-2">${game.title}</h3>
+                        <p class="text-slate-300 text-sm mb-4 flex-grow">${game.description}</p>
+                        <div class="mt-auto pt-4 border-t border-slate-700/50">
+                            <p class="text-xs text-blue-400 font-semibold uppercase">${game.category.join(', ').replace('panteon', 'Mejor Valorado').replace('accion', 'Acción').replace('carreras', 'Carreras')}</p>
+                        </div>
+                    </div>
+                `;
+                gameGrid.appendChild(card);
+            });
+        }
+
+        // --- Event Listener for Filters ---
+        filterContainer.addEventListener('click', (e) => {
+            if (e.target.tagName === 'BUTTON') {
+                // Update active button style
+                document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+                e.target.classList.add('active');
+
+                const category = e.target.dataset.category;
+                let filteredGames;
+
+                if (category === 'all') {
+                    filteredGames = games;
+                } else {
+                    filteredGames = games.filter(game => game.category.includes(category));
+                }
+                
+                displayGames(filteredGames);
+            }
+        });
+
+        // --- Initial Display ---
+        // Initially display all games when the page loads
+        displayGames(games);
+
+    </script>
+</body>
+</html>
