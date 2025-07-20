@@ -17,6 +17,7 @@
         .game-card {
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             will-change: transform;
+            cursor: pointer;
         }
         .game-card:hover {
             transform: translateY(-5px);
@@ -37,6 +38,35 @@
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
+        .modal-enter {
+            animation: fadeIn 0.3s ease-out;
+        }
+        .modal-leave {
+            animation: fadeOut 0.3s ease-in;
+        }
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+        .modal-content-enter {
+             animation: slideInUp 0.4s ease-out;
+        }
+        @keyframes slideInUp {
+            from { opacity: 0; transform: translateY(50px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        /* Custom scrollbar for modal content */
+        .modal-body::-webkit-scrollbar {
+            width: 8px;
+        }
+        .modal-body::-webkit-scrollbar-track {
+            background: #1e293b; /* slate-800 */
+        }
+        .modal-body::-webkit-scrollbar-thumb {
+            background-color: #3b82f6; /* blue-500 */
+            border-radius: 20px;
+            border: 3px solid #1e293b; /* slate-800 */
+        }
     </style>
 </head>
 <body class="bg-slate-900 text-slate-100">
@@ -48,14 +78,14 @@
     </header>
 
     <!-- Filter Buttons -->
-    <div id="filters" class="flex flex-wrap justify-center gap-2 md:gap-4 p-4 mb-8 sticky top-32 z-20 bg-slate-900/50 backdrop-blur-sm rounded-xl max-w-5xl mx-auto">
+    <div id="filters" class="flex flex-wrap justify-center gap-2 md:gap-4 p-4 mb-8 sticky top-28 md:top-32 z-20 bg-slate-900/50 backdrop-blur-sm rounded-xl max-w-5xl mx-auto">
         <button class="filter-btn active px-4 py-2 bg-slate-800 hover:bg-blue-500 rounded-full font-semibold" data-category="all">Todos</button>
-        <button class="filter-btn px-4 py-2 bg-slate-800 hover:bg-blue-500 rounded-full font-semibold" data-category="panteon">Panteón (Mejor Valorados)</button>
-        <button class="filter-btn px-4 py-2 bg-slate-800 hover:bg-blue-500 rounded-full font-semibold" data-category="exclusivo">Exclusivos de PlayStation</button>
-        <button class="filter-btn px-4 py-2 bg-slate-800 hover:bg-blue-500 rounded-full font-semibold" data-category="accion">Aventura y Acción</button>
+        <button class="filter-btn px-4 py-2 bg-slate-800 hover:bg-blue-500 rounded-full font-semibold" data-category="panteon">Panteón</button>
+        <button class="filter-btn px-4 py-2 bg-slate-800 hover:bg-blue-500 rounded-full font-semibold" data-category="exclusivo">Exclusivos</button>
+        <button class="filter-btn px-4 py-2 bg-slate-800 hover:bg-blue-500 rounded-full font-semibold" data-category="accion">Acción</button>
         <button class="filter-btn px-4 py-2 bg-slate-800 hover:bg-blue-500 rounded-full font-semibold" data-category="rpg">RPG</button>
         <button class="filter-btn px-4 py-2 bg-slate-800 hover:bg-blue-500 rounded-full font-semibold" data-category="shooter">Shooters</button>
-        <button class="filter-btn px-4 py-2 bg-slate-800 hover:bg-blue-500 rounded-full font-semibold" data-category="carreras">Deportes y Carreras</button>
+        <button class="filter-btn px-4 py-2 bg-slate-800 hover:bg-blue-500 rounded-full font-semibold" data-category="carreras">Carreras</button>
     </div>
 
     <!-- Game Grid -->
@@ -63,6 +93,13 @@
         <!-- Game cards will be inserted here by JavaScript -->
     </main>
     
+    <!-- Modal Structure -->
+    <div id="game-modal" class="hidden fixed inset-0 bg-black bg-opacity-70 z-50 flex items-center justify-center p-4">
+        <div id="modal-content" class="bg-slate-800 rounded-xl shadow-2xl w-full max-w-4xl max-h-[90vh] flex flex-col md:flex-row overflow-hidden">
+            <!-- Modal content will be populated by JS -->
+        </div>
+    </div>
+
     <!-- Footer -->
     <footer class="text-center py-6 border-t border-slate-800">
         <p class="text-slate-400">Página generada dinámicamente para la exploración de juegos de PS5.</p>
@@ -70,115 +107,142 @@
 
     <script>
         // --- Game Data ---
-        // Data extracted and synthesized from the provided text document.
+        // Data extracted and synthesized from the provided text document, now with real images and more details.
         const games = [
             {
                 title: "Elden Ring",
+                developer: "FromSoftware",
                 category: ["panteon", "rpg"],
                 metascore: 96,
-                description: "Una evolución magistral de la fórmula 'Souls-like' en un vasto mundo abierto que recompensa la curiosidad y la exploración.",
-                image: "https://placehold.co/400x500/1a202c/ffffff?text=Elden+Ring"
+                short_description: "Una evolución magistral de la fórmula 'Souls-like' en un vasto mundo abierto que recompensa la curiosidad y la exploración.",
+                full_description: "Elden Ring transporta la desafiante filosofía de combate, la narrativa ambiental críptica y el intrincado diseño de niveles de la serie Dark Souls a un vasto y asombroso mundo abierto: las Tierras Intermedias. La libertad de exploración permite a los jugadores eludir desafíos abrumadores para fortalecerse en otros lugares, mitigando la frustración asociada con sus predecesores. El resultado es una aventura épica que recompensa constantemente la curiosidad con descubrimientos significativos.",
+                image: "https://image.api.playstation.com/vulcan/ap/rnd/202110/2000/aGhopp3NfF939Qk0i9IF_GJM.png"
             },
             {
                 title: "Baldur's Gate 3",
+                developer: "Larian Studios",
                 category: ["panteon", "rpg"],
                 metascore: 96,
-                description: "Una proeza de la agencia del jugador y la profundidad narrativa, resucitando el género CRPG con una libertad sin precedentes.",
-                image: "https://placehold.co/400x500/1a202c/ffffff?text=Baldur's+Gate+3"
+                short_description: "Una proeza de la agencia del jugador y la profundidad narrativa, resucitando el género CRPG con una libertad sin precedentes.",
+                full_description: "Una adaptación asombrosamente fiel del universo de Dungeons & Dragons, que ofrece un nivel de libertad y reactividad que pocos juegos han logrado. Cada decisión tiene consecuencias que se ramifican a lo largo de una campaña de más de cien horas, destacando por su escritura excepcional, personajes inolvidables y un profundo sistema de combate táctico por turnos.",
+                image: "https://image.api.playstation.com/vulcan/ap/rnd/202302/2321/ba8Of2A4Bll5p5Le2M5z2y5I.png"
             },
             {
                 title: "Astro Bot",
+                developer: "Team Asobi / SIE",
                 category: ["panteon", "exclusivo"],
                 metascore: 94,
-                description: "Una celebración jubilosa de la historia de PlayStation y una obra maestra del género de plataformas 3D, rebosante de creatividad.",
-                image: "https://placehold.co/400x500/1a202c/ffffff?text=Astro+Bot"
+                short_description: "Una celebración jubilosa de la historia de PlayStation y una obra maestra del género de plataformas 3D.",
+                full_description: "Una aventura de tamaño completo que abarca más de 50 planetas. Cada nivel es un derroche de creatividad, introduciendo constantemente nuevas mecánicas y power-ups que se integran de manera brillante con el control DualSense. Es un museo interactivo del legado de PlayStation, lleno de cameos y amor por la marca.",
+                image: "https://image.api.playstation.com/vulcan/ap/rnd/202405/2914/d9065241a679dfb133aad9d53ac60fee16943a5c18a3857e.png"
             },
             {
                 title: "God of War Ragnarök",
+                developer: "Santa Monica Studio / SIE",
                 category: ["panteon", "exclusivo", "accion"],
                 metascore: 94,
-                description: "El cénit crítico de las secuelas de Sony, con una narrativa emotiva, combate visceral y una impresionante construcción de mundos.",
-                image: "https://placehold.co/400x500/1a202c/ffffff?text=GoW+Ragnarök"
+                short_description: "El cénit crítico de las secuelas de Sony, con una narrativa emotiva y combate visceral.",
+                full_description: "Esta secuela expande la saga nórdica de Kratos y Atreus con una ambición narrativa sobrecogedora. El juego profundiza en la relación padre-hijo mientras explora los Nueve Reinos, cada uno un bioma visualmente deslumbrante. Es una obra maestra de la narración cinematográfica y la acción visceral.",
+                image: "https://image.api.playstation.com/vulcan/ap/rnd/202207/1210/4xJ8OK4Yq8G04sRjSm2Qo55B.png"
             },
             {
                 title: "Final Fantasy VII Rebirth",
+                developer: "Square Enix",
                 category: ["rpg", "accion"],
                 metascore: 92,
-                description: "Una ambiciosa expansión del mundo del juego original con una evolución brillante de su sistema de combate híbrido.",
-                image: "https://placehold.co/400x500/1a202c/ffffff?text=FFVII+Rebirth"
+                short_description: "Una ambiciosa expansión del mundo del juego original con un sistema de combate híbrido brillante.",
+                full_description: "Ofrece una vasta y vibrante recreación del mundo del juego original, con un sistema de combate que mezcla acción en tiempo real y estrategia por turnos de manera brillante, demostrando la capacidad de la PS5 para manejar experiencias de rol a gran escala.",
+                image: "https://image.api.playstation.com/vulcan/ap/rnd/202309/1319/d1345091b65b6bc3b44cf46736a56f089626e56a3124f09e.png"
             },
             {
                 title: "Marvel's Spider-Man 2",
+                developer: "Insomniac Games / SIE",
                 category: ["exclusivo", "accion"],
                 metascore: 90,
-                description: "El pináculo del refinamiento, ofreciendo una experiencia de superhéroe más grande, rápida y emocionalmente resonante.",
-                image: "https://placehold.co/400x500/1a202c/ffffff?text=Spider-Man+2"
+                short_description: "Una experiencia de superhéroe más grande, rápida y emocionalmente resonante.",
+                full_description: "Capitaliza la popularidad de Peter Parker y Miles Morales, ampliando el mapa, introduciendo mecánicas de desplazamiento más rápidas y permitiendo cambiar casi instantáneamente entre los dos héroes. Su narrativa explora temas más oscuros y maduros.",
+                image: "https://image.api.playstation.com/vulcan/ap/rnd/202306/1219/5s4iAl35a2d82mM70c24msYk.png"
             },
             {
                 title: "Returnal",
+                developer: "Housemarque / SIE",
                 category: ["exclusivo", "shooter"],
                 metascore: 86,
-                description: "Una audaz fusión de shooter, bullet hell y roguelike. Una de las experiencias más intensas y satisfactorias de la generación.",
-                image: "https://placehold.co/400x500/1a202c/ffffff?text=Returnal"
+                short_description: "Una audaz fusión de shooter, bullet hell y roguelike. Intensa y satisfactoria.",
+                full_description: "El exclusivo más 'hardcore' de PS5. Atrapada en un bucle temporal, Selene debe sobrevivir en un planeta alienígena hostil. Cada muerte reinicia el ciclo. Fue uno de los primeros juegos en demostrar verdaderamente el potencial del control DualSense.",
+                image: "https://image.api.playstation.com/vulcan/img/rnd/202010/2618/YF9sR2R3bJvQpSJMcf35I9dI.png"
             },
             {
                 title: "Helldivers II",
+                developer: "Arrowhead Game Studios / SIE",
                 category: ["exclusivo", "shooter"],
                 metascore: 82,
-                description: "Un fenómeno de shooter cooperativo con una jugabilidad caótica y divertida y una metanarrativa dirigida por la comunidad.",
-                image: "https://placehold.co/400x500/1a202c/ffffff?text=Helldivers+II"
+                short_description: "Fenómeno cooperativo con jugabilidad caótica y una metanarrativa dirigida por la comunidad.",
+                full_description: "Un éxito viral inesperado. Enfrenta a equipos contra hordas de insectos y robots en una sátira del fascismo militarista. Su éxito se debe a su divertida jugabilidad y un enfoque único para la narrativa en vivo, donde las acciones de la comunidad influyen en una guerra galáctica.",
+                image: "https://image.api.playstation.com/vulcan/ap/rnd/202308/3013/e953c552a611def59a6d25ee452ab9a557b28662991a4805.png"
             },
             {
                 title: "Stellar Blade",
+                developer: "Shift Up / SIE",
                 category: ["exclusivo", "accion"],
                 metascore: 81,
-                description: "Un juego de acción estilizado con un combate deslumbrante centrado en el parry y la ejecución de combos vistosos.",
-                image: "https://placehold.co/400x500/1a202c/ffffff?text=Stellar+Blade"
+                short_description: "Acción estilizada con un combate deslumbrante centrado en el parry y combos vistosos.",
+                full_description: "Llena el nicho del 'character action' con reminiscencias de clásicos como NieR:Automata. Destaca por su combate deslumbrante y su diseño de mundo y personajes, demostrando la capacidad de Sony para publicar nuevas IP de socios externos que resuenan globalmente.",
+                image: "https://image.api.playstation.com/vulcan/ap/rnd/202401/2315/a79c3b1a436a53d9622a5786273a5a75a7c2e3997e33550c.png"
             },
             {
                 title: "Gran Turismo 7",
+                developer: "Polyphony Digital / SIE",
                 category: ["exclusivo", "carreras"],
                 metascore: 87,
-                description: "El rey indiscutible de las carreras en PlayStation, ofreciendo un realismo visual y una física de conducción de primer nivel.",
-                image: "https://placehold.co/400x500/1a202c/ffffff?text=Gran+Turismo+7"
+                short_description: "El rey de las carreras en PlayStation, con realismo visual y física de conducción de primer nivel.",
+                full_description: "Una celebración del automovilismo. Su uso del control DualSense es particularmente notable, transmitiendo la textura de la carretera y la tensión de los frenos de una manera que aumenta significativamente la inmersión.",
+                image: "https://image.api.playstation.com/vulcan/ap/rnd/202109/2822/fce21a60aV23ArV82d1a2aFG.png"
             },
             {
                 title: "Ghost of Tsushima D.C.",
+                developer: "Sucker Punch / SIE",
                 category: ["exclusivo", "accion"],
                 metascore: 87,
-                description: "Una impresionante aventura de mundo abierto en el Japón feudal, con un combate de samuráis elegante y un estilo visual arrebatador.",
-                image: "https://placehold.co/400x500/1a202c/ffffff?text=GoT+DC"
+                short_description: "Impresionante mundo abierto en el Japón feudal con combate elegante y un estilo visual arrebatador.",
+                full_description: "La versión Director's Cut, mejorada en PS5 con rendimiento a 60 FPS y tiempos de carga reducidos, ofrece una experiencia transformadora. Jugarlo en la nueva consola lo posiciona como un título esencial de la nueva generación.",
+                image: "https://image.api.playstation.com/vulcan/ap/rnd/202107/0109/jR3h23aJp8bmm8N24o2tS0aU.png"
             },
             {
                 title: "Cyberpunk 2077: U.E.",
+                developer: "CD Projekt Red",
                 category: ["rpg", "accion"],
                 metascore: 86,
-                description: "Night City es una de las ciudades de videojuegos más inmersivas y detalladas, con profundas narrativas ramificadas.",
-                image: "https://placehold.co/400x500/1a202c/ffffff?text=Cyberpunk+2077"
+                short_description: "Night City es una de las ciudades más inmersivas y detalladas, con profundas narrativas ramificadas.",
+                full_description: "La redención de Cyberpunk 2077 con su expansión Phantom Liberty y la actualización 2.0 lo ha transformado en uno de los RPG de mundo abierto más inmersivos disponibles, convirtiéndose en una recomendación frecuente por su profunda construcción de mundo.",
+                image: "https://image.api.playstation.com/vulcan/ap/rnd/202310/1010/055f2d72166a75368a26b840e4f20521217e2b4f974c8872.png"
             }
         ];
 
         const gameGrid = document.getElementById('game-grid');
         const filterContainer = document.getElementById('filters');
+        const modal = document.getElementById('game-modal');
+        const modalContent = document.getElementById('modal-content');
 
         // --- Function to display games ---
         function displayGames(filteredGames) {
             gameGrid.innerHTML = ''; // Clear existing games
-            filteredGames.forEach(game => {
+            filteredGames.forEach((game, index) => {
                 const card = document.createElement('div');
                 card.className = 'game-card bg-slate-800 rounded-lg overflow-hidden shadow-lg border border-slate-700 flex flex-col fade-in';
+                card.dataset.index = index;
                 card.innerHTML = `
                     <div class="relative">
-                        <img src="${game.image}" alt="Portada de ${game.title}" class="w-full h-64 object-cover" onerror="this.onerror=null;this.src='https://placehold.co/400x500/1a202c/ffffff?text=Imagen+no+disponible';">
-                        <div class="absolute top-2 right-2 bg-blue-600 text-white text-lg font-bold rounded-full w-14 h-14 flex items-center justify-center border-2 border-slate-900">
+                        <img src="${game.image}" alt="[Imagen de la portada de ${game.title}]" class="w-full h-80 object-cover" onerror="this.onerror=null;this.src='https://placehold.co/400x500/1a202c/ffffff?text=Imagen+no+disponible';">
+                        <div class="absolute top-2 right-2 bg-blue-600 text-white text-lg font-bold rounded-full w-14 h-14 flex items-center justify-center border-2 border-slate-900 shadow-md">
                             ${game.metascore}
                         </div>
                     </div>
                     <div class="p-4 flex flex-col flex-grow">
                         <h3 class="text-xl font-bold text-slate-100 mb-2">${game.title}</h3>
-                        <p class="text-slate-300 text-sm mb-4 flex-grow">${game.description}</p>
+                        <p class="text-slate-300 text-sm mb-4 flex-grow">${game.short_description}</p>
                         <div class="mt-auto pt-4 border-t border-slate-700/50">
-                            <p class="text-xs text-blue-400 font-semibold uppercase">${game.category.join(', ').replace('panteon', 'Mejor Valorado').replace('accion', 'Acción').replace('carreras', 'Carreras')}</p>
+                            <p class="text-xs text-blue-400 font-semibold uppercase">${game.category.join(', ').replace('panteon', 'Mejor Valorado').replace('accion', 'Acción').replace('carreras', 'Carreras').replace('exclusivo', 'Exclusivo')}</p>
                         </div>
                     </div>
                 `;
@@ -186,28 +250,75 @@
             });
         }
 
-        // --- Event Listener for Filters ---
+        // --- Filter Logic ---
         filterContainer.addEventListener('click', (e) => {
             if (e.target.tagName === 'BUTTON') {
-                // Update active button style
                 document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
                 e.target.classList.add('active');
-
                 const category = e.target.dataset.category;
-                let filteredGames;
-
-                if (category === 'all') {
-                    filteredGames = games;
-                } else {
-                    filteredGames = games.filter(game => game.category.includes(category));
-                }
-                
+                const filteredGames = (category === 'all') ? games : games.filter(game => game.category.includes(category));
                 displayGames(filteredGames);
             }
         });
 
+        // --- Modal Logic ---
+        function openModal(index) {
+            const game = games[index];
+            modalContent.innerHTML = `
+                <img src="${game.image}" alt="[Imagen de la portada de ${game.title}]" class="w-full md:w-1/3 h-64 md:h-auto object-cover rounded-t-xl md:rounded-l-xl md:rounded-t-none" onerror="this.onerror=null;this.src='https://placehold.co/400x500/1a202c/ffffff?text=Imagen+no+disponible';">
+                <div class="flex flex-col p-6 md:p-8 relative modal-body overflow-y-auto">
+                    <button id="close-modal" class="absolute top-4 right-4 text-slate-400 hover:text-white transition-colors">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    </button>
+                    <h2 class="text-3xl font-bold text-white mb-2">${game.title}</h2>
+                    <p class="text-sm text-slate-400 mb-4">${game.developer}</p>
+                    <div class="flex items-center gap-4 mb-6">
+                        <div class="bg-blue-600 text-white text-xl font-bold rounded-full w-16 h-16 flex items-center justify-center border-4 border-slate-700">
+                            ${game.metascore}
+                        </div>
+                        <div class="text-xs text-blue-400 font-semibold uppercase">${game.category.join(', ').replace('panteon', 'Mejor Valorado').replace('accion', 'Acción').replace('carreras', 'Carreras').replace('exclusivo', 'Exclusivo')}</div>
+                    </div>
+                    <p class="text-slate-300">${game.full_description}</p>
+                </div>
+            `;
+            modal.classList.remove('hidden');
+            modal.classList.add('modal-enter');
+            modalContent.classList.add('modal-content-enter');
+            document.getElementById('close-modal').addEventListener('click', closeModal);
+        }
+
+        function closeModal() {
+            modal.classList.add('modal-leave');
+            modal.addEventListener('animationend', () => {
+                modal.classList.add('hidden');
+                modal.classList.remove('modal-enter', 'modal-leave');
+                modalContent.classList.remove('modal-content-enter');
+                modalContent.innerHTML = '';
+            }, { once: true });
+        }
+
+        gameGrid.addEventListener('click', (e) => {
+            const card = e.target.closest('.game-card');
+            if (card) {
+                const index = parseInt(card.dataset.index, 10);
+                const originalGameIndex = games.indexOf(games.filter(g => g.title === games[index].title)[0]);
+                openModal(index);
+            }
+        });
+
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+        
+        document.addEventListener('keydown', (e) => {
+            if (e.key === "Escape" && !modal.classList.contains('hidden')) {
+                closeModal();
+            }
+        });
+
         // --- Initial Display ---
-        // Initially display all games when the page loads
         displayGames(games);
 
     </script>
