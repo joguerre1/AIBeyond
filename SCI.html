@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>El Marco FBI para la Resolución de Conflictos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <!-- 
+    Plan de Narrativa y Estructura (Traducido):
+    1.  Gancho/Intro: Captar la atención con el asombroso costo de los conflictos laborales e introducir el método FBI de Simon Sinek como una solución práctica.
+    2.  El Problema en Cifras: Visualizar la prevalencia y el drenaje financiero de los conflictos no resueltos usando un gráfico de dona y una estadística de gran número.
+    3.  Explicación del Marco FBI: Presentar los pasos centrales F-B-I (Feelings/Sentimientos, Behavior/Comportamiento, Impact/Impacto) usando un diagrama de flujo limpio basado en HTML/CSS.
+    4.  Análisis Profundo de "S" - Sentimientos: Usar un gráfico de barras para contrastar la naturaleza de baja amenaza de las declaraciones "Yo" contra la alta amenaza de las declaraciones "Tú".
+    5.  Análisis Profundo de "C" - Comportamiento: Usar una tabla simple y clara para mostrar ejemplos de lenguaje específico y no sentencioso versus lenguaje vago y acusatorio.
+    6.  Análisis Profundo de "I" - Impacto: Emplear un gráfico de radar para ilustrar los múltiples impactos negativos de un mal comportamiento en métricas clave del negocio.
+    7.  FBI en Acción - Caso de Estudio: Proporcionar una comparación lado a lado de un enfoque de confrontación típico versus el enfoque constructivo FBI usando bloques de citas estilizados.
+    8.  Los Resultados Positivos: Usar un gráfico de barras horizontales para mostrar los beneficios medibles de adoptar una resolución de conflictos saludable.
+    9.  Conclusión: Un mensaje final y empoderador que resume el objetivo de la técnica FBI.
+    -->
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #F8F9FA; }
+        .brand-text-dark { color: #004AAD; }
+        .brand-text-primary { color: #007BFF; }
+        .bg-brand-dark { background-color: #004AAD; }
+        .bg-brand-primary { background-color: #007BFF; }
+        .border-brand-primary { border-color: #007BFF; }
+        .chart-container { position: relative; width: 100%; max-width: 500px; margin-left: auto; margin-right: auto; height: 300px; max-height: 350px; }
+        @media (min-width: 768px) { .chart-container { height: 350px; max-height: 400px; } }
+        .flowchart-step { border: 2px solid #99C7FF; background-color: white; }
+        .flowchart-arrow { font-size: 2.5rem; color: #4DA3FF; line-height: 1; }
+    </style>
+</head>
+<body class="text-[#343A40]">
+
+    <div class="container mx-auto p-4 sm:p-6 md:p-8 max-w-7xl">
+
+        <header class="text-center mb-12">
+            <h1 class="text-4xl md:text-5xl font-black brand-text-dark mb-2">Convierte el Conflicto en Conversación</h1>
+            <p class="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">Una infografía sobre el marco "FBI" de Simon Sinek para disipar la tensión laboral y fomentar el entendimiento.</p>
+        </header>
+
+        <main class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+
+            <div class="bg-white rounded-lg shadow-md p-6 flex flex-col justify-center items-center text-center">
+                <h2 class="text-2xl font-bold brand-text-primary mb-4">El Costo Oculto del Conflicto</h2>
+                <p class="text-gray-600 mb-6">El conflicto no resuelto no es solo incómodo; es una fuga significativa de recursos. La mala comunicación erosiona silenciosamente la productividad y la moral.</p>
+                <div class="text-6xl font-black brand-text-dark">$359 Mil Millones</div>
+                <p class="mt-2 text-gray-500">Costo anual estimado en pérdida de productividad por conflictos laborales solo en EE. UU.</p>
+            </div>
+            
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <h2 class="text-2xl font-bold brand-text-primary mb-4 text-center">El Conflicto es una Experiencia Común</h2>
+                <p class="text-gray-600 mb-4 text-center">Una gran mayoría de los empleados experimenta conflictos en el trabajo, lo que afecta su concentración y bienestar.</p>
+                <div class="chart-container h-64 md:h-auto">
+                    <canvas id="conflictPrevalenceChart"></canvas>
+                </div>
+            </div>
+            
+            <div class="lg:col-span-2 bg-white rounded-lg shadow-md p-6 my-8">
+                <h2 class="text-3xl font-bold brand-text-dark text-center mb-2">La Solución: El Marco SCI</h2>
+                <p class="text-center text-gray-600 max-w-4xl mx-auto mb-8">Simon Sinek propone un método simple de tres pasos (Sentimiento, Comportamiento, Impacto) para iniciar una conversación sin confrontación. El objetivo es exponer tu perspectiva de una manera que invite al diálogo, no a la defensa.</p>
+                <div class="flex flex-col md:flex-row items-center justify-center space-y-4 md:space-y-0 md:space-x-4">
+                    <div class="flowchart-step rounded-lg p-6 text-center w-full md:w-1/3">
+                        <div class="text-4xl font-black brand-text-primary mb-2">S</div>
+                        <h3 class="text-xl font-bold mb-1">Sentimiento</h3>
+                        <p class="text-gray-600">Comienza con tu sentimiento. Es tu verdad y no puede ser disputada.</p>
+                    </div>
+                    <div class="flowchart-arrow font-black transform md:rotate-0 rotate-90">&rarr;</div>
+                    <div class="flowchart-step rounded-lg p-6 text-center w-full md:w-1/3">
+                        <div class="text-4xl font-black brand-text-primary mb-2">C</div>
+                        <h3 class="text-xl font-bold mb-1">Comportamiento</h3>
+                        <p class="text-gray-600">Describe el comportamiento específico y observable que causó el sentimiento.</p>
+                    </div>
+                    <div class="flowchart-arrow font-black transform md:rotate-0 rotate-90">&rarr;</div>
+                    <div class="flowchart-step rounded-lg p-6 text-center w-full md:w-1/3">
+                        <div class="text-4xl font-black brand-text-primary mb-2">I</div>
+                        <h3 class="text-xl font-bold mb-1">Impacto</h3>
+                        <p class="text-gray-600">Explica el impacto tangible que ese comportamiento tiene en ti o en tu trabajo.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-md p-6">
+                 <h2 class="text-2xl font-bold brand-text-primary text-center mb-2">Paso 1 (Sentimiento): Desarma con "Yo"</h2>
+                 <p class="text-gray-600 mb-4 text-center">Empezar con "Tú..." pone a la gente a la defensiva. Empezar con "Yo siento..." es una invitación a entender tu perspectiva. El nivel de amenaza percibido disminuye drásticamente.</p>
+                <div class="chart-container">
+                    <canvas id="statementComparisonChart"></canvas>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <h2 class="text-2xl font-bold brand-text-primary text-center mb-2">Paso 2 (Comportamiento): Sé Específico</h2>
+                <p class="text-gray-600 mb-4 text-center">Evita generalizaciones y acusaciones. Apégate a los hechos de lo que observaste. Esto elimina el juicio y centra la conversación en un evento concreto.</p>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left">
+                        <thead>
+                            <tr class="border-b-2 border-brand-primary">
+                                <th class="p-2 bg-red-100 text-red-800 rounded-tl-lg">Vago y Acusatorio</th>
+                                <th class="p-2 bg-green-100 text-green-800 rounded-tr-lg">Específico y Fáctico</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="border-b border-gray-200">
+                                <td class="p-2">"Siempre me estás desautorizando."</td>
+                                <td class="p-2">"Ayer en la reunión de equipo..."</td>
+                            </tr>
+                            <tr class="border-b border-gray-200">
+                                <td class="p-2">"Ignoraste mi correo."</td>
+                                <td class="p-2">"Cuando vi que mi correo no había sido leído..."</td>
+                            </tr>
+                             <tr>
+                                <td class="p-2">"Estás siendo irrespetuoso."</td>
+                                <td class="p-2">"Cuando hablaste por encima de mí..."</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <h2 class="text-2xl font-bold brand-text-primary text-center mb-2">Paso 3 (Impacto): Conecta los Puntos</h2>
+                <p class="text-gray-600 mb-4 text-center">Explica las consecuencias. Esto ayuda a la otra persona a entender por qué su comportamiento fue problemático, pasando de ser una acción menor a algo con efectos reales.</p>
+                <div class="chart-container">
+                    <canvas id="impactRadarChart"></canvas>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <h2 class="text-2xl font-bold brand-text-primary text-center mb-4">SCI en Acción: Un Caso de Estudio</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="border-2 border-red-300 bg-red-50 p-4 rounded-lg">
+                        <h3 class="font-bold text-red-800 text-lg mb-2">Enfoque de Confrontación</h3>
+                        <p class="text-red-900">"¿Por qué saboteaste mi proyecto frente al cliente? Siempre intentas hacerme quedar mal."</p>
+                    </div>
+                    <div class="border-2 border-green-300 bg-green-50 p-4 rounded-lg">
+                        <h3 class="font-bold text-green-800 text-lg mb-2">El Enfoque SCI</h3>
+                        <p class="text-green-900"><strong class="brand-text-dark">[S]</strong> "Me sentí realmente sorprendido y avergonzado... <strong class="brand-text-dark">[C]</strong> ...cuando mencionaste el problema del presupuesto por primera vez durante la llamada con el cliente... <strong class="brand-text-dark">[I]</strong> ...porque hizo parecer que nuestro equipo no está alineado, y me preocupa que haya socavado la confianza del cliente en nosotros."</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="lg:col-span-2 bg-white rounded-lg shadow-md p-6">
+                 <h2 class="text-2xl font-bold brand-text-primary text-center mb-2">Los Resultados Positivos</h2>
+                 <p class="text-gray-600 mb-4 text-center">Los equipos que manejan los conflictos de manera constructiva ven mejoras medibles en la cultura y el rendimiento.</p>
+                <div class="chart-container max-w-4xl h-96">
+                    <canvas id="outcomesChart"></canvas>
+                </div>
+            </div>
+        </main>
+
+        <footer class="text-center mt-12 py-6 border-t border-gray-300">
+            <p class="text-gray-600">El objetivo no es ganar una discusión. El objetivo es preservar la relación.</p>
+            <p class="font-bold brand-text-dark mt-1">- Simon Sinek</p>
+        </footer>
+
+    </div>
+
+    <script>
+        const brilliantBlues = {
+            darkest: '#004AAD',
+            primary: '#007BFF',
+            medium: '#4DA3FF',
+            light: '#99C7FF',
+            lightest: '#EBF5FF'
+        };
+
+        const textDark = '#343A40';
+
+        Chart.defaults.font.family = "'Inter', sans-serif";
+        Chart.defaults.color = textDark;
+        
+        const tooltipTitleCallback = (tooltipItems) => {
+            const item = tooltipItems[0];
+            let label = item.chart.data.labels[item.dataIndex];
+            if (Array.isArray(label)) {
+                return label.join(' ');
+            }
+            return label;
+        };
+
+        const wrapLabel = (label) => {
+            if (label.length <= 16) return label;
+            const words = label.split(' ');
+            const lines = [];
+            let currentLine = '';
+            words.forEach(word => {
+                if ((currentLine + ' ' + word).trim().length > 16) {
+                    lines.push(currentLine.trim());
+                    currentLine = word;
+                } else {
+                    currentLine = (currentLine + ' ' + word).trim();
+                }
+            });
+            if (currentLine) lines.push(currentLine);
+            return lines;
+        };
+
+        new Chart(document.getElementById('conflictPrevalenceChart'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Ha experimentado conflictos', 'No ha experimentado conflictos'],
+                datasets: [{
+                    label: 'Conflicto Laboral',
+                    data: [85, 15],
+                    backgroundColor: [brilliantBlues.primary, brilliantBlues.lightest],
+                    borderColor: '#FFFFFF',
+                    borderWidth: 4,
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '70%',
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                    },
+                    tooltip: {
+                        callbacks: {
+                            title: tooltipTitleCallback
+                        }
+                    }
+                }
+            }
+        });
+        
+        new Chart(document.getElementById('statementComparisonChart'), {
+            type: 'bar',
+            data: {
+                labels: ['Declaraciones "Tú"', 'Declaraciones "Yo"'],
+                datasets: [{
+                    label: 'Nivel de Amenaza Percibido',
+                    data: [90, 20],
+                    backgroundColor: [ '#EF4444', brilliantBlues.primary],
+                    borderColor: [ '#DC2626', brilliantBlues.darkest],
+                    borderWidth: 2,
+                    borderRadius: 5,
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                indexAxis: 'y',
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        max: 100,
+                        grid: { display: false },
+                    },
+                    y: { grid: { display: false } }
+                },
+                plugins: {
+                    legend: { display: false },
+                    tooltip: { callbacks: { title: tooltipTitleCallback } }
+                }
+            }
+        });
+
+        new Chart(document.getElementById('impactRadarChart'), {
+            type: 'radar',
+            data: {
+                labels: ['Moral', 'Productividad', 'Colaboración', 'Creatividad', ['Seguridad', 'Psicológica'], 'Confianza'],
+                datasets: [{
+                    label: 'Impacto Negativo',
+                    data: [8, 9, 7, 6, 9, 8],
+                    backgroundColor: 'rgba(0, 123, 255, 0.2)',
+                    borderColor: brilliantBlues.primary,
+                    pointBackgroundColor: brilliantBlues.primary,
+                    pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: brilliantBlues.primary
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    r: {
+                        angleLines: { color: brilliantBlues.light },
+                        grid: { color: brilliantBlues.light },
+                        pointLabels: { font: { size: 12 } },
+                        suggestedMin: 0,
+                        suggestedMax: 10
+                    }
+                },
+                plugins: {
+                    legend: { display: false },
+                    tooltip: { callbacks: { title: tooltipTitleCallback } }
+                }
+            }
+        });
+
+        const outcomeLabels = [
+            'Mejora de la Confianza del Equipo',
+            'Mayor Seguridad Psicológica',
+            'Mayor Productividad',
+            'Innovación Mejorada',
+            'Mejor Retención de Empleados'
+        ].map(wrapLabel);
+        
+        new Chart(document.getElementById('outcomesChart'), {
+            type: 'bar',
+            data: {
+                labels: outcomeLabels,
+                datasets: [{
+                    label: '% de Mejora Reportado',
+                    data: [78, 72, 65, 58, 50].sort((a,b) => b-a),
+                    backgroundColor: [
+                        brilliantBlues.darkest,
+                        brilliantBlues.primary,
+                        brilliantBlues.medium,
+                        brilliantBlues.light,
+                        brilliantBlues.lightest
+                    ].reverse(),
+                     borderRadius: 5
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                indexAxis: 'y',
+                scales: {
+                    x: { grid: { display: false } },
+                    y: { grid: { display: false } }
+                },
+                plugins: {
+                    legend: { display: false },
+                    title: {
+                        display: true,
+                        text: 'Beneficios Reportados de la Resolución Constructiva de Conflictos',
+                        padding: { bottom: 20 },
+                        font: { size: 16 }
+                    },
+                    tooltip: { callbacks: { title: tooltipTitleCallback } }
+                }
+            }
+        });
+
+    </script>
+
+</body>
+</html>
