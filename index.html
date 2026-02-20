@@ -1,12 +1,662 @@
-or<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="refresh" content="0; URL='Mentoria-360.html'" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Redireccionando...</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MentorIA 360 – Automatización e IA para Empresas que Crecen</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --brand:       #0F4C81;
+      --brand-dark:  #0a3460;
+      --accent:      #00C9A7;
+      --accent-dark: #00a589;
+      --surface:     #F7F9FC;
+      --text:        #1A1A2E;
+      --muted:       #64748B;
+      --white:       #FFFFFF;
+      --border:      #E2E8F0;
+      --gradient:    linear-gradient(135deg, #0F4C81 0%, #1a6eb5 60%, #00C9A7 100%);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      color: var(--text);
+      background: var(--white);
+      line-height: 1.6;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1rem 2rem;
+      background: rgba(255,255,255,0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo {
+      font-size: 1.3rem; font-weight: 800; color: var(--brand);
+      letter-spacing: -0.5px;
+    }
+    .nav-logo span { color: var(--accent); }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a {
+      text-decoration: none; color: var(--muted);
+      font-size: 0.9rem; font-weight: 500;
+      transition: color .2s;
+    }
+    .nav-links a:hover { color: var(--brand); }
+    .nav-cta {
+      background: var(--brand); color: var(--white);
+      padding: .55rem 1.4rem; border-radius: 8px;
+      text-decoration: none; font-size: 0.88rem; font-weight: 600;
+      transition: background .2s, transform .15s;
+    }
+    .nav-cta:hover { background: var(--brand-dark); transform: translateY(-1px); }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      background: var(--gradient);
+      display: flex; align-items: center; justify-content: center;
+      text-align: center;
+      padding: 7rem 1.5rem 4rem;
+      position: relative; overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+    .hero-badge {
+      display: inline-block;
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.3);
+      color: var(--white); font-size: 0.82rem; font-weight: 600;
+      padding: .4rem 1.1rem; border-radius: 20px;
+      letter-spacing: .5px; margin-bottom: 1.5rem;
+      text-transform: uppercase;
+    }
+    .hero h1 {
+      font-size: clamp(2.2rem, 5.5vw, 4rem);
+      font-weight: 900; color: var(--white);
+      line-height: 1.1; letter-spacing: -1.5px;
+      max-width: 780px; margin: 0 auto 1.5rem;
+    }
+    .hero h1 em {
+      font-style: normal; color: var(--accent);
+    }
+    .hero p {
+      font-size: clamp(1rem, 2vw, 1.2rem);
+      color: rgba(255,255,255,0.85);
+      max-width: 580px; margin: 0 auto 2.5rem;
+      font-weight: 400;
+    }
+    .hero-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .btn-primary {
+      background: var(--accent); color: var(--white);
+      padding: .9rem 2rem; border-radius: 10px;
+      text-decoration: none; font-weight: 700; font-size: 1rem;
+      transition: background .2s, transform .15s, box-shadow .2s;
+      box-shadow: 0 4px 20px rgba(0,201,167,0.4);
+    }
+    .btn-primary:hover { background: var(--accent-dark); transform: translateY(-2px); box-shadow: 0 6px 28px rgba(0,201,167,0.5); }
+    .btn-secondary {
+      background: rgba(255,255,255,0.15); color: var(--white);
+      border: 1.5px solid rgba(255,255,255,0.4);
+      padding: .9rem 2rem; border-radius: 10px;
+      text-decoration: none; font-weight: 600; font-size: 1rem;
+      transition: background .2s, transform .15s;
+      backdrop-filter: blur(6px);
+    }
+    .btn-secondary:hover { background: rgba(255,255,255,0.25); transform: translateY(-2px); }
+
+    /* ── STATS BAR ── */
+    .stats-bar {
+      background: var(--brand-dark);
+      padding: 1.8rem 2rem;
+      display: flex; justify-content: center; flex-wrap: wrap; gap: 3rem;
+    }
+    .stat { text-align: center; }
+    .stat-number {
+      display: block; font-size: 2rem; font-weight: 900;
+      color: var(--accent); letter-spacing: -1px;
+    }
+    .stat-label {
+      font-size: 0.82rem; color: rgba(255,255,255,0.7);
+      text-transform: uppercase; letter-spacing: .5px;
+    }
+
+    /* ── SECTIONS ── */
+    section { padding: 5rem 1.5rem; }
+    .container { max-width: 1100px; margin: 0 auto; }
+    .section-tag {
+      display: inline-block;
+      background: rgba(0,201,167,0.1); color: var(--accent-dark);
+      font-size: 0.78rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 1px; padding: .3rem .9rem; border-radius: 20px;
+      margin-bottom: 1rem;
+    }
+    .section-title {
+      font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+      font-weight: 800; letter-spacing: -1px;
+      color: var(--text); margin-bottom: 1rem; line-height: 1.2;
+    }
+    .section-sub {
+      font-size: 1.05rem; color: var(--muted);
+      max-width: 600px; margin-bottom: 3rem;
+    }
+
+    /* ── PAIN POINTS ── */
+    .pain-section { background: var(--surface); }
+    .pain-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.5rem;
+    }
+    .pain-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-left: 4px solid #EF4444;
+      border-radius: 12px; padding: 1.5rem;
+    }
+    .pain-icon { font-size: 1.6rem; margin-bottom: .8rem; }
+    .pain-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: .4rem; }
+    .pain-card p { font-size: 0.9rem; color: var(--muted); }
+
+    /* ── WHO ── */
+    .who-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem; margin-top: 3rem;
+    }
+    .who-card {
+      background: var(--white); border: 1px solid var(--border);
+      border-radius: 16px; padding: 2rem;
+      transition: transform .2s, box-shadow .2s;
+    }
+    .who-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(15,76,129,0.1); }
+    .who-avatar {
+      width: 56px; height: 56px; border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.6rem; margin-bottom: 1rem;
+    }
+    .who-card h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: .4rem; }
+    .who-card p { font-size: 0.9rem; color: var(--muted); }
+    .who-card .who-tag {
+      display: inline-block; margin-top: 1rem;
+      background: var(--surface); color: var(--brand);
+      font-size: 0.78rem; font-weight: 600; padding: .25rem .8rem;
+      border-radius: 20px; border: 1px solid var(--border);
+    }
+
+    /* ── SERVICES ── */
+    .services-section { background: var(--surface); }
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem; margin-top: 3rem;
+    }
+    .service-card {
+      background: var(--white); border: 1px solid var(--border);
+      border-radius: 20px; padding: 2rem;
+      display: flex; flex-direction: column;
+      transition: transform .2s, box-shadow .2s;
+      position: relative; overflow: hidden;
+    }
+    .service-card:hover { transform: translateY(-5px); box-shadow: 0 16px 48px rgba(15,76,129,0.12); }
+    .service-card.featured {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px rgba(0,201,167,0.2);
+    }
+    .featured-badge {
+      position: absolute; top: 1.2rem; right: 1.2rem;
+      background: var(--accent); color: var(--white);
+      font-size: 0.72rem; font-weight: 700; text-transform: uppercase;
+      padding: .25rem .75rem; border-radius: 20px; letter-spacing: .5px;
+    }
+    .service-icon {
+      width: 52px; height: 52px; border-radius: 14px;
+      background: linear-gradient(135deg, var(--brand), #1a6eb5);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.5rem; margin-bottom: 1.2rem;
+    }
+    .service-card.featured .service-icon {
+      background: linear-gradient(135deg, var(--accent-dark), var(--accent));
+    }
+    .service-tag {
+      font-size: 0.75rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .8px; color: var(--muted); margin-bottom: .5rem;
+    }
+    .service-card h3 { font-size: 1.25rem; font-weight: 800; margin-bottom: .6rem; color: var(--text); }
+    .service-card p { font-size: 0.92rem; color: var(--muted); flex: 1; margin-bottom: 1.5rem; }
+    .service-price {
+      font-size: 1.8rem; font-weight: 900; color: var(--brand);
+      letter-spacing: -1px; margin-bottom: .2rem;
+    }
+    .service-card.featured .service-price { color: var(--accent-dark); }
+    .service-price-note { font-size: 0.8rem; color: var(--muted); margin-bottom: 1.5rem; }
+    .service-features { list-style: none; margin-bottom: 1.8rem; }
+    .service-features li {
+      font-size: 0.88rem; color: var(--text); padding: .35rem 0;
+      display: flex; align-items: flex-start; gap: .6rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .service-features li:last-child { border: none; }
+    .service-features li::before { content: '✓'; color: var(--accent); font-weight: 800; flex-shrink: 0; }
+    .service-cta {
+      display: block; text-align: center;
+      background: var(--brand); color: var(--white);
+      padding: .8rem; border-radius: 10px;
+      text-decoration: none; font-weight: 700; font-size: 0.92rem;
+      transition: background .2s, transform .15s;
+    }
+    .service-card.featured .service-cta { background: var(--accent); }
+    .service-cta:hover { opacity: .9; transform: translateY(-1px); }
+
+    /* ── CASE STUDY ── */
+    .case-section { background: var(--brand); }
+    .case-section .section-title { color: var(--white); }
+    .case-section .section-sub { color: rgba(255,255,255,0.7); }
+    .case-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 3rem; align-items: center;
+    }
+    @media (max-width: 768px) { .case-grid { grid-template-columns: 1fr; } }
+    .case-steps { display: flex; flex-direction: column; gap: 1.5rem; }
+    .case-step {
+      display: flex; gap: 1rem; align-items: flex-start;
+    }
+    .case-step-num {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: var(--accent); color: var(--white);
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 0.9rem; flex-shrink: 0;
+    }
+    .case-step h4 { font-size: 0.95rem; font-weight: 700; color: var(--white); margin-bottom: .2rem; }
+    .case-step p { font-size: 0.88rem; color: rgba(255,255,255,0.7); }
+    .case-result {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 20px; padding: 2.5rem;
+    }
+    .case-result blockquote {
+      font-size: 1.05rem; font-style: italic;
+      color: var(--white); line-height: 1.7;
+      margin-bottom: 1.5rem;
+      border-left: 3px solid var(--accent);
+      padding-left: 1.2rem;
+    }
+    .case-metrics {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 1rem; margin-bottom: 1.5rem;
+    }
+    .case-metric {
+      background: rgba(0,201,167,0.15); border-radius: 10px;
+      padding: 1rem; text-align: center;
+    }
+    .case-metric-num { display: block; font-size: 1.6rem; font-weight: 900; color: var(--accent); }
+    .case-metric-label { font-size: 0.78rem; color: rgba(255,255,255,0.7); }
+    .case-author { display: flex; align-items: center; gap: .8rem; }
+    .case-author-avatar {
+      width: 44px; height: 44px; border-radius: 50%;
+      background: var(--accent); display: flex; align-items: center;
+      justify-content: center; font-weight: 800; color: var(--white);
+    }
+    .case-author-name { font-weight: 700; color: var(--white); font-size: 0.95rem; }
+    .case-author-role { font-size: 0.82rem; color: rgba(255,255,255,0.6); }
+
+    /* ── ABOUT ── */
+    .about-grid {
+      display: grid; grid-template-columns: 1fr 1.4fr;
+      gap: 4rem; align-items: center;
+    }
+    @media (max-width: 768px) { .about-grid { grid-template-columns: 1fr; } }
+    .about-visual {
+      background: var(--gradient);
+      border-radius: 24px; padding: 3rem 2rem; text-align: center;
+    }
+    .about-avatar {
+      width: 100px; height: 100px; border-radius: 50%;
+      background: rgba(255,255,255,0.2); margin: 0 auto 1rem;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 3rem; border: 3px solid rgba(255,255,255,0.4);
+    }
+    .about-visual h3 { color: var(--white); font-size: 1.3rem; font-weight: 800; }
+    .about-visual p { color: rgba(255,255,255,0.8); font-size: 0.88rem; margin-top: .3rem; }
+    .about-pills { display: flex; flex-wrap: wrap; gap: .5rem; justify-content: center; margin-top: 1.2rem; }
+    .about-pill {
+      background: rgba(255,255,255,0.15); color: var(--white);
+      font-size: 0.78rem; padding: .3rem .8rem; border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+    .about-content h2 { font-size: 2rem; font-weight: 800; margin-bottom: 1rem; letter-spacing: -.5px; }
+    .about-content p { color: var(--muted); margin-bottom: 1rem; font-size: 0.97rem; }
+    .about-values { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1.5rem; }
+    .about-value {
+      display: flex; align-items: center; gap: .6rem;
+      font-size: 0.88rem; font-weight: 600; color: var(--text);
+    }
+    .about-value::before { content: '→'; color: var(--accent); font-weight: 900; }
+
+    /* ── CTA FINAL ── */
+    .cta-section {
+      background: var(--gradient);
+      text-align: center; padding: 6rem 1.5rem;
+    }
+    .cta-section h2 {
+      font-size: clamp(1.8rem, 4vw, 3rem);
+      font-weight: 900; color: var(--white);
+      letter-spacing: -1px; margin-bottom: 1rem;
+    }
+    .cta-section p {
+      font-size: 1.1rem; color: rgba(255,255,255,0.8);
+      max-width: 520px; margin: 0 auto 2.5rem;
+    }
+    .cta-guarantee {
+      display: inline-flex; align-items: center; gap: .5rem;
+      background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
+      color: rgba(255,255,255,0.85); font-size: 0.85rem;
+      padding: .5rem 1.2rem; border-radius: 20px; margin-top: 1.5rem;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: #0a0f1e; color: rgba(255,255,255,0.5);
+      text-align: center; padding: 2rem; font-size: 0.85rem;
+    }
+    footer a { color: var(--accent); text-decoration: none; }
+
+    /* ── RESPONSIVE NAV ── */
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .pain-grid, .services-grid { grid-template-columns: 1fr; }
+      .about-values { grid-template-columns: 1fr; }
+      .case-metrics { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
 </head>
 <body>
-    <p>Si no se redirige automáticamente, haga clic <a href="Mentoria-360.html">aquí</a>.</p>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Mentor<span>IA</span> 360</div>
+  <ul class="nav-links">
+    <li><a href="#para-quien">¿Para quién?</a></li>
+    <li><a href="#servicios">Servicios</a></li>
+    <li><a href="#caso">Caso de éxito</a></li>
+    <li><a href="#jose">Sobre mí</a></li>
+  </ul>
+  <a href="https://calendly.com/guerrero-jose/charla-gratuita-de-15-min" class="nav-cta" target="_blank">Agendar llamada →</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div>
+    <div class="hero-badge">🤖 IA Aplicada · Resultados Reales</div>
+    <h1>Tu empresa, <em>más inteligente</em>.<br/>Tu equipo, más libre.</h1>
+    <p>Diseñamos e implementamos estrategias de IA que automatizan lo operativo, reducen costos y generan resultados medibles en 90 días. Sin tecnicismos. Sin promesas vacías.</p>
+    <div class="hero-actions">
+      <a href="https://calendly.com/guerrero-jose/charla-gratuita-de-15-min" class="btn-primary" target="_blank">Agenda tu diagnóstico gratuito →</a>
+      <a href="#servicios" class="btn-secondary">Ver servicios</a>
+    </div>
+  </div>
+</section>
+
+<!-- STATS BAR -->
+<div class="stats-bar">
+  <div class="stat">
+    <span class="stat-number">90</span>
+    <span class="stat-label">días al primer resultado</span>
+  </div>
+  <div class="stat">
+    <span class="stat-number">40%</span>
+    <span class="stat-label">reducción promedio en tareas manuales</span>
+  </div>
+  <div class="stat">
+    <span class="stat-number">3x</span>
+    <span class="stat-label">ROI estimado en proyectos de automatización</span>
+  </div>
+  <div class="stat">
+    <span class="stat-number">100%</span>
+    <span class="stat-label">personalizado a tu industria</span>
+  </div>
+</div>
+
+<!-- PAIN POINTS -->
+<section class="pain-section" id="problemas">
+  <div class="container">
+    <div class="section-tag">El problema real</div>
+    <h2 class="section-title">¿Te suena alguno de estos escenarios?</h2>
+    <p class="section-sub">Las empresas que no adoptan IA hoy no compiten igual mañana. El problema no es la tecnología, es saber qué automatizar primero.</p>
+    <div class="pain-grid">
+      <div class="pain-card">
+        <div class="pain-icon">⏳</div>
+        <h3>Tu equipo consume horas en tareas repetitivas</h3>
+        <p>Digitación, reportes, respuestas manuales, seguimientos… tiempo valioso que podría invertirse en crecer.</p>
+      </div>
+      <div class="pain-card">
+        <div class="pain-icon">💸</div>
+        <h3>Errores operativos que cuestan dinero</h3>
+        <p>Glosas rechazadas, pedidos mal procesados, datos inconsistentes. Cada error manual tiene un costo financiero real.</p>
+      </div>
+      <div class="pain-card">
+        <div class="pain-icon">🌀</div>
+        <h3>Herramientas de IA que nadie sabe usar bien</h3>
+        <p>Ya pagaste por ChatGPT, Copilot o algún software. Pero el equipo no lo usa de forma estratégica ni consistente.</p>
+      </div>
+      <div class="pain-card">
+        <div class="pain-icon">📉</div>
+        <h3>Sin una hoja de ruta clara de adopción</h3>
+        <p>Sabes que la IA puede ayudarte, pero no tienes claridad de por dónde empezar ni qué priorizar primero.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PARA QUIÉN -->
+<section id="para-quien">
+  <div class="container">
+    <div class="section-tag">¿Para quién es MentorIA 360?</div>
+    <h2 class="section-title">Tres perfiles. Un mismo objetivo:<br/>resultados con IA.</h2>
+    <div class="who-grid">
+      <div class="who-card">
+        <div class="who-avatar" style="background:#EFF6FF;">🏥</div>
+        <h3>Gerentes de empresas medianas</h3>
+        <p>Clínicas, IPSs, retailers, fintechs con 20-200 empleados que necesitan automatizar procesos críticos con bajo riesgo y alto impacto.</p>
+        <span class="who-tag">Salud · Retail · Finanzas</span>
+      </div>
+      <div class="who-card">
+        <div class="who-avatar" style="background:#F0FDF4;">💼</div>
+        <h3>Directivos y líderes de área</h3>
+        <p>Directores de operaciones, finanzas o tecnología que necesitan adoptar IA en su equipo sin depender del área de sistemas.</p>
+        <span class="who-tag">Operaciones · Finanzas · RRHH</span>
+      </div>
+      <div class="who-card">
+        <div class="who-avatar" style="background:#FFF7ED;">🚀</div>
+        <h3>Profesionales que quieren destacar</h3>
+        <p>Ejecutivos y consultores que quieren dominar la IA aplicada a su trabajo real, no teoría, para ser los más productivos de su sector.</p>
+        <span class="who-tag">Mentoría 1:1 · Avance acelerado</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section class="services-section" id="servicios">
+  <div class="container">
+    <div class="section-tag">Servicios</div>
+    <h2 class="section-title">Elige el nivel de acompañamiento<br/>que tu empresa necesita hoy</h2>
+    <p class="section-sub">Desde una primera exploración hasta implementación completa. Sin contratos largos ni compromisos hasta que veas el valor.</p>
+    <div class="services-grid">
+
+      <!-- Diagnóstico -->
+      <div class="service-card">
+        <div class="service-icon">🔍</div>
+        <div class="service-tag">Punto de entrada</div>
+        <h3>AI Readiness Audit</h3>
+        <p>Mapeo completo de tus procesos actuales, identificación de los 3 automatizaciones con mayor ROI y un roadmap de 90 días listo para ejecutar.</p>
+        <div class="service-price">$1.800.000</div>
+        <div class="service-price-note">COP · pago único · entrega en 5-7 días</div>
+        <ul class="service-features">
+          <li>Sesión de levantamiento de 90 min</li>
+          <li>Mapa de procesos actual documentado</li>
+          <li>Top 3 automatizaciones priorizadas por ROI</li>
+          <li>Stack tecnológico recomendado</li>
+          <li>Roadmap de implementación de 90 días</li>
+        </ul>
+        <a href="https://calendly.com/guerrero-jose/charla-gratuita-de-15-min" class="service-cta" target="_blank">Solicitar diagnóstico →</a>
+      </div>
+
+      <!-- Mentoría -->
+      <div class="service-card featured">
+        <span class="featured-badge">Más solicitado</span>
+        <div class="service-icon">🧠</div>
+        <div class="service-tag">Para equipos y profesionales</div>
+        <h3>Mentoría IA Estratégica</h3>
+        <p>Acompañamiento 1:1 o grupal para aplicar IA de forma práctica en tu trabajo real. Cada sesión termina con una herramienta o proceso funcionando.</p>
+        <div class="service-price">$750.000</div>
+        <div class="service-price-note">COP / mes · 4 sesiones · cancelable cuando quieras</div>
+        <ul class="service-features">
+          <li>4 sesiones mensuales de 60 min</li>
+          <li>Personalización por industria y rol</li>
+          <li>Biblioteca de prompts y plantillas</li>
+          <li>Soporte por WhatsApp entre sesiones</li>
+          <li>Acceso al ebook de productividad</li>
+        </ul>
+        <a href="https://calendly.com/guerrero-jose/charla-gratuita-de-15-min" class="service-cta" target="_blank">Empezar mentoría →</a>
+      </div>
+
+      <!-- Implementación -->
+      <div class="service-card">
+        <div class="service-icon">⚙️</div>
+        <div class="service-tag">Para empresas listas para actuar</div>
+        <h3>IA-as-a-Service</h3>
+        <p>Somos tu equipo externo de IA. Diseñamos, construimos y mantenemos la infraestructura de automatización de tu empresa mes a mes.</p>
+        <div class="service-price">Desde $4.500.000</div>
+        <div class="service-price-note">COP / mes · contrato mínimo 3 meses</div>
+        <ul class="service-features">
+          <li>Auditoría inicial incluida</li>
+          <li>Diseño e implementación de agentes IA</li>
+          <li>Automatizaciones de procesos críticos</li>
+          <li>Mantenimiento y mejora continua</li>
+          <li>Reportes mensuales de impacto y ROI</li>
+        </ul>
+        <a href="https://calendly.com/guerrero-jose/charla-gratuita-de-15-min" class="service-cta" target="_blank">Hablar con José →</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- CASO DE ÉXITO -->
+<section class="case-section" id="caso">
+  <div class="container">
+    <div class="section-tag" style="background:rgba(0,201,167,0.2); color:var(--accent);">Caso de éxito real</div>
+    <h2 class="section-title">De preparación manual a presentación de impacto en una sesión</h2>
+    <p class="section-sub">Así funciona MentorIA 360 en la práctica: un problema concreto, una sesión enfocada, un resultado medible.</p>
+    <div class="case-grid">
+      <div class="case-steps">
+        <div class="case-step">
+          <div class="case-step-num">1</div>
+          <div>
+            <h4>El reto</h4>
+            <p>Lina, Gerente de Operaciones en una fintech, necesitaba preparar una presentación de innovación en tiempo récord sin sacrificar calidad ni impacto ejecutivo.</p>
+          </div>
+        </div>
+        <div class="case-step">
+          <div class="case-step-num">2</div>
+          <div>
+            <h4>La intervención</h4>
+            <p>En una sesión de MentorIA 360 aplicamos IA para estructurar la narrativa, refinar argumentos estratégicos y automatizar la construcción del contenido.</p>
+          </div>
+        </div>
+        <div class="case-step">
+          <div class="case-step-num">3</div>
+          <div>
+            <h4>El resultado</h4>
+            <p>Presentación ejecutiva lista, discurso de alto impacto validado y un nuevo flujo de trabajo que Lina puede replicar en cualquier proyecto futuro.</p>
+          </div>
+        </div>
+      </div>
+      <div class="case-result">
+        <blockquote>"¡Terminé haciendo los cambios en 3, 2, 1! Con IA, mi discurso para el proyecto de innovación quedó súper potente. Me sentí actualizada y rápida en mis ideas. ¡Lo súper recomiendo!"</blockquote>
+        <div class="case-metrics">
+          <div class="case-metric">
+            <span class="case-metric-num">1</span>
+            <span class="case-metric-label">sesión de trabajo</span>
+          </div>
+          <div class="case-metric">
+            <span class="case-metric-num">−80%</span>
+            <span class="case-metric-label">tiempo de preparación</span>
+          </div>
+        </div>
+        <div class="case-author">
+          <div class="case-author-avatar">LC</div>
+          <div>
+            <div class="case-author-name">Lina Cano</div>
+            <div class="case-author-role">Gerente de Operaciones · Fintech</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="jose">
+  <div class="container">
+    <div class="about-grid">
+      <div class="about-visual">
+        <div class="about-avatar">👨‍💻</div>
+        <h3>José Guerrero</h3>
+        <p>Arquitecto de IA · Mentor Estratégico</p>
+        <div class="about-pills">
+          <span class="about-pill">Salud</span>
+          <span class="about-pill">Fintech</span>
+          <span class="about-pill">Retail</span>
+          <span class="about-pill">Automatización</span>
+          <span class="about-pill">Agentes IA</span>
+        </div>
+      </div>
+      <div class="about-content">
+        <div class="section-tag">Sobre José</div>
+        <h2 class="section-title">No soy un instructor.<br/>Soy tu colega experto.</h2>
+        <p>Mi trabajo diario es diseñar e implementar arquitecturas de IA para empresas reales. No enseño desde la teoría, enseño desde lo que hago cada semana.</p>
+        <p>Creé MentorIA 360 con un propósito claro: que las empresas y los profesionales de Colombia y Latinoamérica puedan adoptar la IA de forma práctica, segura y rentable, sin depender de equipos técnicos gigantes ni presupuestos de multinacional.</p>
+        <div class="about-values">
+          <div class="about-value">Resultados antes que teoría</div>
+          <div class="about-value">Personalización real</div>
+          <div class="about-value">ROI medible en 90 días</div>
+          <div class="about-value">Acompañamiento humano</div>
+        </div>
+        <br/>
+        <a href="https://www.linkedin.com/in/jose-belmer-guerrero/" target="_blank" style="color: var(--brand); font-weight: 700; text-decoration: none;">→ Conecta en LinkedIn</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA FINAL -->
+<section class="cta-section" id="contacto">
+  <div class="container">
+    <h2>¿Listo para saber qué puede<br/>automatizar tu empresa hoy?</h2>
+    <p>Una llamada de 15 minutos. Sin compromiso. Con una o dos ideas concretas que te llevas para aplicar de inmediato.</p>
+    <a href="https://calendly.com/guerrero-jose/charla-gratuita-de-15-min" class="btn-primary" target="_blank" style="font-size: 1.05rem; padding: 1rem 2.5rem;">Agendar llamada gratuita →</a>
+    <br/>
+    <div class="cta-guarantee">✓ Sin costo · Sin compromiso · 15 minutos que pueden cambiar tu operación</div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>© 2025 MentorIA 360 · José Guerrero · <a href="mailto:guerrero-jose@mentoria360.co">guerrero-jose@mentoria360.co</a></p>
+</footer>
+
 </body>
 </html>
