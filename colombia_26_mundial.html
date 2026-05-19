@@ -335,7 +335,8 @@ function render() {
       const s = selected.has(j);
       const d = n >= 26 && !s;
       const idx = order.indexOf(j) + 1;
-      return `<div class="player-row${s?' selected':''}${d?' disabled':''}" onclick="toggle(${JSON.stringify(j)})">
+      const safeName = j.replace(/&/g,'&amp;').replace(/"/g,'&quot;');
+      return `<div class="player-row${s?' selected':''}${d?' disabled':''}" data-name="${safeName}">
         <div class="chk-circle">${s ? checkSVG : ''}</div>
         <div class="player-info"><div class="player-name">${j}</div></div>
         <div class="order-badge">${idx}</div>
@@ -399,6 +400,13 @@ function showToast(msg) {
   t.classList.add('show');
   setTimeout(() => t.classList.remove('show'), 2500);
 }
+
+document.getElementById('playerList').addEventListener('click', function(e) {
+  const row = e.target.closest('.player-row');
+  if (row && !row.classList.contains('disabled')) {
+    toggle(row.dataset.name);
+  }
+});
 
 render();
 </script>
