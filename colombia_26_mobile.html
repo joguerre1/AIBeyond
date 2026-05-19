@@ -1,0 +1,126 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+.hdr{padding:1rem;border-bottom:0.5px solid var(--color-border-tertiary);background:var(--color-background-primary);}
+.title-row{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;}
+.ttl{font-size:17px;font-weight:500;color:var(--color-text-primary);}
+.sub{font-size:12px;color:var(--color-text-secondary);margin-top:2px;}
+.clear-btn{display:none;align-items:center;gap:4px;background:none;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);padding:6px 10px;font-size:12px;color:var(--color-text-secondary);cursor:pointer;white-space:nowrap;flex-shrink:0;}
+.search-wrap{position:relative;margin-top:0.875rem;}
+.search-wrap input{width:100%;padding:10px 12px 10px 38px;font-size:15px;}
+.si{position:absolute;left:11px;top:50%;transform:translateY(-50%);font-size:18px;color:var(--color-text-tertiary);pointer-events:none;}
+.pbar{height:5px;background:var(--color-border-tertiary);border-radius:3px;margin-top:0.75rem;overflow:hidden;}
+.pfill{height:100%;width:0%;border-radius:3px;transition:width 0.25s ease;background:var(--color-text-warning);}
+.pfill.done{background:var(--color-text-success);}
+.ctr{display:flex;align-items:center;justify-content:space-between;margin-top:6px;}
+.ctr-label{font-size:12px;color:var(--color-text-secondary);}
+.ctr-badge{font-size:13px;font-weight:500;color:var(--color-text-warning);}
+.ctr-badge.done{color:var(--color-text-success);}
+.row{display:flex;align-items:center;gap:12px;padding:14px 1rem;border-bottom:0.5px solid var(--color-border-tertiary);cursor:pointer;min-height:54px;transition:background 0.1s;-webkit-tap-highlight-color:transparent;}
+.row.sel{background:var(--color-background-success);}
+.row.dis{opacity:0.35;pointer-events:none;}
+.chk{width:26px;height:26px;border-radius:50%;border:1.5px solid var(--color-border-secondary);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:15px;color:var(--color-text-tertiary);transition:all 0.15s;}
+.row.sel .chk{background:var(--color-text-success);border-color:var(--color-text-success);color:#fff;}
+.pname{font-size:15px;color:var(--color-text-primary);flex:1;line-height:1.3;}
+.row.sel .pname{font-weight:500;color:var(--color-text-success);}
+.num-badge{font-size:11px;font-weight:500;width:22px;height:22px;border-radius:50%;background:var(--color-background-success);color:var(--color-text-success);display:none;align-items:center;justify-content:center;flex-shrink:0;}
+.row.sel .num-badge{display:flex;}
+.empty{padding:2.5rem 1rem;text-align:center;color:var(--color-text-secondary);font-size:14px;}
+.bbar{padding:0.875rem 1rem 1rem;border-top:0.5px solid var(--color-border-tertiary);}
+.xbtn{width:100%;padding:15px;border-radius:var(--border-radius-md);font-size:15px;font-weight:500;border:none;cursor:not-allowed;display:flex;align-items:center;justify-content:center;gap:8px;background:var(--color-background-secondary);color:var(--color-text-tertiary);transition:all 0.2s;}
+.xbtn.rdy{background:var(--color-background-success);color:var(--color-text-success);cursor:pointer;}
+.xbtn.rdy:active{transform:scale(0.98);}
+.summary{display:none;flex-wrap:wrap;gap:6px;margin-bottom:0.75rem;}
+.summary.show{display:flex;}
+.stag{font-size:11px;padding:3px 8px;border-radius:50px;background:var(--color-background-success);color:var(--color-text-success);font-weight:500;}
+</style>
+
+<h2 class="sr-only">Selector de 26 jugadores de Colombia para el Mundial 2026</h2>
+
+<div class="hdr">
+  <div class="title-row">
+    <div>
+      <div class="ttl">Mi selección Colombia</div>
+      <div class="sub">Copa Mundial FIFA 2026 · 55 preconvocados</div>
+    </div>
+    <button class="clear-btn" id="clr" onclick="clearAll()">
+      <i class="ti ti-refresh" aria-hidden="true"></i> Limpiar
+    </button>
+  </div>
+  <div class="search-wrap">
+    <i class="ti ti-search si" aria-hidden="true"></i>
+    <input type="text" id="q" placeholder="Buscar jugador..." oninput="doFilter()" />
+  </div>
+  <div class="pbar"><div class="pfill" id="pf"></div></div>
+  <div class="ctr">
+    <span class="ctr-label" id="cl">Toca un jugador para seleccionarlo</span>
+    <span class="ctr-badge" id="cb">0 / 26</span>
+  </div>
+</div>
+
+<div id="list"></div>
+<div class="empty" id="emp" style="display:none">
+  <i class="ti ti-search" style="font-size:28px;display:block;margin-bottom:10px;" aria-hidden="true"></i>
+  Ningún jugador con ese nombre
+</div>
+
+<div class="bbar">
+  <div class="summary" id="sum"></div>
+  <button class="xbtn" id="xbtn" onclick="doExport()">
+    <i class="ti ti-download" aria-hidden="true"></i>
+    <span id="xtext">Selecciona 26 jugadores para exportar</span>
+  </button>
+</div>
+
+<script>
+const P=["Aldair Quintana","Álvaro Angulo","Álvaro Montero","Andrés Mosquera","Andrés Román","Camilo Vargas","Carlos Cuesta","Carlos Gómez","Cristian Borja","Daniel Muñoz","David Ospina","Dávinson Sánchez","Deiver Machado","Edier Ocampo","Edwuin Cetré","Gustavo Puerta","James Rodríguez","Jaminton Campaz","Jefferson Lerma","Jhojan Romaña","Jhon Arias","Jhon Córdoba","Jhon Jáder Durán","Jhon Lucumí","Jhon Solís","Johan Carbonero","Johan Mojica","Johan Rojas","John Steven Mendoza","Jordan Barrera","Jorge Carrascal","Juan Camilo Hernández","Juan Camilo Portilla","Juan David Cabal","Juan Fernando Quintero","Juan Guillermo Cuadrado","Juan Manuel Rengifo","Junior Hernández","Kevin Castaño","Kevin Mier","Kevin Viveros","Luis Díaz","Luis Suárez","Nelson Deossa","Neyser Villarreal","Rafael Santos Borré","Richard Ríos","Santiago Arias","Sebastián Gómez","Sebastián Villa","Willer Ditta","Wílmar Barrios","Yáser Asprilla","Yerry Mina","Yerson Mosquera"];
+let sel=new Set(),q="",order=[];
+function toggle(n){
+  if(sel.has(n)){sel.delete(n);order=order.filter(x=>x!==n);}
+  else if(sel.size<26){sel.add(n);order.push(n);}
+  render();
+}
+function doFilter(){q=document.getElementById('q').value;render();}
+function clearAll(){sel.clear();order=[];render();}
+function render(){
+  const f=P.filter(j=>j.toLowerCase().includes(q.toLowerCase()));
+  const list=document.getElementById('list');
+  const emp=document.getElementById('emp');
+  const n=sel.size;const done=n===26;
+  if(!f.length){list.innerHTML='';emp.style.display='block';}
+  else{emp.style.display='none';
+    list.innerHTML=f.map((j,i)=>{
+      const s=sel.has(j),d=n>=26&&!s,idx=order.indexOf(j)+1;
+      return`<div class="row${s?' sel':''}${d?' dis':''}" onclick="toggle(${JSON.stringify(j)})">
+        <div class="chk">${s?'<i class="ti ti-check" aria-hidden="true"></i>':''}</div>
+        <span class="pname">${j}</span>
+        <span class="num-badge">${idx}</span>
+      </div>`;
+    }).join('');
+  }
+  const pf=document.getElementById('pf');
+  pf.style.width=Math.min((n/26)*100,100)+'%';
+  pf.className='pfill'+(done?' done':'');
+  document.getElementById('cl').textContent=done?'¡Equipo completo! Descarga el CSV':`Selecciona ${26-n} jugador${26-n!==1?'es':''} más`;
+  const cb=document.getElementById('cb');
+  cb.textContent=n+' / 26';
+  cb.className='ctr-badge'+(done?' done':'');
+  document.getElementById('clr').style.display=n>0?'flex':'none';
+  const xb=document.getElementById('xbtn');
+  xb.className='xbtn'+(done?' rdy':'');
+  document.getElementById('xtext').textContent=done?'Exportar CSV — equipo listo':`Faltan ${26-n} jugadores`;
+  const sum=document.getElementById('sum');
+  if(done){sum.className='summary show';sum.innerHTML=order.map(j=>`<span class="stag">${j.split(' ')[0]}</span>`).join('');}
+  else{sum.className='summary';}
+}
+function doExport(){
+  if(sel.size!==26)return;
+  const rows=["Nombre Jugador",...order];
+  const blob=new Blob([rows.join('\n')],{type:'text/csv;charset=utf-8;'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;a.download='Colombia_26_Mundial2026.csv';
+  a.click();URL.revokeObjectURL(url);
+}
+render();
+</script>
