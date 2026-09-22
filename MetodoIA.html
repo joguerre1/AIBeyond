@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>El método vuelve a servir</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0E2A47;
+  --navy-deep:#081B2F;
+  --orange:#E2651C;
+  --paper:#F0EBE1;
+  --muted:#7E8EA0;
+  --line:rgba(240,235,225,.18);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  background:var(--navy-deep);
+  color:var(--paper);
+  font-family:'Archivo','Helvetica Neue',Helvetica,Arial,sans-serif;
+  font-weight:400;
+  overflow:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+.stage{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
+.slide{
+  position:absolute;inset:0;
+  display:none;
+  flex-direction:column;justify-content:center;
+  padding:clamp(28px,6vw,110px);
+  max-width:1500px;margin:0 auto;
+}
+.slide.on{display:flex}
+h1{
+  font-weight:900;
+  font-size:clamp(38px,7.6vw,104px);
+  line-height:.96;
+  letter-spacing:-.03em;
+  max-width:16ch;
+}
+h2{
+  font-weight:700;
+  font-size:clamp(26px,3.9vw,54px);
+  line-height:1.1;
+  letter-spacing:-.02em;
+  max-width:22ch;
+}
+p{
+  font-size:clamp(17px,2.05vw,30px);
+  line-height:1.45;
+  max-width:36ch;
+  color:#DCD6C9;
+}
+.lede{max-width:30ch}
+.sub{color:var(--muted);font-size:clamp(15px,1.5vw,21px);max-width:44ch}
+.stack > * + *{margin-top:clamp(14px,2.2vh,30px)}
+.kicker{
+  border-left:4px solid var(--orange);
+  padding-left:clamp(14px,1.6vw,24px);
+  font-weight:700;
+  color:var(--paper);
+  font-size:clamp(19px,2.35vw,36px);
+  line-height:1.25;
+  max-width:26ch;
+}
+.orange{color:var(--orange)}
+
+/* chrome */
+.bar{
+position:fixed;left:0;right:0;bottom:0;
+display:flex;align-items:center;gap:18px;
+padding:12px clamp(16px,3vw,40px);
+border-top:1px solid var(–line);
+background:rgba(8,27,47,.9);
+font-size:13px;color:var(–muted);
+z-index:40;
+}
+#clock{
+font-weight:700;font-size:20px;color:var(–paper);
+font-variant-numeric:tabular-nums;letter-spacing:.02em;
+min-width:78px;
+}
+#clock.over{color:var(–orange)}
+#clock.idle{color:var(–muted)}
+.bar .spacer{flex:1}
+.pips{display:flex;gap:6px}
+.pip{width:22px;height:3px;background:var(–line);border-radius:2px}
+.pip.done{background:var(–muted)}
+.pip.now{background:var(–orange)}
+.hint{display:none}
+@media(min-width:900px){.hint{display:block}}
+button{
+font-family:inherit;font-size:16px;font-weight:700;
+background:var(–orange);color:#0B1D31;
+border:0;border-radius:2px;
+padding:14px 26px;cursor:pointer;
+}
+button:focus-visible{outline:3px solid var(–paper);outline-offset:3px}
+button.ghost{background:transparent;color:var(–paper);border:1px solid var(–line)}
+button[disabled]{opacity:.35;cursor:default}
+
+/* roster */
+.roster{display:flex;flex-direction:column;gap:clamp(8px,1.5vh,18px);margin-top:clamp(16px,3vh,36px)}
+.roster div{
+display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 16px;
+border-bottom:1px solid var(–line);padding-bottom:clamp(7px,1.2vh,14px);
+}
+.roster b{font-weight:700;font-size:clamp(19px,2.5vw,38px);letter-spacing:-.02em}
+.roster span{color:var(–muted);font-size:clamp(14px,1.4vw,19px)}
+
+/* why cards */
+.whys{display:flex;flex-direction:column;gap:10px;margin-top:22px;min-height:clamp(200px,42vh,360px)}
+.why{
+border-left:3px solid var(–line);padding:clamp(8px,1.2vh,14px) 0 clamp(8px,1.2vh,14px) 20px;
+opacity:0;transform:translateY(8px);
+transition:opacity .35s ease,transform .35s ease,border-color .35s ease;
+}
+.why.show{opacity:1;transform:none;border-left-color:var(–orange)}
+.why q{display:block;font-weight:700;font-size:clamp(16px,1.8vw,26px);quotes:none}
+.why em{display:block;font-style:normal;color:var(–muted);font-size:clamp(15px,1.6vw,22px);margin-top:3px}
+.why.final q{color:var(–orange)}
+
+/* marbles */
+.marbles{display:grid;grid-template-columns:repeat(20,1fr);gap:clamp(4px,.7vw,10px);max-width:760px;margin-top:26px}
+.marbles i{
+display:block;aspect-ratio:1;border-radius:50%;
+background:#2A4767;transition:opacity .5s ease,background .5s ease,transform .5s ease;
+}
+.marbles i.keep{background:var(–orange)}
+.marbles i.drop{opacity:.12;transform:scale(.55)}
+
+/* fishbone */
+svg{width:100%;max-width:960px;height:auto;margin-top:18px}
+.bone{stroke:var(–paper);stroke-width:2.5;fill:none}
+.rib{stroke:var(–orange);stroke-width:2.5;fill:none;opacity:0;transition:opacity .4s ease}
+.rib.show{opacity:1}
+.ribtext{fill:var(–paper);font-size:15px;font-weight:700;opacity:0;transition:opacity .4s ease}
+.ribtext.show{opacity:1}
+.head{fill:none;stroke:var(–orange);stroke-width:2.5}
+
+/* timer30 */
+.big30{font-size:clamp(74px,17vw,190px);font-weight:900;line-height:1;letter-spacing:-.05em;font-variant-numeric:tabular-nums}
+.row{display:flex;gap:14px;flex-wrap:wrap;align-items:center;margin-top:26px}
+
+/* notes */
+#notes{
+position:fixed;right:0;top:0;bottom:46px;width:min(420px,92vw);
+background:#071729;border-left:1px solid var(–line);
+padding:26px;overflow:auto;display:none;z-index:50;
+}
+#notes.on{display:block}
+#notes h3{font-size:14px;color:var(–orange);margin-bottom:12px;font-weight:700}
+#notes p{font-size:15px;max-width:none;line-height:1.55;color:#C9C2B4}
+#notes p + p{margin-top:12px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+</head>
+<body>
+
+<div class="stage">
+
+  <!-- 1 -->
+
+  <section class="slide on" data-note="Arranque. No saludes largo. Señala el reloj: 'voy a hablar 16 minutos, el reloj corre, y va a ser parte de la charla'. Luego el título.">
+    <div class="stack">
+      <h1>El método vuelve<br>a servir</h1>
+      <p class="sub">Por qué las técnicas de siempre rinden más ahora que tenemos IA</p>
+    </div>
+  </section>
+
+  <!-- 2 -->
+
+  <section class="slide" data-note="La idea de la charla en tres frases. Dilas despacio y para. No adornes.">
+    <div class="stack">
+      <h2>Tenemos la herramienta más potente que hemos tenido.</h2>
+      <p>Y lo que más le saca provecho son técnicas de hace sesenta años, hechas con lápiz y papel.</p>
+      <div class="kicker">De eso se trata esta charla.</div>
+    </div>
+  </section>
+
+  <!-- 3 -->
+
+  <section class="slide" data-note="El desfile. Lee cada una con su fecha, sin explicar todavía. La fecha es el chiste: son viejísimas y siguen aquí.">
+    <div class="stack">
+      <h2>Las que vamos a usar hoy</h2>
+      <div class="roster">
+        <div><b>Los 5 porqués</b><span>Toyota, 1930</span></div>
+        <div><b>Matriz de Eisenhower</b><span>1954</span></div>
+        <div><b>Espina de pescado</b><span>Ishikawa, 1968</span></div>
+        <div><b>Técnica de Feynman</b><span>Caltech, años 60</span></div>
+        <div><b>Pre-mortem</b><span>Gary Klein, 1989</span></div>
+      </div>
+      <p class="sub">Ninguna necesita licencia, servidor ni presupuesto.</p>
+    </div>
+  </section>
+
+  <!-- 4 -->
+
+  <section class="slide" data-note="Escena 1. Click para ir soltando cada porqué, uno por uno, mientras cuentas. No los leas todos de corrido.">
+    <div class="stack">
+      <h2>Preguntar antes de pedir</h2>
+      <p class="sub">Iba a pedirle al modelo un reporte más rápido. Antes preguntó cinco veces por qué.</p>
+      <div class="whys" id="whys">
+        <div class="why"><q>¿Por qué lo queremos más rápido?</q><em>Porque llega tarde a la reunión.</em></div>
+        <div class="why"><q>¿Por qué llega tarde?</q><em>Porque se arma a mano el lunes.</em></div>
+        <div class="why"><q>¿Por qué se arma a mano?</q><em>Porque cada área manda su parte en otro formato.</em></div>
+        <div class="why"><q>¿Por qué en otro formato?</q><em>Porque nadie definió uno.</em></div>
+        <div class="why final"><q>¿Por qué nadie lo definió?</q><em>Porque el reporte lo pidió alguien que ya no trabaja aquí.</em></div>
+      </div>
+      <div class="row"><button data-act="why">Siguiente porqué</button></div>
+    </div>
+  </section>
+
+  <!-- 5 -->
+
+  <section class="slide" data-note="Remate de la escena 1. Corto y seco.">
+    <div class="stack">
+      <h2>Nadie leía ese reporte.</h2>
+      <p>No terminó pidiendo un reporte más rápido. Terminó pidiendo otra cosa, y esa sí sirvió.</p>
+      <div class="kicker">Cinco preguntas. Cambió lo que le pidió a la máquina.</div>
+    </div>
+  </section>
+
+  <!-- 6 -->
+
+  <section class="slide" data-note="Escena 2. Cuenta el caso, después lanza el ejercicio. Deja que la sala hable y se ría. No la calles antes de tiempo.">
+    <div class="stack">
+      <h2>Explicarlo para saber si lo sabes</h2>
+      <p>El modelo entregó algo que funcionaba. Ella trató de explicárselo a un compañero sin términos técnicos y se trabó en la tercera frase.</p>
+      <p class="sub">Volvió, preguntó, entendió. Salió sabiendo más que si lo hubiera escrito sola.</p>
+    </div>
+  </section>
+
+  <!-- 7 -->
+
+  <section class="slide" data-note="Ejercicio en vivo. Dale al botón y quédate callado los 30 segundos. Ese silencio tuyo es el ejercicio.">
+    <div class="stack">
+      <h2>Treinta segundos</h2>
+      <p>Explíquele a la persona de al lado cómo funciona un modelo de lenguaje. Sin términos técnicos.</p>
+      <div class="big30" id="t30">0:30</div>
+      <div class="row">
+        <button data-act="t30">Empezar</button>
+        <span class="sub" id="t30msg"></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8 -->
+
+  <section class="slide" data-note="Remate de la escena 2. Es el punto más importante de la charla: si no lo puedes explicar, no lo sabes.">
+    <div class="stack">
+      <h2>Si se trabó, ya sabe qué preguntar.</h2>
+      <p>Trabarse no es un problema. Es el resultado. Ahí está justo lo que le falta.</p>
+      <div class="kicker">Lo que no puede explicar con sus palabras, todavía no lo sabe.</div>
+    </div>
+  </section>
+
+  <!-- 9 -->
+
+  <section class="slide" data-note="Escena 3. Cuenta el caso, luego dale al botón. Que las canicas hagan el trabajo; tú no expliques el gráfico.">
+    <div class="stack">
+      <h2>Elegir entre lo que sobra</h2>
+      <p class="sub">El modelo le dio doce opciones. Antes el trabajo era producirlas. Ahora es descartar once.</p>
+      <div class="marbles" id="marbles"></div>
+      <div class="row"><button data-act="marbles">Quedarse con el 20%</button></div>
+    </div>
+  </section>
+
+  <!-- 10 -->
+
+  <section class="slide" data-note="Remate de la escena 3.">
+    <div class="stack">
+      <h2>Producir salió barato.</h2>
+      <p>Lo que quedó caro es elegir. Y elegir no lo hace la máquina.</p>
+      <div class="kicker">Escogió dos con criterio. En media hora tenía lo de una semana.</div>
+    </div>
+  </section>
+
+  <!-- 11 -->
+
+  <section class="slide" data-note="Escena 4. La frase entre comillas dila tal cual, es la que se van a llevar.">
+    <div class="stack">
+      <h2>Dudar a propósito</h2>
+      <p>Le pidió un plan al modelo. Después le pidió algo mejor:</p>
+      <div class="kicker">“Imagina que este plan fracasó. Dime por qué.”</div>
+      <p class="sub">El modelo hizo una lista en contra de su propio plan. Buenísima.</p>
+    </div>
+  </section>
+
+  <!-- 12 -->
+
+  <section class="slide" data-note="Remate de la escena 4.">
+    <div class="stack">
+      <h2>A una máquina muy segura hay que pedirle que dude.</h2>
+      <p>La cautela dejó de ser un freno. Es una segunda herramienta.</p>
+      <div class="kicker">Eso lo inventó un psicólogo en 1989.</div>
+    </div>
+  </section>
+
+  <!-- 13 -->
+
+  <section class="slide" data-note="Punto alto. Pide un tema a la sala y ve soltando ramas con el botón mientras hablas. Que se sienta hecho en el momento, no preparado.">
+    <div class="stack">
+      <h2>Un tema cualquiera. Sesenta segundos.</h2>
+      <svg viewBox="0 0 900 380" aria-label="Espina de pescado">
+        <line class="bone" x1="40" y1="190" x2="760" y2="190"></line>
+        <polyline class="head" points="760,150 850,190 760,230"></polyline>
+        <g id="ribs">
+          <g><line class="rib" x1="150" y1="190" x2="205" y2="80"></line><text class="ribtext" x="150" y="66">Método</text></g>
+          <g><line class="rib" x1="330" y1="190" x2="385" y2="80"></line><text class="ribtext" x="330" y="66">Herramientas</text></g>
+          <g><line class="rib" x1="510" y1="190" x2="565" y2="80"></line><text class="ribtext" x="510" y="66">Personas</text></g>
+          <g><line class="rib" x1="200" y1="190" x2="255" y2="300"></line><text class="ribtext" x="200" y="330">Datos</text></g>
+          <g><line class="rib" x1="390" y1="190" x2="445" y2="300"></line><text class="ribtext" x="390" y="330">Proceso</text></g>
+          <g><line class="rib" x1="580" y1="190" x2="635" y2="300"></line><text class="ribtext" x="580" y="330">Medición</text></g>
+        </g>
+      </svg>
+      <div class="row"><button data-act="rib">Agregar rama</button></div>
+    </div>
+  </section>
+
+  <!-- 14 -->
+
+  <section class="slide" data-note="Remate del punto alto. Señala la espina con la mano.">
+    <div class="stack">
+      <h2>Esto es toda la tecnología.</h2>
+      <div class="kicker">Y lo que sale de aquí es el mejor prompt que van a escribir hoy.</div>
+    </div>
+  </section>
+
+  <!-- 15 -->
+
+  <section class="slide" data-note="Cierre. Baja el ritmo. Las dos últimas frases van con pausa entre ellas.">
+    <div class="stack">
+      <h2>Llevo veinticinco años oyendo que la próxima herramienta reemplaza al criterio.</h2>
+      <p>Cada vez pasó lo contrario. Entre mejor la herramienta, más se nota quién sabe usarla.</p>
+      <div class="kicker">El método no hay que comprarlo. Ya lo tenemos.</div>
+    </div>
+  </section>
+
+  <!-- 16 -->
+
+  <section class="slide" data-note="Última línea. Dila y para. No agregues nada después.">
+    <div class="stack">
+      <h1>El que sabe preguntar<br>le saca más.</h1>
+      <p class="sub">Así de simple.</p>
+    </div>
+  </section>
+
+</div>
+
+<div id="notes"><h3>Nota del facilitador</h3><p id="notetext"></p></div>
+
+<div class="bar">
+  <span id="clock" class="idle">16:00</span>
+  <span class="pips" id="pips"></span>
+  <span class="spacer"></span>
+  <span class="hint">← → navegar · T reloj · N notas · F pantalla completa</span>
+</div>
+
+<script>
+(function(){
+  var slides=[].slice.call(document.querySelectorAll('.slide'));
+  var i=0, total=slides.length;
+  var pips=document.getElementById('pips');
+  slides.forEach(function(){var s=document.createElement('span');s.className='pip';pips.appendChild(s);});
+  var pipEls=[].slice.call(pips.children);
+
+  function render(){
+    slides.forEach(function(s,n){s.classList.toggle('on',n===i);});
+    pipEls.forEach(function(p,n){
+      p.className='pip'+(n===i?' now':(n<i?' done':''));
+    });
+    document.getElementById('notetext').textContent=slides[i].dataset.note||'';
+  }
+  function go(d){
+    var n=i+d;
+    if(n<0||n>=total)return;
+    i=n; start(); render();
+  }
+
+  /* reloj principal 16:00 */
+  var left=16*60, running=false, tick=null;
+  var clock=document.getElementById('clock');
+  function paint(){
+    var neg=left<0, v=Math.abs(left);
+    var m=Math.floor(v/60), s=v%60;
+    clock.textContent=(neg?'-':'')+m+':'+(s<10?'0':'')+s;
+    clock.classList.toggle('over',neg);
+  }
+  function start(){
+    if(running)return;
+    running=true; clock.classList.remove('idle');
+    tick=setInterval(function(){left--;paint();},1000);
+  }
+  function toggle(){
+    if(running){clearInterval(tick);running=false;clock.classList.add('idle');}
+    else start();
+  }
+
+  /* artefactos */
+  var whyN=0;
+  var t30=null;
+
+  document.addEventListener('click',function(e){
+    var b=e.target.closest('button[data-act]');
+    if(!b)return;
+    var a=b.dataset.act;
+
+    if(a==='why'){
+      var items=document.querySelectorAll('#whys .why');
+      if(whyN<items.length){items[whyN].classList.add('show');whyN++;}
+      if(whyN>=items.length){b.disabled=true;b.textContent='Ahí está la raíz';}
+    }
+
+    if(a==='marbles'){
+      var m=document.querySelectorAll('#marbles i');
+      m.forEach(function(el,n){
+        setTimeout(function(){el.classList.add(n<20?'keep':'drop');},n*8);
+      });
+      b.disabled=true;
+    }
+
+    if(a==='rib'){
+      var next=document.querySelector('#ribs .rib:not(.show)');
+      if(next){
+        next.classList.add('show');
+        next.parentNode.querySelector('.ribtext').classList.add('show');
+      }
+      if(!document.querySelector('#ribs .rib:not(.show)')){b.disabled=true;b.textContent='Listo';}
+    }
+
+    if(a==='t30'){
+      if(t30)return;
+      var n=30, out=document.getElementById('t30');
+      b.disabled=true;
+      t30=setInterval(function(){
+        n--;
+        out.textContent='0:'+(n<10?'0':'')+n;
+        if(n<=0){
+          clearInterval(t30);t30=null;
+          out.textContent='0:00';
+          out.style.color='var(--orange)';
+          document.getElementById('t30msg').textContent='Tiempo.';
+        }
+      },1000);
+    }
+  });
+
+  /* marbles */
+  var mw=document.getElementById('marbles');
+  for(var k=0;k<100;k++){mw.appendChild(document.createElement('i'));}
+
+  /* teclado */
+  document.addEventListener('keydown',function(e){
+    var k=e.key;
+    if(k==='ArrowRight'||k==='PageDown'||k===' '){e.preventDefault();go(1);}
+    else if(k==='ArrowLeft'||k==='PageUp'){e.preventDefault();go(-1);}
+    else if(k==='t'||k==='T'){toggle();}
+    else if(k==='n'||k==='N'){document.getElementById('notes').classList.toggle('on');}
+    else if(k==='f'||k==='F'){
+      if(document.fullscreenElement){document.exitFullscreen();}
+      else{document.documentElement.requestFullscreen();}
+    }
+  });
+
+  /* swipe */
+  var x0=null;
+  document.addEventListener('touchstart',function(e){x0=e.touches[0].clientX;},{passive:true});
+  document.addEventListener('touchend',function(e){
+    if(x0===null)return;
+    var dx=e.changedTouches[0].clientX-x0;
+    if(Math.abs(dx)>60)go(dx<0?1:-1);
+    x0=null;
+  },{passive:true});
+
+  paint(); render();
+})();
+</script>
+
+</body>
+</html>
